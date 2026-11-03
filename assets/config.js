@@ -15,7 +15,7 @@ window.SITE_CONFIG = {
 
   // 問い合わせ先（Amazonアソシエイトの審査で運営者の連絡先が必要）
   // 例: Googleフォームのリンクや、公開用メールアドレス
-  contact: "",
+  contact: "https://forms.gle/iFDijk64t3HmDtyE7",
 
   operator: "ギター練習ラボ 運営者"
 };
