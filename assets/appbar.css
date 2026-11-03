@@ -1,0 +1,8 @@
+/* アプリページの下に付くサイト帯（各アプリの配色を壊さないよう独立した色） */
+.gl-bar{border-top:1px solid rgba(127,127,127,.35);padding:20px 16px calc(28px + env(safe-area-inset-bottom,0px));font:13px/1.7 "Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
+.gl-in{max-width:1040px;margin:0 auto;display:grid;gap:8px}
+.gl-home{font-weight:700;text-decoration:none;color:inherit}
+.gl-home:hover{text-decoration:underline}
+.gl-links{display:flex;flex-wrap:wrap;gap:6px 18px}
+.gl-links a{color:inherit;opacity:.85}
+.gl-note{margin:0;opacity:.7;font-size:12px;max-width:70ch}

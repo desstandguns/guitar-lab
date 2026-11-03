@@ -1,0 +1,1890 @@
+<!doctype html><html lang="ja" data-app data-base="../../"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>ファンク・ロック・ラボ｜ギター練習ラボ</title>
+<meta name="description" content="ファンク・カッティング、コード装飾、アルペジオ、歌うソロなど、90〜2000年代ファンク・ロックのギター奏法を練習できる無料アプリ。">
+<meta property="og:title" content="ファンク・ロック・ラボ｜ギター練習ラボ">
+<meta property="og:description" content="ファンク・カッティング、コード装飾、アルペジオ、歌うソロなど、90〜2000年代ファンク・ロックのギター奏法を練習できる無料アプリ。">
+<link rel="stylesheet" href="../../assets/appbar.css">
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a practice bench. Sticky header carries the tabs and a metronome; each tab is one tool on a rosewood fretboard motif. Sunburst Strat palette. */
+:root{
+  --bg:#ECEFE8;          /* aged mint pickguard */
+  --surface:#F8F9F5;
+  --fg:#1F1A15;
+  --muted:#5D5F57;
+  --line:#CDD2C7;
+  --line-strong:#8C9286; /* control borders (>=3:1 on surface) */
+  --accent:#A04E08;      /* sunburst amber (darkened for 4.5:1 text contrast on bg/surface) */
+  --accent-strong:#8A3E06;
+  --accent2:#7C2C12;     /* sunburst edge */
+  --on-accent:#FFF8EE;   /* text on --accent / --accent-strong */
+  --chip:#E2E6DC;
+  --blue:#2F5E8A;
+  --wood:#3B2519; --wood2:#2E1C12; --fretwire:#B9B3A6; --string:#D8CFC0; --inlay:#E9E1CF;
+  --display:"Dela Gothic One","Zen Kaku Gothic New",system-ui,sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --radius:10px;
+  --gap:clamp(20px,4vw,32px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15110E;--surface:#1F1814;--fg:#EEE6D9;--muted:#ADA292;--line:#3A2F27;--line-strong:#7A6858;
+  --accent:#E79A3A;--accent-strong:#F2B25E;--accent2:#D0603A;--on-accent:#1A0E04;--chip:#2A211B;--blue:#7FAEDB;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15110E;--surface:#1F1814;--fg:#EEE6D9;--muted:#ADA292;--line:#3A2F27;--line-strong:#7A6858;
+  --accent:#E79A3A;--accent-strong:#F2B25E;--accent2:#D0603A;--on-accent:#1A0E04;--chip:#2A211B;--blue:#7FAEDB;color-scheme:dark}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}  /* section.view sets display:grid, which would otherwise override the hidden attribute */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:120px}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.75;overflow-wrap:anywhere;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+::selection{background:var(--accent);color:var(--on-accent)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(1.9rem,6vw,3rem);line-height:1.2;letter-spacing:.01em}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(1.3rem,4vw,1.5rem);line-height:1.35}
+h3{font-size:1.05rem;font-weight:700;line-height:1.45}
+p{margin:0;max-width:65ch;text-wrap:pretty}
+a{color:var(--accent)}
+img,svg{max-width:100%}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.muted{color:var(--muted)}
+button,select,input{font:inherit;color:inherit}
+button{touch-action:manipulation}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+input:focus-visible,select:focus-visible{outline-offset:1px}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding-block:10px}
+.brand{font-family:var(--display);font-size:1.05rem;display:flex;align-items:center;gap:10px;margin-right:auto;white-space:nowrap}
+.burst{width:22px;height:22px;flex:none;border-radius:50%;background:radial-gradient(circle at 45% 45%,#E8A93A 0 30%,#B5520F 55%,#3A1508 85%)}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;max-width:100%;padding:3px;margin:-3px}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-weight:700;font-size:.9rem;white-space:nowrap;min-height:36px;display:inline-flex;align-items:center}
+nav.tabs a[aria-current="page"]{background:var(--fg);color:var(--bg)}
+nav.tabs a:hover{color:var(--fg);background:var(--chip)}
+nav.tabs a[aria-current="page"]:hover{background:var(--fg);color:var(--bg)}
+.metro{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.82rem}
+.metro input{width:62px;padding:4px 6px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);font-variant-numeric:tabular-nums;min-height:34px}
+.led{width:10px;height:10px;border-radius:50%;background:var(--line);flex:none}
+.led.on{background:var(--accent)}
+.led.down{background:var(--accent2)}
+@media (max-width:560px){
+  .topbar{gap:8px 10px}
+  nav.tabs{order:3;flex:1 0 100%}
+  nav.tabs a{flex:1 0 auto;justify-content:center;padding:6px 10px;font-size:.85rem}
+}
+
+.btn{border:1px solid var(--fg);background:transparent;border-radius:6px;padding:5px 12px;min-height:34px;cursor:pointer;font-weight:700;font-size:.85rem;display:inline-flex;align-items:center;gap:6px;transition:background-color .12s,color .12s}
+.btn:hover{background:var(--chip)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-strong);border-color:var(--accent-strong)}
+.btn[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+main{padding-block:28px 64px}
+section.view{display:grid;gap:var(--gap)}
+section.view>*{min-width:0}
+.intro{display:grid;gap:10px}
+
+footer{font-size:.8rem;color:var(--muted);padding-block:24px calc(24px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+  .btn:active{transform:none}
+}
+@media (forced-colors:active){.btn[aria-pressed="true"],nav.tabs a[aria-current="page"]{outline:2px solid CanvasText}}
+section.view:focus{outline:none}
+/* analysis */
+.ana-hint{font-size:.85rem;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px}
+.traits{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.trait{background:var(--surface);padding:18px 20px;display:grid;gap:10px;align-content:start;min-width:0}
+.trait .k{font-family:var(--mono);font-size:.72rem;color:var(--accent);letter-spacing:.1em}
+.trait p{font-size:.92rem}
+.trait .ex-note,.tc .ex-note{font-size:.82rem;color:var(--muted);font-family:var(--body)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.75rem;padding:1px 8px;border-radius:99px;background:var(--chip);color:var(--muted)}
+
+.demo-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.btn.demo{min-height:36px}
+.btn.demo[aria-pressed="true"]::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);margin-left:2px}
+.go{font-size:.85rem;font-weight:700;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:4px 0}
+.go::after{content:"→";transition:transform .15s}
+.go:hover{text-decoration:underline;text-underline-offset:3px}
+.go:hover::after{transform:translateX(2px)}
+
+.tech{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.tc{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.tc p{font-size:.9rem}
+.tc .ab .btn{flex:1 1 140px;justify-content:center}
+
+.infl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px 28px}
+.infl li{display:grid;gap:2px;align-content:start;border-top:2px solid var(--line);padding-top:10px;min-width:0}
+.infl b{font-size:1rem}
+.infl .who{font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.02em}
+.infl p{font-size:.88rem;margin-top:4px}
+
+.guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}
+.g-group{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:baseline;align-content:start;min-width:0}
+.g-group h3{font-size:1rem}
+.g-group ul{grid-column:1/-1;list-style:none;margin:0;padding:0;display:grid}
+.g-group li{padding:10px 0;border-top:1px solid var(--line);display:grid;gap:2px}
+.g-group li b{font-size:.95rem}
+.g-group .alb{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.g-group li p{font-size:.88rem}
+
+.timeline{list-style:none;margin:0 0 0 6px;padding:0;display:grid;gap:0;border-left:2px solid var(--line)}
+.era{position:relative;padding:4px 0 18px 22px;display:grid;gap:4px}
+.era::before{content:"";position:absolute;left:-7px;top:10px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+.era .yr{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.era b{font-size:1rem}
+.era p{font-size:.9rem}
+.gear{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px 24px;margin:0}
+.gear dt{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.gear dd{margin:0 0 8px;font-weight:500}
+@media (max-width:480px){.trait,.tc,.g-group{padding:14px 14px}}
+/* progressions */
+.prog-layout{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:760px){.prog-layout{grid-template-columns:1fr}}
+.prog-list{display:grid;gap:6px}
+.prog-item{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 14px;cursor:pointer;display:grid;gap:2px}
+.prog-item .roman{font-family:var(--mono);font-size:.85rem;font-weight:600}
+.prog-item .song{font-size:.8rem;color:var(--muted)}
+.prog-item[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.prog-detail{display:grid;gap:16px;min-width:0}
+.chord-row{display:flex;flex-wrap:wrap;gap:12px}
+.chord{display:grid;justify-items:center;gap:2px;padding:8px 6px 6px;border-radius:8px;border:1px solid transparent;cursor:pointer;background:none}
+.chord.now{border-color:var(--accent);background:var(--chip)}
+.chord .nm{font-weight:700;font-size:1rem}
+.chord .rn{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.chord svg{display:block}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.controls label{font-size:.85rem;color:var(--muted)}
+.controls select,.controls input[type=number]{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px}
+.note-box{border-left:3px solid var(--accent);padding:4px 0 4px 14px;display:grid;gap:6px}
+.note-box p{font-size:.93rem}
+.disclaimer{font-size:.8rem;color:var(--muted)}
+
+/* transpose / voicing / playback / solo guide */
+#v-chords .chord .vc{font-size:.66rem;color:var(--muted);line-height:1.3;text-align:center;max-width:84px}
+#v-chords .chord-row{gap:8px}
+.ch-opts{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end}
+.ch-field{display:grid;gap:4px}
+.ch-field>label,.ch-flabel{font-size:.8rem;color:var(--muted)}
+.ch-keyrow{display:flex;gap:4px;align-items:center}
+.ch-keyrow select{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;min-width:0}
+.ch-step{padding:4px 10px;min-width:34px;justify-content:center}
+.ch-seg{display:inline-flex;border:1px solid var(--fg);border-radius:6px;overflow:hidden}
+.ch-seg button{border:0;background:transparent;padding:5px 12px;font-weight:700;font-size:.85rem;cursor:pointer}
+.ch-seg button+button{border-left:1px solid var(--fg)}
+.ch-seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.ch-legend{font-size:.82rem;color:var(--muted)}
+.ch-orn{display:inline-block;width:11px;height:11px;border-radius:50%;border:2px solid var(--accent);vertical-align:-1px;margin-right:6px}
+.ch-check{display:inline-flex;align-items:center;gap:4px}
+.ch-progress{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.ch-bars{display:flex;gap:4px;flex:1 1 200px;min-width:0}
+.ch-bar{flex:1;height:8px;border-radius:4px;background:var(--chip);overflow:hidden;border:1px solid var(--line)}
+.ch-bar i{display:block;height:100%;width:0;background:var(--accent)}
+.ch-bar.now{border-color:var(--accent)}
+.ch-pos{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.ch-guide{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:14px 16px;display:grid;gap:8px;min-width:0}
+.ch-ghead{display:grid;gap:2px}
+.ch-ghead .muted{font-weight:400;font-size:.9rem}
+.ch-gscale,.ch-gtip{font-size:.88rem}
+.ch-tones{display:flex;flex-wrap:wrap;gap:6px}
+.ch-tone{display:inline-flex;align-items:baseline;gap:4px;padding:2px 10px;border-radius:999px;font-weight:700;font-size:.92rem;border:1px solid var(--accent)}
+.ch-tone small{font-family:var(--mono);font-size:.7rem;font-weight:600;color:var(--muted)}
+.ch-tone.in{background:var(--chip)}
+.ch-tone.out{border-color:var(--blue);border-style:dashed}
+.ch-fb{overflow-x:auto;min-width:0}
+.ch-fb svg{display:block;width:100%;min-width:340px;height:auto}
+.ch-gleg{font-size:.75rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.ch-dot{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:4px}
+.ch-dot.in{background:var(--accent)}.ch-dot.out{background:var(--blue)}.ch-dot.sc{background:var(--muted);width:7px;height:7px}
+@media (max-width:480px){#v-chords .chord svg{width:80px;height:86px}#v-chords .chord{padding:6px 2px 4px}}
+/* scales: fretboard, positions, chord tones, licks */
+#v-scales{min-width:0}
+.fb-scroll{overflow-x:auto;overscroll-behavior-x:contain;border-radius:8px;max-width:100%;-webkit-overflow-scrolling:touch}
+.fb{display:block;min-width:820px;width:100%;height:auto}
+.fb.fb-lick{min-width:600px}
+.scale-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px}
+.scale-btn{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px;cursor:pointer}
+.scale-btn b{display:block;font-size:.9rem}
+.scale-btn span{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.scale-btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted);align-items:center}
+.sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:4px}
+.sw.sw-sc{background:var(--inlay);border:1px solid var(--line)}
+.sw.sw-rt{background:var(--accent)}
+.sw.sw-hi{background:var(--blue)}
+.sw.sw-cr{background:var(--accent2)}
+.sw.sw-ct{background:var(--accent)}
+.sw.sw-out{background:transparent;border:2px dashed var(--accent)}
+.sw.sw-dim{background:var(--inlay);opacity:.4;border:1px solid var(--line)}
+
+/* control panel */
+.sc-panel{display:grid;gap:10px;min-width:0}
+.sc-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-width:0}
+.sc-row[hidden]{display:none}
+.sc-row label,.sc-lab{font-size:.85rem;color:var(--muted);min-width:5.5em}
+.sc-row label+select{margin-right:8px}
+.sc-row select{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px}
+.sc-seg{display:flex;flex-wrap:wrap;gap:4px;min-width:0}
+.sc-seg .btn{padding:4px 10px}
+.sc-chords .btn{font-family:var(--mono);font-weight:600}
+.sc-chords .btn small{font-weight:400;font-size:.68rem;opacity:.75}
+
+/* fretboard notes (CSS fills override SVG attributes) */
+.fb .nd{cursor:pointer}
+.fb .nd circle{fill:var(--inlay);transition:transform .08s}
+.fb .nd text{fill:var(--wood2);font-family:var(--mono);font-size:11px;font-weight:600;pointer-events:none}
+.fb .nd.rt circle,.fb .nd.ct circle{fill:var(--accent)}
+.fb .nd.rt text,.fb .nd.ct text,.fb .nd.hi text,.fb .nd.cr text{fill:var(--bg)}
+.fb .nd.hi circle{fill:var(--blue)}
+.fb .nd.cr circle{fill:var(--accent2)}
+.fb .nd.out circle{fill:var(--wood2);stroke:var(--accent);stroke-width:2;stroke-dasharray:4 3}
+.fb .nd.out text{fill:var(--inlay)}
+.fb .nd.dim{opacity:.4}
+.fb .nd.open circle{stroke:var(--muted);stroke-width:1.5}
+.fb .nd circle{transform-box:fill-box;transform-origin:center}
+.fb .nd.hit{opacity:1}
+.fb .nd.hit circle{stroke:var(--inlay);stroke-width:4;stroke-dasharray:none;transform:scale(1.25)}
+.fb .pos-frame{fill:var(--inlay);fill-opacity:.1;stroke:var(--accent);stroke-width:2;stroke-dasharray:6 4}
+.fb .fnum{fill:var(--muted);font-family:var(--mono);font-size:12px}
+.fb .fnum.in{fill:var(--accent);font-weight:700}
+
+/* licks */
+.sc-licks{display:grid;gap:14px;border-top:1px solid var(--line);padding-top:22px;min-width:0}
+.lick-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px}
+.lick-body{display:grid;gap:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:16px;min-width:0}
+.lick-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.lick-body p{font-size:.92rem}
+.sc-tab{overflow-x:auto;background:var(--wood2);border-radius:8px;max-width:100%}
+.sc-tab pre{margin:0;padding:12px 16px;font-family:var(--mono);font-size:.85rem;line-height:1.5;color:var(--inlay)}
+.sc-tab pre span.hit{background:var(--accent);color:var(--wood2)}
+.sc-key{font-size:.78rem!important}
+@media (prefers-reduced-motion:reduce){.fb .nd circle{transition:none}.fb .nd.hit circle{transform:none}}
+/* practice */
+.ex-list{display:grid;gap:16px}
+.ex{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:18px 20px;display:grid;gap:12px;min-width:0;scroll-margin-top:110px}
+.ex.rt-on{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.ex-head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline}
+.ex-head h3{margin-right:auto}
+.lvl{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.ex p{font-size:.93rem}
+.ex ul{margin:0;padding-left:1.2em;font-size:.92rem}
+.ex .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.hint{font-size:.82rem}
+.tab-wrap{position:relative;overflow-x:auto;background:var(--wood2);border-radius:8px}
+pre.tab{margin:0;padding:12px 16px;font-family:var(--mono);font-size:.85rem;line-height:1.5;color:var(--inlay);width:max-content}
+.tab .tabcell{border-radius:2px;transition:background-color .08s}
+.tab .tabcell.cur{background:var(--accent);color:var(--wood2)}
+.done{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.85rem}
+.done input{width:18px;height:18px;accent-color:var(--accent)}
+.week{display:flex;gap:4px;margin-left:auto;align-items:center}
+.week i{width:14px;height:14px;border-radius:3px;background:var(--chip);border:1px solid var(--line)}
+.week i.y{background:var(--accent);border-color:var(--accent)}
+.week small{font-family:var(--mono);color:var(--muted);margin-right:4px;font-size:.7rem}
+
+/* tempo trainer */
+.tempo{display:grid;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.tempo-now{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px}
+.tempo-now b{font-family:var(--mono);font-size:1.6rem;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.tempo-now .unit{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.tempo-sub{font-size:.8rem;color:var(--muted)}
+.tempo-bar{height:4px;border-radius:2px;background:var(--chip);overflow:hidden}
+.tempo-bar i{display:block;height:100%;background:var(--accent);width:0}
+.tempo-row{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.tempo-set{font-size:.8rem;color:var(--muted)}
+.tempo-set label{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.tempo-set input[type=number]{width:3.6em;padding:2px 4px;border:1px solid var(--line);border-radius:5px;background:var(--surface);font-family:var(--mono);font-size:.82rem;color:var(--fg)}
+.tempo-set input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;margin:0}
+
+/* ear quiz */
+.quiz{display:grid;gap:10px}
+.qlv{display:flex;flex-wrap:wrap;gap:6px}
+.qlv .btn small{font-weight:400;font-size:.72rem;opacity:.8}
+.qpad{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;max-width:640px}
+.qn{border:1px solid var(--line);border-radius:6px;background:var(--bg);cursor:pointer;padding:6px 2px;display:grid;justify-items:center;line-height:1.2;font-weight:700;font-family:var(--mono)}
+.qn small{font-weight:400;font-size:.62rem;color:var(--muted);font-family:var(--body)}
+.qn:hover{background:var(--chip)}
+.qn:active{border-color:var(--accent)}
+.qrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qpicks{display:flex;flex-wrap:wrap;gap:4px;margin-right:auto;min-height:30px}
+.qp{min-width:30px;height:30px;padding:0 4px;display:grid;place-items:center;border:1px dashed var(--line);border-radius:5px;font-family:var(--mono);font-size:.85rem}
+.qp.ok{border:1px solid var(--accent);background:var(--accent);color:var(--wood2)}
+.qp.ng{border:1px solid var(--accent2);color:var(--accent2);text-decoration:line-through}
+.qmsg{font-size:.88rem}
+.qscore{font-size:.82rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.qscore b{color:var(--fg);font-family:var(--mono)}
+.linkish{border:0;background:none;padding:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:.8rem}
+
+/* routine */
+.routine{display:grid;gap:10px}
+.rt-top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.streak{font-size:.88rem}
+.streak b{font-family:var(--mono);font-size:1.2rem;color:var(--accent);margin-right:2px}
+.rt-bar{position:sticky;bottom:10px;z-index:4;display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center;padding:12px 14px;border:1px solid var(--accent);border-radius:10px;background:var(--surface);box-shadow:0 6px 20px color-mix(in srgb,var(--fg) 18%,transparent)}
+.rt-bar[hidden]{display:none}
+.rt-info{display:grid;gap:2px;min-width:0}
+.rt-info small{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.rt-info b{font-size:.95rem;line-height:1.4}
+.rt-links{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.8rem}
+.rt-links a{color:var(--accent)}
+.rt-clock{font-family:var(--mono);font-size:2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.rt-bar.paused .rt-clock{color:var(--muted)}
+.rt-prog{grid-column:1/-1;height:4px;border-radius:2px;background:var(--chip);overflow:hidden}
+.rt-prog i{display:block;height:100%;width:0;background:var(--accent)}
+.rt-btns{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+
+.grid16{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;max-width:640px}
+.step{aspect-ratio:1/1.3;max-width:100%;border:1px solid var(--line);border-radius:4px;background:var(--bg);cursor:pointer;display:grid;place-items:center;font-family:var(--mono);font-size:.62rem;color:var(--muted);padding:0}
+.step.ring{background:var(--accent);border-color:var(--accent);color:var(--wood2);font-weight:600}
+.step.beat{border-color:var(--muted)}
+.step.cur{outline:2px solid var(--fg);outline-offset:1px}
+.count{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;max-width:640px;font-family:var(--mono);font-size:.65rem;color:var(--muted);text-align:center}
+
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.plan div{border-top:2px solid var(--accent);padding-top:8px;font-size:.88rem}
+.plan b{font-family:var(--mono);font-size:.8rem;display:block;color:var(--accent)}
+footer{font-size:.8rem;color:var(--muted);padding-block:24px;border-top:1px solid var(--line)}
+@media (max-width:520px){
+  .ex{padding:14px 12px}
+  .qpad{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .rt-clock{font-size:1.6rem}
+  pre.tab{font-size:.78rem;padding:10px 12px}
+  .rt-bar{padding:8px 10px;gap:4px 10px;bottom:6px}
+  .rt-info b{font-size:.85rem}
+  .rt-btns .btn{padding:3px 9px;font-size:.78rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.arp-lab{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.arp-row{display:flex;align-items:center;gap:8px;min-width:0}
+.arp-row label{font-size:.82rem;color:var(--muted);white-space:nowrap}
+.arp-row select{max-width:100%;min-width:0;border:1px solid var(--line-strong,var(--line));background:var(--surface);border-radius:6px;padding:4px 8px}
+.arp-desc{flex-basis:100%;font-size:.86rem;margin:0}
+@media (max-width:480px){.arp-row{flex-basis:100%}.arp-row select{flex:1}}
+/* header: tap / sound panel */
+.metro{flex-wrap:wrap;position:relative}
+.btn-s{padding:5px 8px;font-size:.8rem}
+.snd{position:relative}
+.snd>summary{list-style:none;user-select:none;max-width:9.5em;white-space:nowrap}
+.snd>summary::-webkit-details-marker{display:none}
+.snd>summary::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);margin-left:2px}
+.snd[open]>summary::after{transform:translateY(1px) rotate(-135deg)}
+.snd-ico{width:10px;height:10px;border-radius:50%;background:var(--accent);flex:none}
+.snd-pop{position:absolute;right:0;top:calc(100% + 8px);z-index:6;width:min(280px,calc(100vw - 32px));
+  background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:12px;
+  display:grid;gap:8px;font-family:var(--body);font-size:.88rem;box-shadow:0 8px 24px color-mix(in srgb,var(--fg) 18%,transparent)}
+.snd-tones{border:0;margin:0;padding:0;display:grid;gap:4px}
+.snd-tones legend{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-bottom:4px;padding:0}
+.snd-tones label{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;border:1px solid var(--line);cursor:pointer}
+.snd-tones label:has(input:checked){border-color:var(--accent);background:var(--chip)}
+.snd-pop input[type=radio],.snd-pop input[type=checkbox]{accent-color:var(--accent);margin:0}
+.snd-pop small{color:var(--muted);font-size:.74rem;margin-left:6px}
+.snd-row{display:flex;align-items:center;gap:8px;cursor:pointer}
+.snd-vol input{flex:1;accent-color:var(--accent);min-width:0}
+.snd-row select{padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.snd-sep{height:1px;background:var(--line);margin:2px 0}
+.snd-note{font-size:.75rem;color:var(--muted);line-height:1.5}
+@media (max-width:480px){.metro{gap:5px}.metro input#bpm{width:52px}}
+.metro .snd-pop input[type=radio],.metro .snd-pop input[type=checkbox]{width:16px;height:16px;min-height:0;padding:0;border:0;flex:none}
+.metro .snd-pop input[type=range]{width:auto;min-height:0;padding:0;border:0;background:transparent}
+</style>
+
+<header class="top">
+  <div class="wrap topbar">
+    <div class="brand"><span class="burst" aria-hidden="true"></span>ファンク・ロック・ラボ</div>
+    <nav class="tabs" aria-label="セクション">
+      <a href="#analysis" data-v="analysis">スタイル分析</a>
+      <a href="#chords" data-v="chords">コード進行</a>
+      <a href="#scales" data-v="scales">スケール</a>
+      <a href="#practice" data-v="practice">練習メニュー</a>
+    </nav>
+    <div class="metro" aria-label="メトロノーム">
+      <span class="led" id="led"></span>
+      <label for="bpm">BPM</label>
+      <input id="bpm" type="number" min="40" max="220" value="90" inputmode="numeric">
+      <button class="btn btn-s" id="tapBtn" type="button" title="2回以上タップしてテンポを設定">タップ</button>
+      <button class="btn" id="metroBtn" aria-pressed="false">クリック</button>
+      <details class="snd" id="sndPanel">
+        <summary class="btn btn-s" title="音色・音量・クリック設定"><span class="snd-ico" aria-hidden="true"></span><span id="sndLabel">クリーン</span></summary>
+        <div class="snd-pop" role="group" aria-label="音色とクリック設定">
+          <fieldset class="snd-tones">
+            <legend>音色（全体にかかる）</legend>
+            <label><input type="radio" name="tone" value="clean"><span>クリーン</span></label>
+            <label><input type="radio" name="tone" value="crunch"><span>クランチ<small>DS-2風</small></span></label>
+            <label><input type="radio" name="tone" value="fuzz"><span>ファズ<small>Big Muff風</small></span></label>
+          </fieldset>
+          <label class="snd-row"><input type="checkbox" id="chorusChk"><span>コーラス<small>CE-1風</small></span></label>
+          <label class="snd-row snd-vol"><span>音量</span><input type="range" id="volIn" min="0" max="1" step="0.01" value="0.8"></label>
+          <div class="snd-sep"></div>
+          <label class="snd-row"><span>拍子</span>
+            <select id="beatsSel"><option value="2">2拍</option><option value="3">3拍</option><option value="4" selected>4拍</option><option value="5">5拍</option><option value="6">6拍</option><option value="7">7拍</option></select></label>
+          <label class="snd-row"><input type="checkbox" id="subChk"><span>16分クリック</span></label>
+          <p class="snd-note">拍子・16分はヘッダーのクリック用。1拍目にアクセントが付く。</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ANALYSIS -->
+<section class="view" id="v-analysis" aria-labelledby="ana-title">
+  <div class="intro">
+    <span class="eyebrow">John Frusciante / Red Hot Chili Peppers</span>
+    <h1 id="ana-title">速さより、歌うギター。</h1>
+    <p class="muted">ジョン・フルシアンテのプレイは、ジミ・ヘンドリックス由来のコード装飾、ファンクの16分カッティング、ポストパンクのアルペジオ、そして「音数を減らして一音に意味を持たせる」姿勢でできている。下の6つの要素を軸に、コード進行・スケール・練習メニューを組み立てた。</p>
+    <p class="ana-hint">各カードの「▶ 試聴」は、その特徴を説明するために作ったオリジナルの短い例（原曲の採譜ではない）。もう一度押すと止まる。</p>
+  </div>
+
+  <div class="traits">
+    <article class="trait"><span class="k">TRAIT 1</span><h3>Hendrix流のコード装飾</h3>
+      <p>コードを押さえたまま、ハンマリング・プリング・ダブルストップで内声を動かす。親指で6弦ルートを押さえるフォームも多用。リズムとリードの境目がない。</p>
+      <p class="ex-note">例：D（xx0232）の1弦を2→3フレット（sus4）、開放→2フレット（sus2）と動かす。</p>
+      <div class="demo-row"><button class="btn demo" data-demo="hendrix" aria-pressed="false">▶ 試聴</button><a class="go" href="#chords">コード進行で練習</a></div>
+      <div class="tags"><span class="tag">Under the Bridge</span><span class="tag">Hendrix「Little Wing」</span></div></article>
+    <article class="trait"><span class="k">TRAIT 2</span><h3>16分のファンク・カッティング</h3>
+      <p>右手は16分で振り続け、鳴らす所だけ左手を押さえる。ミュート音（ブラッシング）がグルーヴの半分を作る。9thコードや単音リフも多い。</p>
+      <p class="ex-note">例：E9（x76777）。空振りと「チャッ」というミュート音が混ざる。</p>
+      <div class="demo-row"><button class="btn demo" data-demo="cut" aria-pressed="false">▶ 試聴</button><a class="go" href="#practice">練習メニューへ</a></div>
+      <div class="tags"><span class="tag">Give It Away</span><span class="tag">Can't Stop</span></div></article>
+    <article class="trait"><span class="k">TRAIT 3</span><h3>高音弦のトライアドとダイアド</h3>
+      <p>1〜3弦の小さなトライアド、3度・6度の2音（ダイアド）をスライドでつなぐ。2弦をミュートして3弦と1弦を同時に鳴らす「弦飛び」の6度は特に彼らしい。</p>
+      <p class="ex-note">例：Cメジャーの6度。3弦5f＋1弦5f → 7f＋7f → 9f＋8f → 10f＋10f とスライド。</p>
+      <div class="demo-row"><button class="btn demo" data-demo="dyad" aria-pressed="false">▶ 試聴</button><a class="go" href="#scales">スケールで位置を確認</a></div>
+      <div class="tags"><span class="tag">Scar Tissue</span></div></article>
+    <article class="trait"><span class="k">TRAIT 4</span><h3>ポストパンクのアルペジオ</h3>
+      <p>John McGeoch、Johnny Marr、Bernard Sumner など、本人がたびたび名前を挙げる80年代前後のギタリストの影響。コードを分散して刻み、コーラスやディレイで空間を作る。</p>
+      <p class="ex-note">例：Am(add9)（x02410）→ Fmaj7（xx3210）を16分で分散。</p>
+      <div class="demo-row"><button class="btn demo" data-demo="arp" aria-pressed="false">▶ 試聴</button><a class="go" href="#chords">コード進行で練習</a></div>
+      <div class="tags"><span class="tag">Californication</span><span class="tag">Snow (Hey Oh)</span></div></article>
+    <article class="trait"><span class="k">TRAIT 5</span><h3>少ない音のソロ</h3>
+      <p>マイナー・ペンタトニックが基本。速弾きより、1音のビブラート、チョーキングの音程、休符を大事にする。ドリアンの6度で明るさを足す場面も。</p>
+      <p class="ex-note">例：Aマイナー・ペンタ。G→Aのチョーキング、休符、最後の1音にビブラート。</p>
+      <div class="demo-row"><button class="btn demo" data-demo="solo" aria-pressed="false">▶ 試聴</button><a class="go" href="#scales">スケールへ</a></div>
+      <div class="tags"><span class="tag">Californication</span><span class="tag">Dani California</span></div></article>
+    <article class="trait"><span class="k">TRAIT 6</span><h3>マイナーキーの♭VII・♭VI</h3>
+      <p>マイナーキーで ♭VII や ♭VI を使う進行、メジャーキーにキー外のコードを混ぜる進行がよく聴ける。切なさと浮遊感の源。</p>
+      <p class="ex-note">例（スタイル例）：Am → G → Dm → Am（i–♭VII–iv–i）。</p>
+      <div class="demo-row"><button class="btn demo" data-demo="prog" aria-pressed="false">▶ 試聴</button><a class="go" href="#chords">コード進行へ</a></div>
+      <div class="tags"><span class="tag">Otherside</span><span class="tag">i–♭VII–iv</span></div></article>
+  </div>
+
+  <div class="intro"><span class="eyebrow">Right hand &amp; Phrasing</span><h2>右手とフレージング</h2>
+    <p class="muted">彼の音らしさは、左手のフォームより「どう弾くか」に出る。A/Bを聴き比べて、違いを耳で確かめよう。</p></div>
+  <div class="tech">
+    <article class="tc"><h3>ゴーストノート（ブラッシング）</h3>
+      <p>左手を弦に軽く触れたまま右手で弾くと、音程のない「チャッ」という音になる。16分の空いた所をこれで埋めると、同じコードでもグルーヴが生まれる。</p>
+      <div class="demo-row ab"><button class="btn demo" data-demo="ghost0" aria-pressed="false">A：ミュートなし</button><button class="btn demo" data-demo="ghost1" aria-pressed="false">B：ミュートあり</button></div></article>
+    <article class="tc"><h3>ダイナミクス（強弱）</h3>
+      <p>全部を同じ強さで弾かず、拍の頭を強く、裏を弱く。小さく弾く音があるから、強い音が前に出る。歪みを使う時も、ピッキングの強さで音色を変える。</p>
+      <div class="demo-row ab"><button class="btn demo" data-demo="dyn0" aria-pressed="false">A：均一</button><button class="btn demo" data-demo="dyn1" aria-pressed="false">B：強弱あり</button></div></article>
+    <article class="tc"><h3>ビブラート</h3>
+      <p>音を出してすぐ揺らさず、少し伸ばしてから揺らし始める「遅れて入るビブラート」。ロングトーンで歌うように使う。</p>
+      <div class="demo-row ab"><button class="btn demo" data-demo="vib0" aria-pressed="false">A：揺らさない</button><button class="btn demo" data-demo="vib1" aria-pressed="false">B：ビブラート</button></div></article>
+    <article class="tc"><h3>チョーキングの音程</h3>
+      <p>チョーキングは「どの音まで上げるか」が全て。全音（2フレット分）上げるなら、目標の音にぴったり届かせる。届かないと、ただ不安定に聞こえる。</p>
+      <div class="demo-row ab"><button class="btn demo" data-demo="bend0" aria-pressed="false">A：上げ足りない</button><button class="btn demo" data-demo="bend1" aria-pressed="false">B：全音ぴったり</button></div></article>
+    <article class="tc"><h3>休符と「間」</h3>
+      <p>本人はインタビューで、技術を見せることより一音ごとのアイデアを重視すると繰り返し語っている。音を詰めた16分と、3音＋休符のフレーズを比べてみよう。</p>
+      <div class="demo-row ab"><button class="btn demo" data-demo="space0" aria-pressed="false">A：詰め込む</button><button class="btn demo" data-demo="space1" aria-pressed="false">B：間を置く</button></div></article>
+  </div>
+
+  <div class="intro"><span class="eyebrow">Influences</span><h2>本人が挙げている影響</h2>
+    <p class="muted">インタビューで本人が繰り返し名前を挙げているものに絞った。「何を聴き取るか」は練習のための目安。</p></div>
+  <ul class="infl">
+    <li><b>Jimi Hendrix</b><span class="who">最初の大きな影響</span><p>コードとリードを一体化させる装飾、ワウやファズを使った即興。Stadium Arcadium 期には、Hendrix や Eddie Van Halen のような派手なギターをあえて目指したと語っている。</p></li>
+    <li><b>Hillel Slovak</b><span class="who">RHCP の前任ギタリスト</span><p>10代でレッチリのライブを観て憧れた、もう一人の大きな影響。ファンクのカッティングの原点。</p></li>
+    <li><b>John McGeoch</b><span class="who">Magazine / Siouxsie and the Banshees</span><p>「目指したいギタリスト」と呼び、アルバム『Juju』などに合わせて弾いていたと語る。曲ごとに違うアイデアを持ち込む姿勢とアルペジオ。</p></li>
+    <li><b>Johnny Marr / Bernard Sumner / George Harrison</b><span class="who">The Smiths / Joy Division・New Order / The Beatles</span><p>By the Way のギターに影響したと本人が名前を挙げた顔ぶれ。コードの響きを分散して聴かせる弾き方。</p></li>
+    <li><b>Matthew Ashman</b><span class="who">Bow Wow Wow</span><p>Sumner と並べて「見過ごされている」と評価するメロディ志向のギター。技術より発想、という考え方の象徴。</p></li>
+    <li><b>シンセポップ</b><span class="who">Depeche Mode、OMD、Human League、Gary Numan</span><p>By the Way 制作時、シンセのメロディをギターで再現しようとしたと語る。「一音ずつ意味を積み上げる」ミニマルなフレーズ作りの源。</p></li>
+  </ul>
+
+  <div class="intro"><span class="eyebrow">Listening Guide</span><h2>聴くべき曲ガイド</h2>
+    <p class="muted">テクニック別に、どこに耳を向けるかをまとめた。曲名の後ろはアルバムと発売年。</p></div>
+  <div class="guide">
+    <div class="g-group"><h3>カッティングとミュート</h3><a class="go" href="#practice">練習メニュー</a>
+      <ul>
+        <li><b>Give It Away</b><span class="alb">Blood Sugar Sex Magik（1991）</span><p>ベースとドラムのすき間に短いカッティングを差し込む。弾かない所の多さに注目。</p></li>
+        <li><b>Suck My Kiss</b><span class="alb">Blood Sugar Sex Magik（1991）</span><p>鋭いコード・ストロークとミュートの切れ。音を止めるタイミングが音を出すタイミングと同じくらい大事。</p></li>
+        <li><b>Can't Stop</b><span class="alb">By the Way（2002）</span><p>ミュートを効かせた短く跳ねるイントロのリフ。右手の振りを止めずに、鳴らす音を選んでいる。</p></li>
+      </ul></div>
+    <div class="g-group"><h3>コード装飾とダイアド</h3><a class="go" href="#chords">コード進行</a>
+      <ul>
+        <li><b>Under the Bridge</b><span class="alb">Blood Sugar Sex Magik（1991）</span><p>イントロで、コードを押さえたまま指を足し引きする装飾。静かに始まって盛り上がるダイナミクスも聴きどころ。</p></li>
+        <li><b>Little Wing（Jimi Hendrix）</b><span class="alb">Axis: Bold as Love（1967）</span><p>装飾コードの源流として。上の曲と続けて聴くと、つながりが分かりやすい。</p></li>
+        <li><b>Scar Tissue</b><span class="alb">Californication（1999）</span><p>弦を1本飛ばした6度の2音をスライドでつなぐリフと、音数の少ないスライド主体のソロ。</p></li>
+      </ul></div>
+    <div class="g-group"><h3>アルペジオと重ねたギター</h3><a class="go" href="#chords">コード進行</a>
+      <ul>
+        <li><b>Californication</b><span class="alb">Californication（1999）</span><p>分散和音のリフが曲の背骨。コードを「かき鳴らさず並べる」弾き方の基本形。</p></li>
+        <li><b>Dosed</b><span class="alb">By the Way（2002）</span><p>何本ものギターが少しずつ違うフレーズを重ねる。1本ずつ追いかけて聴いてみよう。</p></li>
+        <li><b>Snow (Hey Oh)</b><span class="alb">Stadium Arcadium（2006）</span><p>高音弦で途切れずに続く速いアルペジオ。左右の手の粒の揃い方に注目。</p></li>
+      </ul></div>
+    <div class="g-group"><h3>歌うソロ</h3><a class="go" href="#scales">スケール</a>
+      <ul>
+        <li><b>Otherside</b><span class="alb">Californication（1999）</span><p>マイナーキーの進行の上で、短い単音フレーズを繰り返す。少ない音でも曲の顔になる例。</p></li>
+        <li><b>Dani California</b><span class="alb">Stadium Arcadium（2006）</span><p>終盤のソロ。歪んだ音でもチョーキングの音程とビブラートがはっきり聴こえる。</p></li>
+        <li><b>Wet Sand</b><span class="alb">Stadium Arcadium（2006）</span><p>後半の長いソロ。ゆっくり積み上げていく構成と、ロングトーンの揺らし方。</p></li>
+      </ul></div>
+  </div>
+
+  <div class="intro"><span class="eyebrow">Eras</span><h2>時期ごとの変化</h2></div>
+  <ol class="timeline">
+    <li class="era"><span class="yr">1988–1992</span><b>Mother's Milk / Blood Sugar Sex Magik</b><p>18歳で加入。ファンク・カッティングと、Hendrix直系の荒々しいリード。BSSM 期には Captain Beefheart や Robert Johnson などのブルースも聴き込んでいた。</p></li>
+    <li class="era"><span class="yr">1998–1999</span><b>Californication</b><p>1998年に復帰。音数を絞り、メロディとコードの響きで聴かせるスタイルへ。</p></li>
+    <li class="era"><span class="yr">2002</span><b>By the Way</b><p>ポストパンク、シンセポップ、ビートルズ的なコード感とコーラスワーク。アルペジオとハーモニーの比重が増える。</p></li>
+    <li class="era"><span class="yr">2006</span><b>Stadium Arcadium</b><p>ファズとワウを使った長めのソロ。Hendrix的な即興と、多重録音のギター・オーケストレーション。2009年に再び脱退。</p></li>
+    <li class="era"><span class="yr">2019–</span><b>再復帰 / Unlimited Love（2022）</b><p>2019年末に復帰。ソロ作で電子音楽を手がけた時期を経て、2022年に Unlimited Love と Return of the Dream Canteen を発表。</p></li>
+  </ol>
+
+  <div class="intro"><span class="eyebrow">Gear</span><h2>代表的な機材</h2></div>
+  <dl class="gear">
+    <div><dt>Guitar</dt><dd>1962年製 Fender Stratocaster（サンバースト）を中心に、ヴィンテージのストラトなど</dd></div>
+    <div><dt>Amp</dt><dd>Marshall Major、Marshall Silver Jubilee</dd></div>
+    <div><dt>Drive / Fuzz</dt><dd>Boss DS-1・DS-2、Electro-Harmonix Big Muff Pi</dd></div>
+    <div><dt>Modulation / Wah</dt><dd>Boss CE-1 Chorus Ensemble、Ibanez WH-10 Wah、MXR Phase 90</dd></div>
+  </dl>
+  <p class="disclaimer">機材は時期によって大きく変わる。音作りより先に、指と耳でニュアンスを作るのが彼の考え方に近い。曲名は「その特徴が聴ける例」として挙げたもので、本ページの試聴音源はすべてオリジナルの短い例。</p>
+</section>
+
+<!-- CHORDS -->
+<section class="view" id="v-chords" hidden>
+  <div class="intro">
+    <span class="eyebrow">Chord Progressions</span>
+    <h2>よく使う進行パターン</h2>
+    <p class="muted">進行を選んで「再生」を押すとループで鳴る。キーを変えると、コード名とダイアグラムが押さえやすいフォームで描き直される。コードダイアグラムを押すと、そのコードだけ鳴る。下の「ソロ用ガイド」を見ながら、コードトーンを狙ってソロを弾いてみよう。</p>
+  </div>
+  <div class="prog-layout">
+    <div class="prog-list" id="progList" role="listbox" aria-label="進行一覧"></div>
+    <div class="prog-detail">
+      <div>
+        <span class="eyebrow" id="pKey"></span>
+        <h2 id="pTitle"></h2>
+      </div>
+      <div class="ch-opts">
+        <div class="ch-field">
+          <label for="chKey">キー（移調）</label>
+          <div class="ch-keyrow">
+            <button class="btn ch-step" id="chKeyDn" aria-label="半音下げる">−</button>
+            <select id="chKey"></select>
+            <button class="btn ch-step" id="chKeyUp" aria-label="半音上げる">＋</button>
+          </div>
+        </div>
+        <div class="ch-field">
+          <span class="ch-flabel" id="chStyleLbl">ボイシング</span>
+          <div class="ch-seg" id="chStyle" role="group" aria-labelledby="chStyleLbl">
+            <button data-style="std" aria-pressed="true">標準</button>
+            <button data-style="fr" aria-pressed="false">装飾フォーム</button>
+          </div>
+        </div>
+      </div>
+      <div class="chord-row" id="chordRow"></div>
+      <p class="ch-legend" id="chLegend" hidden><span class="ch-orn" aria-hidden="true"></span>オレンジの○は装飾音。そこから黒い点の音へハンマリング（またはプリング）する。親指で6弦を押さえるフォームでは、5弦は親指の先、1弦は人差し指の腹で軽く触れてミュートする。</p>
+      <div class="controls">
+        <button class="btn primary" id="progPlay" aria-pressed="false">▶ 再生</button>
+        <label for="progBpm">テンポ</label><input id="progBpm" type="number" min="50" max="180" value="84" style="width:70px">
+        <label for="progStrum">パターン</label>
+        <select id="progStrum">
+          <option value="whole">全音符（1拍目だけ）</option>
+          <option value="quarter" selected>4分</option>
+          <option value="eighth">8分（ダウン・アップ）</option>
+          <option value="funk16">16分ファンク（ゴースト入り）</option>
+          <option value="arp">アルペジオ（8分）</option>
+        </select>
+        <label for="chLoops">ループ</label>
+        <select id="chLoops"><option value="0">∞</option><option value="1">1回</option><option value="2">2回</option><option value="4" selected>4回</option><option value="8">8回</option></select>
+        <label class="ch-check"><input type="checkbox" id="chClick" checked>クリック</label>
+      </div>
+      <div class="ch-progress" aria-live="off">
+        <div class="ch-bars" id="chBars" aria-hidden="true"></div>
+        <span class="ch-pos" id="chPos">停止中</span>
+      </div>
+      <div class="ch-guide" id="chGuide"></div>
+      <div class="note-box" id="pNote"></div>
+      <p class="disclaimer">曲名は「この進行が聴ける例」として挙げている。キーやボイシングは練習用に簡略化しているので、細部は原曲を聴いて確かめてほしい。「スタイル例」は特定の曲ではなく、彼の演奏によく出てくる響きをまとめたもの。「装飾フォーム」のフォームも、Hendrix由来の押さえ方をもとにした練習用の一例。</p>
+    </div>
+  </div>
+</section>
+
+<!-- SCALES -->
+<section class="view" id="v-scales" hidden>
+  <div class="intro">
+    <span class="eyebrow">Scales on the fretboard</span>
+    <h2>スケール・マップ</h2>
+    <p class="muted">スケールとキーを選ぶと指板に表示される。音を押すと鳴る。まずはポジション（ボックス）を1つずつ覚え、次に「コード上の音」モードで、鳴っているコードのどの音に着地するかを確かめよう。</p>
+  </div>
+  <div class="scale-grid" id="scaleGrid"></div>
+
+  <div class="sc-panel">
+    <div class="sc-row">
+      <label for="rootSel">キー</label><select id="rootSel"></select>
+      <label for="labelSel">表示</label><select id="labelSel"><option value="deg">度数</option><option value="name">音名</option></select>
+    </div>
+    <div class="sc-row" role="group" aria-label="ポジション">
+      <span class="sc-lab">ポジション</span>
+      <div class="sc-seg" id="posSeg"></div>
+    </div>
+    <div class="sc-row" role="group" aria-label="モード">
+      <span class="sc-lab">モード</span>
+      <div class="sc-seg" id="modeSeg">
+        <button class="btn" data-mode="scale" aria-pressed="true">スケール</button>
+        <button class="btn" data-mode="chord" aria-pressed="false">コード上の音</button>
+      </div>
+    </div>
+    <div class="sc-row" id="chordRowSc" hidden>
+      <span class="sc-lab">コード</span>
+      <div class="sc-seg sc-chords" id="chordSeg"></div>
+      <button class="btn" id="backBtn" aria-pressed="false">♪ バッキングを流す</button>
+    </div>
+    <div class="sc-row">
+      <label for="dirSel">再生</label>
+      <select id="dirSel"><option value="updown">上行→下行</option><option value="up">上行のみ</option><option value="down">下行のみ</option></select>
+      <button class="btn primary" id="scalePlay" aria-pressed="false">▶ ポジションを鳴らす</button>
+    </div>
+  </div>
+
+  <div class="fb-scroll" id="fbScroll"><svg class="fb" id="fb" viewBox="0 0 1000 245" role="img" aria-label="ギター指板"></svg></div>
+  <div class="legend" id="scLegend"></div>
+  <div class="note-box" id="scaleNote"></div>
+
+  <div class="sc-licks">
+    <div class="intro">
+      <span class="eyebrow">Licks in his style</span>
+      <h3>ファンク・ロック風リック</h3>
+      <p class="muted">彼のソロによく出てくる要素（チョーキング＋ビブラート、3度・6度のダブルストップ、Hendrix流のハンマリング）を使った、このアプリ用のオリジナル・フレーズ。曲のコピーではなく「スタイル例」。テンポはヘッダーのBPMに従う。</p>
+    </div>
+    <div class="lick-list" id="lickList"></div>
+    <div class="lick-body">
+      <div class="lick-head"><b id="lickTitle"></b><button class="btn primary" id="lickPlay" aria-pressed="false">▶ 再生</button></div>
+      <p class="muted" id="lickDesc"></p>
+      <div class="fb-scroll"><svg class="fb fb-lick" id="lickFb" viewBox="0 0 720 245" role="img" aria-label="リックの指板図"></svg></div>
+      <div class="sc-tab"><pre id="lickTab" aria-label="TAB譜"></pre></div>
+      <p class="sc-key muted">TAB記号：h＝ハンマリング　p＝プリング　/＝スライド　b＝チョーキング（例 8b10＝8フレットを10フレットの音程まで）　~＝ビブラート</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRACTICE -->
+<section class="view" id="v-practice" hidden>
+  <div class="intro">
+    <span class="eyebrow">Practice Routine</span>
+    <h2>やっておくべき練習</h2>
+    <p class="muted">10の練習を、彼のスタイルの要素ごとに並べた。1日35分なら、下の配分が目安。「今日のルーティン」を押すとブロックごとにタイマーが進み、時間が来た練習には自動でチェックが入る。記録（直近7日と連続日数）はこのブラウザに残る。</p>
+  </div>
+  <div class="plan">
+    <div><b>5 min</b>メトロノームで16分カッティング（練習1）</div>
+    <div><b>10 min</b>トライアド／6度ダイアド／オクターブ（練習3・4・8）</div>
+    <div><b>10 min</b>コード装飾／アルペジオ／ダブルストップ（練習2・5・10）</div>
+    <div><b>10 min</b>3音ソロ／チョーキング／耳コピ（練習6・9・7）</div>
+  </div>
+  <div class="routine" id="routine"></div>
+  <div class="ex-list" id="exList"></div>
+</section>
+
+</main>
+<footer class="wrap"><p>ファンク・ロック・ラボ — 練習用のまとめ。音はすべてブラウザ内で合成したオリジナルの例で、原曲の音源や採譜は含まない。曲の分析は一般に知られている解釈と本人のインタビュー発言をもとに簡略化したもの。再生中は Esc キーで止められる。</p></footer>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s);
+const NN=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const TUNING=[40,45,50,55,59,64]; // low E -> high e
+const DEG={0:'1',1:'♭2',2:'2',3:'♭3',4:'3',5:'4',6:'♭5',7:'5',8:'♭6',9:'6',10:'♭7',11:'7'};
+const mf=m=>440*Math.pow(2,(m-69)/12);
+
+const INIT=[]; // modules push init functions here
+
+/* ---------- audio ----------
+   Signal chain (built once on first ac()):
+   pluck/strum/scratch → per-note pan → master (bus, gain .55)
+     → pickup resonance → [drive: preHP → preGain → WaveShaper → postLP → mid EQ → postGain]
+     → chorus (CE-1風 stereo modulated delay) → cab EQ → dry + convolver reverb
+     → volume → compressor → destination
+   click() goes to clickBus → volume (never distorted).
+   Extra API (optional, for other roles): pluck opts.mute, strum(...,opts), scratch(when,gain,dir),
+   click(when,accent,sub), setTone('clean'|'crunch'|'fuzz'), getTone(), setChorus(bool), setVolume(0..1). */
+let ctx=null,master=null;const cache=new Map();
+const SND={tone:'clean',chorus:false,vol:.8,nodes:null};
+try{const s=JSON.parse(localStorage.getItem('fl-sound')||'{}');
+  if(['clean','crunch','fuzz'].includes(s.tone))SND.tone=s.tone;
+  if(typeof s.chorus==='boolean')SND.chorus=s.chorus;
+  if(typeof s.vol==='number'&&s.vol>=0&&s.vol<=1)SND.vol=s.vol;}catch(e){}
+function saveSound(){try{localStorage.setItem('fl-sound',JSON.stringify({tone:SND.tone,chorus:SND.chorus,vol:SND.vol}));}catch(e){}}
+
+/* amp / pedal voicings */
+const TONES={
+  clean: {label:'クリーン',pre:.5,post:3.3,hp:20, lp:11000,midF:1800,midG:0,  midQ:.8,cab:7600,curve:x=>Math.tanh(1.4*x)/Math.tanh(1.4),wet:.17},
+  crunch:{label:'クランチ',pre:5, post:.2, hp:190,lp:6200, midF:900, midG:3.5,midQ:.9,cab:5200,curve:x=>Math.tanh(4.2*(x+.06))-Math.tanh(4.2*.06),wet:.13},
+  fuzz:  {label:'ファズ',  pre:11,post:.13, hp:90, lp:4400, midF:950, midG:-8, midQ:.7,cab:4700,curve:x=>Math.tanh(3*Math.tanh(6*x))/Math.tanh(3),wet:.12}
+};
+const curveCache={};
+function toneCurve(name){
+  if(curveCache[name])return curveCache[name];
+  const n=4096,c=new Float32Array(n),f=TONES[name].curve;
+  for(let i=0;i<n;i++)c[i]=f(i/(n-1)*2-1);
+  return curveCache[name]=c;
+}
+function reverbIR(c){
+  const sr=c.sampleRate,len=Math.floor(sr*1.7),b=c.createBuffer(2,len,sr);
+  for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);let lp=0;
+    for(let i=0;i<len;i++){const t=i/sr,k=Math.min(.92,.25+t*.5); // darker as it decays
+      lp=lp*k+(Math.random()*2-1)*(1-k);d[i]=lp*Math.exp(-t*4.2)*(t<.012?t/.012:1)*3;}
+    [.011,.019,.027,.041].forEach((t,j)=>{const i=Math.floor((t+ch*.003)*sr);d[i]+=(j%2?-.5:.6)/(j+1);});}
+  return b;
+}
+function buildChain(){
+  const c=ctx,N={};const bq=(type,f,q,g)=>{const x=c.createBiquadFilter();x.type=type;x.frequency.value=f;if(q!=null)x.Q.value=q;if(g!=null)x.gain.value=g;return x;};
+  N.pickup=bq('peaking',3300,1.4,3);            // single-coil resonance
+  N.preHP=bq('highpass',20,.7);N.pre=c.createGain();
+  N.shaper=c.createWaveShaper();N.shaper.oversample='4x';
+  N.postLP=bq('lowpass',11000,.7);N.mid=bq('peaking',1800,.8,0);N.post=c.createGain();
+  // chorus
+  N.chIn=c.createGain();N.dry=c.createGain();N.chOut=c.createGain();
+  const merge=c.createChannelMerger(2),lfo=c.createOscillator();lfo.frequency.value=.75;
+  N.wet=[];[1,-1].forEach((sgn,ch)=>{const d=c.createDelay(.05);d.delayTime.value=.0075;const lg=c.createGain();lg.gain.value=.0026*sgn;
+    lfo.connect(lg);lg.connect(d.delayTime);const w=c.createGain();w.gain.value=0;N.chIn.connect(d);d.connect(w);w.connect(merge,0,ch);N.wet.push(w);});
+  lfo.start();N.chIn.connect(N.dry);N.dry.connect(N.chOut);merge.connect(N.chOut);
+  // cabinet
+  N.cabHP=bq('highpass',75,.7);N.body=bq('peaking',115,1,2);N.pres=bq('peaking',2600,1,1.5);N.cabLP=bq('lowpass',7600,.8);
+  // reverb + output
+  N.verb=c.createConvolver();N.verb.buffer=reverbIR(c);N.verbG=c.createGain();
+  N.vol=c.createGain();N.vol.gain.value=SND.vol;
+  const comp=c.createDynamicsCompressor();comp.threshold.value=-12;comp.ratio.value=4;comp.attack.value=.004;comp.release.value=.2;
+  N.clickBus=c.createGain();
+  master.connect(N.pickup);N.pickup.connect(N.preHP);N.preHP.connect(N.pre);N.pre.connect(N.shaper);N.shaper.connect(N.postLP);
+  N.postLP.connect(N.mid);N.mid.connect(N.post);N.post.connect(N.chIn);
+  N.chOut.connect(N.cabHP);N.cabHP.connect(N.body);N.body.connect(N.pres);N.pres.connect(N.cabLP);
+  N.cabLP.connect(N.vol);N.cabLP.connect(N.verb);N.verb.connect(N.verbG);N.verbG.connect(N.vol);
+  N.clickBus.connect(N.vol);N.vol.connect(comp);comp.connect(c.destination);
+  SND.nodes=N;applyTone(true);applyChorus(true);
+}
+function applyTone(now){
+  const N=SND.nodes;if(!N)return;const T=TONES[SND.tone],t=ctx.currentTime,tc=now?0:.03;
+  const set=(p,v)=>{if(now)p.value=v;else p.setTargetAtTime(v,t,tc);};
+  N.shaper.curve=toneCurve(SND.tone);
+  set(N.preHP.frequency,T.hp);set(N.pre.gain,T.pre);set(N.postLP.frequency,T.lp);
+  set(N.mid.frequency,T.midF);set(N.mid.gain,T.midG);set(N.mid.Q,T.midQ);set(N.post.gain,T.post);
+  set(N.cabLP.frequency,T.cab);set(N.pres.gain,SND.tone==='clean'?2:.5);set(N.verbG.gain,T.wet);
+}
+function applyChorus(now){
+  const N=SND.nodes;if(!N)return;const t=ctx.currentTime,on=SND.chorus;
+  N.wet.forEach(w=>now?w.gain.value=on?.55:0:w.gain.setTargetAtTime(on?.55:0,t,.05));
+  now?N.dry.gain.value=on?.8:1:N.dry.gain.setTargetAtTime(on?.8:1,t,.05);
+}
+function setTone(name){if(!TONES[name])return;SND.tone=name;applyTone();saveSound();document.dispatchEvent(new CustomEvent('fl-sound'));}
+function getTone(){return SND.tone;}
+function setChorus(on){SND.chorus=!!on;applyChorus();saveSound();document.dispatchEvent(new CustomEvent('fl-sound'));}
+function setVolume(v){SND.vol=Math.min(1,Math.max(0,+v||0));if(SND.nodes)SND.nodes.vol.gain.setTargetAtTime(SND.vol*SND.vol*1.25,ctx.currentTime,.03);saveSound();}
+
+function ac(){
+  if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.55;buildChain();SND.nodes.vol.gain.value=SND.vol*SND.vol*1.25;}
+  if(ctx.state==='suspended'&&ctx.resume){const p=ctx.resume();p&&p.catch&&p.catch(()=>{});} return ctx;
+}
+
+/* Karplus-Strong with fractional (allpass) tuning, pick-position comb on the excitation,
+   Strat-style neck+middle pickup comb on the output. Two variants per pitch so repeats aren't identical. */
+function ksBuffer(freq,mute,variant){
+  const key=(mute?'m':'')+Math.round(freq*10)+'_'+(variant|0);if(cache.has(key))return cache.get(key);
+  const sr=ctx.sampleRate,T60=mute?.16+40/freq*.02:Math.min(6.5,5.6*Math.pow(82/freq,.5)),
+    secs=mute?.45:Math.min(2.8,Math.max(1.3,T60*.62)),len=Math.floor(sr*secs),
+    buf=ctx.createBuffer(1,len,sr),d=buf.getChannelData(0);
+  const p=mute?.5:.32;                      // loop-filter weight (smaller = brighter)
+  const D=sr/freq;let Ni=Math.floor(D-p),fr=D-p-Ni;if(fr<.15){Ni--;fr+=1;}Ni=Math.max(2,Ni);
+  const C=(1-fr)/(1+fr),g=Math.pow(10,-3/(freq*T60));
+  // excitation: filtered noise, pick-position comb
+  const ex=new Float32Array(Ni),soft=mute?.75:.35;let prev=0;
+  for(let i=0;i<Ni;i++){prev=prev*soft+(Math.random()*2-1)*(1-soft);ex[i]=prev;}
+  const P=Math.max(1,Math.round(Ni*(.11+Math.random()*.05)));
+  for(let i=0;i<Ni;i++)d[i]=ex[i]-ex[(i-P+Ni)%Ni];
+  let xp=0,yp=0;
+  for(let i=Ni;i<len;i++){const a=d[i-Ni],b=i-Ni-1>=0?d[i-Ni-1]:0;
+    const x=g*((1-p)*a+p*b);const y=C*x+xp-C*yp;xp=x;yp=y;d[i]=y;}
+  // pickup comb (neck .25 + middle .15 of the string length, "position 4")
+  const Q1=Math.round(Ni*.25),Q2=Math.round(Ni*.15);
+  for(let i=len-1;i>=Q1;i--)d[i]=d[i]-.5*(d[i-Q1]+d[i-Q2]);
+  let pk=0;for(let i=0;i<Math.min(len,sr*.1);i++)pk=Math.max(pk,Math.abs(d[i]));
+  const sc=pk>0?.8/pk:1,fade=Math.floor(sr*.12);
+  for(let i=0;i<len;i++)d[i]*=sc*(i>len-fade?(len-i)/fade:1)*(i<8?i/8:1);
+  cache.set(key,buf);return buf;
+}
+function panFor(midi){if(!ctx.createStereoPanner)return null;const p=ctx.createStereoPanner();
+  p.pan.value=Math.max(-.35,Math.min(.35,(midi-58)/45+(Math.random()-.5)*.08));return p;}
+function pluck(midi,when,gain=.35,dur=2.4,o={}){
+  ac();o=o||{};const mute=!!o.mute;if(mute)dur=Math.min(dur,.28);
+  const src=ctx.createBufferSource();src.buffer=ksBuffer(mf(midi),mute,Math.random()<.5?0:1);
+  const g=ctx.createGain();const a=(o.legato?.55:1)*(mute?.9:1);
+  g.gain.setValueAtTime(0,when);g.gain.linearRampToValueAtTime(gain*a,when+.002);
+  g.gain.setValueAtTime(gain*a,when+dur);g.gain.setTargetAtTime(0,when+dur,mute?.03:.07);
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.Q.value=.6;
+  lp.frequency.value=mute?900+gain*1500:o.legato?2600:Math.min(7000,2400+gain*7000);
+  if(o.from){src.detune.setValueAtTime(o.from*100,when);src.detune.linearRampToValueAtTime(0,when+.08);}
+  if(o.bend){src.detune.setValueAtTime(0,when);src.detune.linearRampToValueAtTime(o.bend*100,when+.17);}
+  if(o.vib){const l=ctx.createOscillator(),lg=ctx.createGain();l.frequency.value=5.5;lg.gain.setValueAtTime(0,when);lg.gain.linearRampToValueAtTime(0,when+.25);lg.gain.linearRampToValueAtTime(28,when+.6);l.connect(lg);lg.connect(src.detune);l.start(when);l.stop(when+dur+.6);}
+  const pn=panFor(midi);src.connect(lp);lp.connect(g);if(pn){g.connect(pn);pn.connect(master);}else g.connect(master);
+  src.start(when);src.stop(when+dur+(mute?.2:.6));
+}
+function strum(frets,when,dir='down',gain=.28,dur=2.2,o){
+  const idx=[0,1,2,3,4,5];if(dir==='up')idx.reverse();const sp=(o&&o.mute?.008:.018)*(.85+Math.random()*.3);
+  let k=0;idx.forEach(s=>{const f=frets[s];if(f<0)return;
+    pluck(TUNING[s]+f,when+k*sp,gain*(dir==='up'?.75:1)*(.9+Math.random()*.2),dur,o);k++;});
+}
+/* muted-string strum ("chk"): damped strings + pick noise */
+function scratch(when,gain=.22,dir='down'){
+  ac();const idx=dir==='up'?[5,4,3,2]:[0,1,2,3,4,5];
+  idx.forEach((s,k)=>pluck(TUNING[s]+2,when+k*.006,gain*.55,.06,{mute:true}));
+  const len=Math.floor(ctx.sampleRate*.045);let buf=cache.get('scr');
+  if(!buf){buf=ctx.createBuffer(1,len,ctx.sampleRate);const d=buf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);cache.set('scr',buf);}
+  const src=ctx.createBufferSource();src.buffer=buf;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1500+Math.random()*400;bp.Q.value=1.1;
+  const g=ctx.createGain();g.gain.value=gain*.6;src.connect(bp);bp.connect(g);g.connect(master);src.start(when);
+}
+function click(when,accent,sub){
+  ac();const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=sub?2200:accent?1600:1000;
+  const pk=sub?.09:accent?.5:.3;
+  g.gain.setValueAtTime(.0001,when);g.gain.exponentialRampToValueAtTime(pk,when+.002);g.gain.exponentialRampToValueAtTime(.0001,when+(sub?.025:.05));
+  o.connect(g);g.connect(SND.nodes.clickBus);o.start(when);o.stop(when+.06);
+}
+/* one transport at a time */
+let transport=null;
+function stopAll(){ if(transport){clearInterval(transport.timer);transport.onStop&&transport.onStop();transport=null;} }
+function startTransport(stepDur,onStep,onStop){
+  stopAll();ac();let next=ctx.currentTime+.08,step=0;
+  const t={onStop,timer:null};
+  t.timer=setInterval(()=>{while(next<ctx.currentTime+.12){const s=step,w=next;onStep(s,w,stepDur());const delay=Math.max(0,(w-ctx.currentTime)*1000);setTimeout(()=>t===transport&&t.vis&&t.vis(s),delay);next+=stepDur();step++;}},25);
+  transport=t;return t;
+}
+
+/* ---------- metronome ---------- */
+const metroBtn=$('#metroBtn'),led=$('#led'),bpmIn=$('#bpm');
+const bpm=()=>Math.min(220,Math.max(40,+bpmIn.value||90));
+const METRO={beats:4,sub:false};
+try{const s=JSON.parse(localStorage.getItem('fl-metro')||'{}');if(s.beats>=2&&s.beats<=7)METRO.beats=s.beats|0;METRO.sub=!!s.sub;if(s.bpm>=40&&s.bpm<=220)bpmIn.value=s.bpm|0;}catch(e){}
+function saveMetro(){try{localStorage.setItem('fl-metro',JSON.stringify({beats:METRO.beats,sub:METRO.sub,bpm:bpm()}));}catch(e){}}
+bpmIn.addEventListener('change',()=>{bpmIn.value=bpm();saveMetro();});
+metroBtn.onclick=()=>{
+  if(metroBtn.getAttribute('aria-pressed')==='true'){stopAll();return;}
+  const per=()=>METRO.sub?4:1;
+  // step = one beat, or one 16th when subdivision is on; read live so changes apply while running
+  let pos=0,lastN=per();const t=startTransport(()=>60/bpm()/per(),(s,w)=>{const n=per();if(n!==lastN){pos=0;lastN=n;}
+      pos%=METRO.beats*n;const beat=Math.floor(pos/n),inBeat=pos%n;
+      if(inBeat===0)click(w,beat===0);else click(w,false,true);
+      t.mark[s]=inBeat===0?(beat===0?'down':'on'):'';pos++;},
+    ()=>{metroBtn.setAttribute('aria-pressed','false');led.className='led';});
+  t.mark={};
+  t.vis=s=>{const m=t.mark[s];delete t.mark[s];if(!m)return;led.className='led '+m;setTimeout(()=>led.className='led',90);};
+  metroBtn.setAttribute('aria-pressed','true');
+};
+/* tap tempo */
+let taps=[];
+$('#tapBtn').onclick=()=>{const now=performance.now();taps=taps.filter(x=>now-x<2500);taps.push(now);
+  if(taps.length>=2){const iv=[];for(let i=1;i<taps.length;i++)iv.push(taps[i]-taps[i-1]);
+    const avg=iv.slice(-4).reduce((a,b)=>a+b,0)/Math.min(4,iv.length);bpmIn.value=Math.round(Math.min(220,Math.max(40,60000/avg)));saveMetro();}
+  led.className='led on';setTimeout(()=>led.className='led',80);};
+
+/* ---------- header sound panel (tone / chorus / volume / beats / 16th) ---------- */
+INIT.push(()=>{
+  const panel=$('#sndPanel'),lab=$('#sndLabel'),radios=[...document.querySelectorAll('input[name="tone"]')],
+    cho=$('#chorusChk'),vol=$('#volIn'),beats=$('#beatsSel'),sub=$('#subChk');
+  const sync=()=>{radios.forEach(r=>r.checked=r.value===SND.tone);cho.checked=SND.chorus;
+    lab.textContent=TONES[SND.tone].label+(SND.chorus?'+Ch':'');};
+  sync();vol.value=SND.vol;beats.value=METRO.beats;sub.checked=METRO.sub;
+  radios.forEach(r=>r.onchange=()=>{if(r.checked)setTone(r.value);});
+  cho.onchange=()=>setChorus(cho.checked);
+  vol.oninput=()=>setVolume(vol.value);
+  beats.onchange=()=>{METRO.beats=+beats.value;saveMetro();};
+  sub.onchange=()=>{METRO.sub=sub.checked;saveMetro();};
+  document.addEventListener('fl-sound',sync);
+  // close on outside click / Escape
+  document.addEventListener('click',e=>{if(panel.open&&!panel.contains(e.target))panel.open=false;});
+  panel.addEventListener('keydown',e=>{if(e.key==='Escape'){panel.open=false;panel.querySelector('summary').focus();}});
+});
+
+/* ---------- chords ---------- */
+/* CH: fixed voicings used by other modules (practice/analysis). Keep these keys. */
+const CH={
+  Am:[-1,0,2,2,1,0],F:[1,3,3,2,1,1],C:[-1,3,2,0,1,0],G:[3,2,0,0,0,3],D:[-1,-1,0,2,3,2],Dm:[-1,-1,0,2,3,1],
+  E:[0,2,2,1,0,0],B:[-1,2,4,4,4,2],'C#m':[-1,4,6,6,5,4],'G#m':[4,6,6,4,4,4],A:[-1,0,2,2,2,0],Em:[0,2,2,0,0,0],E9:[-1,7,6,7,7,7],
+  Am7:[-1,0,2,0,1,0],E7:[0,2,0,1,0,0],A7:[-1,0,2,0,2,0],D7:[-1,-1,0,2,1,2],Bm:[-1,2,4,4,3,2]
+};
+
+/* --- voicing engine: open chords + movable shapes, transposable --- */
+const CV_X=null; // muted string in shape definitions
+const CV_FLAT=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+const CV_SHARP=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const CV_QUAL={'':[0,4,7],m:[0,3,7],'7':[0,4,7,10],m7:[0,3,7,10],maj7:[0,4,7,11],'9':[0,4,7,10,2],sus2:[0,2,7],sus4:[0,5,7],add9:[0,4,7,2]};
+const CV_DEG={0:'R',2:'9',3:'♭3',4:'3',5:'4',7:'5',10:'♭7',11:'7'};
+const CV_STRN=['6弦','5弦','4弦','3弦','2弦','1弦'];
+function cvParse(sym){const m=/^([A-G])([#b♭]?)(.*)$/.exec(sym);const pc=(CV_SHARP.indexOf(m[1])+(m[2]==='#'?1:m[2]?11:0))%12;return{pc,q:m[3],flat:!!m[2]&&m[2]!=='#',sharp:m[2]==='#'};}
+const cvFlatKey=p=>[1,3,5,8,10].includes(((p%12)+12)%12);
+// absolute open voicings (name -> frets)
+const CV_OPEN={C:[-1,3,2,0,1,0],A:[-1,0,2,2,2,0],G:[3,2,0,0,0,3],E:[0,2,2,1,0,0],D:[-1,-1,0,2,3,2],
+  Am:[-1,0,2,2,1,0],Em:[0,2,2,0,0,0],Dm:[-1,-1,0,2,3,1],E7:[0,2,0,1,0,0],A7:[-1,0,2,0,2,0],D7:[-1,-1,0,2,1,2],G7:[3,2,0,0,0,1],
+  C7:[-1,3,2,3,1,0],B7:[-1,2,1,2,0,2],Am7:[-1,0,2,0,1,0],Em7:[0,2,0,0,0,0],Dm7:[-1,-1,0,2,1,1],Cmaj7:[-1,3,2,0,0,0],
+  Fmaj7:[-1,-1,3,2,1,0],Amaj7:[-1,0,2,1,2,0],Dmaj7:[-1,-1,0,2,2,2],Asus2:[-1,0,2,2,0,0],Asus4:[-1,0,2,2,3,0],
+  Dsus2:[-1,-1,0,2,3,0],Dsus4:[-1,-1,0,2,3,3],Esus4:[0,2,2,2,0,0],Cadd9:[-1,3,2,0,3,0]};
+// movable shapes: rs = root string index (0=6弦), sh = offsets from root fret r, fr = Frusciante-style
+// orn = embellishment on string s: play 'from' then hammer/pull to 'to' (offsets from r)
+const CV_SHAPES=[
+  {q:'',rs:0,sh:[0,2,2,1,0,0],lab:'Eフォーム'},{q:'m',rs:0,sh:[0,2,2,0,0,0],lab:'Emフォーム'},
+  {q:'7',rs:0,sh:[0,2,0,1,0,0],lab:'E7フォーム'},{q:'m7',rs:0,sh:[0,2,0,0,0,0],lab:'Em7フォーム'},
+  {q:'maj7',rs:0,sh:[0,CV_X,1,1,0,CV_X],lab:'6弦ルート'},{q:'sus4',rs:0,sh:[0,2,2,2,0,0],lab:'Esus4フォーム'},
+  {q:'',rs:1,sh:[CV_X,0,2,2,2,0],lab:'Aフォーム'},{q:'m',rs:1,sh:[CV_X,0,2,2,1,0],lab:'Amフォーム'},
+  {q:'7',rs:1,sh:[CV_X,0,2,0,2,0],lab:'A7フォーム'},{q:'m7',rs:1,sh:[CV_X,0,2,0,1,0],lab:'Am7フォーム'},
+  {q:'maj7',rs:1,sh:[CV_X,0,2,1,2,0],lab:'Amaj7フォーム'},{q:'sus2',rs:1,sh:[CV_X,0,2,2,0,0],lab:'Asus2フォーム'},
+  {q:'sus4',rs:1,sh:[CV_X,0,2,2,3,0],lab:'Asus4フォーム'},{q:'9',rs:1,sh:[CV_X,0,-1,0,0,0],minR:2,lab:'5弦ルート9th'},
+  // Frusciante / Hendrix style
+  {q:'',rs:0,sh:[0,CV_X,2,1,0,CV_X],minR:1,fr:1,lab:'親指6弦',orn:{s:3,from:2,to:1,k:'p',t:'sus4→3'}},
+  {q:'',rs:1,sh:[CV_X,0,2,2,2,CV_X],fr:1,lab:'5弦ルート',orn:{s:4,from:0,to:2,k:'h',t:'9→3'}},
+  {q:'',rs:2,sh:[CV_X,CV_X,0,2,3,2],fr:1,lab:'上4弦',orn:{s:5,from:3,to:2,k:'p',t:'sus4→3'}},
+  {q:'m',rs:0,sh:[0,CV_X,2,0,0,CV_X],minR:1,fr:1,lab:'親指6弦',orn:{s:3,from:2,to:0,k:'p',t:'4→♭3'}},
+  {q:'m',rs:1,sh:[CV_X,0,2,0,1,CV_X],fr:1,as:'m7',lab:'m7・上4弦',orn:{s:4,from:0,to:1,k:'h',t:'9→♭3'}},
+  {q:'m',rs:2,sh:[CV_X,CV_X,0,2,3,1],fr:1,lab:'上4弦',orn:{s:5,from:0,to:1,k:'h',t:'9→♭3'}},
+  {q:'m7',rs:1,sh:[CV_X,0,2,0,1,CV_X],fr:1,lab:'上4弦',orn:{s:4,from:0,to:1,k:'h',t:'9→♭3'}},
+  {q:'7',rs:0,sh:[0,CV_X,0,1,0,CV_X],minR:1,fr:1,lab:'親指6弦'},
+];
+function cvPlace(sh,r){return sh.map(o=>o===CV_X?-1:r+o);}
+function cvCands(pc,q,fr){
+  const out=[];
+  if(!fr){const nm=CV_SHARP[pc]+q,o=CV_OPEN[nm]||CV_OPEN[CV_FLAT[pc]+q];if(o)out.push({f:o.slice(),lab:'オープン',open:1});}
+  CV_SHAPES.forEach(S=>{
+    if(S.q!==q||(!!S.fr)!==!!fr)return;
+    const r0=((pc-TUNING[S.rs]%12)%12+12)%12;
+    for(const r of [r0,r0+12]){
+      if(r<(S.minR||0))continue;
+      const f=cvPlace(S.sh,r),fz=f.filter(v=>v>=0),orn=S.orn?{s:S.orn.s,from:r+S.orn.from,to:r+S.orn.to,k:S.orn.k,t:S.orn.t}:null;
+      const all=orn?fz.concat([orn.from]):fz;
+      if(Math.min(...all)<0||Math.max(...all)>15)continue;
+      const fp=all.filter(v=>v>0);if(fp.length&&Math.max(...fp)-Math.min(...fp)>4)continue;
+      out.push({f,lab:S.lab,orn,as:S.as||null,fr:!!S.fr});
+    }
+  });
+  return out;
+}
+const cvCenter=v=>{const p=v.f.filter(x=>x>0);return p.length?p.reduce((a,b)=>a+b,0)/p.length:0;};
+// choose voicings for a list of chord symbols. style 'std' | 'fr'
+function cvVoice(syms,style){
+  let prev=null;
+  return syms.map(sym=>{
+    const {pc,q}=cvParse(sym);
+    if(style!=='fr'){
+      const c=cvCands(pc,q,false);let best=c.find(v=>v.open);
+      if(!best)best=c.sort((a,b)=>Math.max(...a.f)-Math.max(...b.f))[0];
+      return best||{f:[-1,-1,-1,-1,-1,-1],lab:'?'};
+    }
+    const c=cvCands(pc,q,true).concat(cvCands(pc,q,false).filter(v=>!v.open).map(v=>Object.assign(v,{pen:3})));
+    const target=prev==null?5:prev;
+    let best=null,bs=1e9;
+    c.forEach(v=>{const ce=cvCenter(v);const s=Math.abs(ce-target)+(v.pen||0)+(Math.max(...v.f)>12?2:0)+(ce<1.5?1.5:0);if(s<bs){bs=s;best=v;}});
+    if(!best)return cvVoice([sym],'std')[0];
+    prev=cvCenter(best);return best;
+  });
+}
+function cvTrans(sym,off,parent){
+  const p=cvParse(sym),pc=(p.pc+off+12)%12;
+  const useFlat=p.flat?true:p.sharp?false:cvFlatKey(parent);
+  return (useFlat?CV_FLAT:CV_SHARP)[pc]+p.q;
+}
+const cvNote=(pc,parent)=>(cvFlatKey(parent)?CV_FLAT:CV_SHARP)[((pc%12)+12)%12];
+
+const PROGS=[
+  {id:'otherside',roman:'vi–IV–I–V',chords:['Am','F','C','G'],rn:['vi','IV','I','V'],tonic:0,tm:'',parent:0,key:'Key: {0} major（{9} minor）',song:'Otherside（ヴァース）',
+   sc:{root:9,type:'mp'},
+   note:['ポップスで定番の「vi–IV–I–V」。マイナーから始めることで、明るいコードが並んでも切なく聴こえる。','弾き方のポイント: 高音弦側を中心に軽くストローク。{9}m→{5} の移動で共通音を残す意識を持つと、彼らしい滑らかさが出る。','ソロ: {9}マイナー・ペンタトニック（6弦{f9}フレット）。{7}の上で{11}の音を使うとメジャー感が出る。']},
+  {id:'dani',roman:'i–♭VII–iv–i',chords:['Am','G','Dm','Am'],rn:['i','♭VII','iv','i'],tonic:9,tm:'m',parent:0,key:'Key: {9} minor（エオリアン）',song:'Dani California（ヴァース）',
+   sc:{root:9,type:'mp'},
+   note:['マイナーキーの主和音から ♭VII へ下がる、ロックの基本形。全て{9}ナチュラル・マイナー（エオリアン）の中に収まる。','弾き方のポイント: 8分のダウン・アップで、裏拍を少し弱く。{2}mの後に一瞬ミュートを入れると前へ進む感じが出る。','ソロ: {9}マイナー・ペンタトニック。{2}mの上で{5}の音（♭6）を使うとエオリアンの暗さが際立つ。']},
+  {id:'cali',roman:'I–V–II–vi',chords:['C','G','D','Am'],rn:['I','V','II','vi'],tonic:0,tm:'',parent:0,key:'Key: {0} major',song:'Californication（コーラス）',
+   sc:{root:9,type:'mp',extra:[6]},
+   note:['3つ目の{2}メジャーがキー外の音（{6}）を含む。{0}メジャーの中にこの1音が入ることで、ふわっと浮く響きになる。','{9}マイナーから見ると、{2}メジャーは「ドリアンのIV」。{6}は{9}ドリアンの6度。スケール・マップで{9}ドリアンを表示して確かめよう。','ソロ: {9}マイナー・ペンタ＋{6}。{2}の上で{6}を狙うと進行に溶け込む。']},
+  {id:'bridge',roman:'I–V–vi–iii–IV',chords:['E','B','C#m','G#m','A'],rn:['I','V','vi','iii','IV'],tonic:4,tm:'',parent:4,key:'Key: {4} major',song:'Under the Bridge（ヴァース）',
+   sc:{root:4,type:'Mp'},
+   note:['ダイアトニック・コードを順に下る進行。原曲ではコードを鳴らしつつ、Hendrix流のハンマリングや装飾音でメロディを入れている。','弾き方のポイント: まずは「標準」のフォームで流れを覚える。次に「装飾フォーム」に切り替えて、親指で6弦を押さえるフォームと装飾音（オレンジの○）を足していく。','ソロ: {4}メジャー・ペンタトニック（＝{1}マイナー・ペンタ）。']},
+  {id:'mixo',roman:'I–♭VII–IV–I',chords:['E','D','A','E'],rn:['I','♭VII','IV','I'],tonic:4,tm:'',parent:9,key:'Key: {4} ミクソリディアン',song:'スタイル例（Hendrix由来）',
+   sc:{root:4,type:'mp'},
+   note:['メジャーキーで ♭VII を使う、ミクソリディアンの定番。Hendrixやクラシックロック直系の響きで、ジャムやソロの土台に向く。','ソロ: {4}マイナー・ペンタと{4}メジャー・ペンタを行き来する。♭3（{7}）から3（{8}）へのハンマリングがブルージーな決め手。']},
+  {id:'aeol',roman:'♭VI–♭VII–i',chords:['F','G','Am','Am'],rn:['♭VI','♭VII','i','i'],tonic:9,tm:'m',parent:0,key:'Key: {9} minor（エオリアン）',song:'スタイル例（エオリアンの上昇）',
+   sc:{root:9,type:'mp'},
+   note:['♭VI→♭VII→i と階段状に上がってマイナーに着地する。ドラマチックで、サビやアウトロのソロに向く。','練習法: このループの上で、練習メニューの「3音ソロ」をやる。{9}mの2小節で長いビブラートを鳴らし切る。']},
+  {id:'dorian',roman:'i7–IV',chords:['Am7','D','Am7','D'],rn:['i7','IV','i7','IV'],tonic:9,tm:'m',parent:7,key:'Key: {9} ドリアン',song:'スタイル例（ドリアン・ヴァンプ）',
+   sc:{root:9,type:'mp',extra:[6]},
+   note:['マイナーの i に、メジャーの IV を組み合わせるドリアンの定番ヴァンプ。IVの3度（{6}）が、ドリアンの特徴音（6度）になる。','2コードだけなので、右手のリズムとソロの「間」に集中できる。ジャムの土台に向く。','ソロ: {9}マイナー・ペンタ＋{6}。{2}の上では{6}、{9}m7の上では{0}（♭3）を狙うと、コードが変わったことがソロだけで伝わる。']},
+  {id:'borrow',roman:'I–iii–IV–iv',chords:['E','G#m','A','Am'],rn:['I','iii','IV','iv'],tonic:4,tm:'',parent:4,key:'Key: {4} major（iv 借用）',song:'スタイル例（同主短調からの借用）',
+   sc:{root:4,type:'Mp'},
+   note:['IV をマイナーにした iv（{9}m）は、同主短調（{4}マイナー）からの借用和音。{1}が{0}に半音下がるだけで、一気に切なくなる。','弾き方: {9} → {9}m は、3度の音を1フレット下げるだけ。この半音の動きを、音を伸ばしながらはっきり聴かせる。','ソロ: {4}メジャー・ペンタ（＝{1}マイナー・ペンタ）。{9}mの上では{0}（♭3）を狙うと、借用の響きをソロで強調できる。']},
+  {id:'funk',roman:'I9（ワンコード）',chords:['E9','E9','E9','E9'],rn:['I9','I9','I9','I9'],tonic:4,tm:'',parent:9,key:'Key: {4} ドミナント',song:'スタイル例（ファンク・ワンコード）',
+   titleT:'{4}9 ワンコード・ファンク',sc:{root:4,type:'mp'},
+   note:['コードは1つだけ。グルーヴは右手の16分とミュートで作る。パターンを「16分ファンク」にして、空ピッキング（ゴースト）の「チャッ」を聴こう。','5弦ルートのフォーム。ルートを中指、残りを薬指のセーハで押さえ、1弦は軽く触れてミュートしてもよい。']},
+];
+const CV_SC={mp:{iv:[0,3,5,7,10],nm:'マイナー・ペンタトニック'},Mp:{iv:[0,2,4,7,9],nm:'メジャー・ペンタトニック'}};
+const CV_PATS={whole:{per:1},quarter:{per:4},eighth:{per:8},funk16:{per:16},arp:{per:8}};
+// 16th funk pattern: S=accent stab, s=stab, g=ghost (muted scratch)
+const CV_FUNK=['S','g','g','s','g','s','g','g','S','g','g','s','g','s','s','g'];
+
+const progList=$('#progList'),chordRow=$('#chordRow');let curProg=PROGS[0];
+const chState={off:0,style:'std',voic:[],names:[],guide:0,guideKey:''};
+try{const s=JSON.parse(localStorage.getItem('fl-chords')||'{}');if(s.style==='fr')chState.style='fr';
+  ['progStrum','chLoops'].forEach(id=>{const el=$('#'+id);if(el&&s[id]&&[...el.options].some(o=>o.value===s[id]))el.value=s[id];});
+  if(typeof s.click==='boolean'&&$('#chClick'))$('#chClick').checked=s.click;}catch(e){}
+function chSave(){try{localStorage.setItem('fl-chords',JSON.stringify({style:chState.style,progStrum:$('#progStrum').value,chLoops:$('#chLoops').value,click:$('#chClick').checked}));}catch(e){}}
+
+const chParent=()=>(curProg.parent+chState.off+12)%12;
+function chFill(t){const par=chParent();
+  return t.replace(/\{([fa]?)(\d+)\}/g,(m,k,n)=>{const pc=(+n+chState.off+12)%12;
+    if(k==='f'){const f=(pc-4+12)%12;return String(f||12);}
+    if(k==='a'){const f=(pc-9+12)%12;return String(f||12);}
+    return cvNote(pc,par);});}
+
+function chordSVG(name,v){
+  const f=v?v.f:CH[name],orn=v&&chState.style==='fr'?v.orn:null;
+  const pts=f.filter(x=>x>0).concat(orn&&orn.from>0?[orn.from]:[]);
+  const min=pts.length?Math.min(...pts):1,max=pts.length?Math.max(...pts):1;
+  const base=max<=4?1:min,W=90,H=96,x0=12,y0=18,sx=11,sy=17;
+  let s=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">`;
+  for(let i=0;i<6;i++)s+=`<line x1="${x0+i*sx}" y1="${y0}" x2="${x0+i*sx}" y2="${y0+4*sy}" stroke="var(--muted)" stroke-width="1"/>`;
+  for(let j=0;j<=4;j++)s+=`<line x1="${x0}" y1="${y0+j*sy}" x2="${x0+5*sx}" y2="${y0+j*sy}" stroke="var(--muted)" stroke-width="${j===0&&base===1?3:1}"/>`;
+  if(base>1)s+=`<text x="${x0+5*sx+7}" y="${y0+sy*.7}" font-size="9" fill="var(--muted)" font-family="JetBrains Mono,monospace">${base}fr</text>`;
+  f.forEach((v,i)=>{const x=x0+i*sx;
+    if(v<0)s+=`<text x="${x}" y="${y0-5}" font-size="9" text-anchor="middle" fill="var(--muted)">×</text>`;
+    else if(v===0)s+=`<circle cx="${x}" cy="${y0-8}" r="3" fill="none" stroke="var(--muted)"/>`;
+    else s+=`<circle cx="${x}" cy="${y0+(v-base+.5)*sy}" r="4.5" fill="var(--fg)"/>`;});
+  if(orn){const x=x0+orn.s*sx;
+    if(orn.from===0)s+=`<circle cx="${x}" cy="${y0-8}" r="3.2" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+    else s+=`<circle cx="${x}" cy="${y0+(orn.from-base+.5)*sy}" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>`;}
+  return s+'</svg>';
+}
+function renderProgList(){
+  progList.innerHTML='';PROGS.forEach(p=>{const b=document.createElement('button');b.className='prog-item';b.setAttribute('role','option');
+    b.setAttribute('aria-selected',p===curProg);b.innerHTML=`<span class="roman">${p.roman}</span><span class="song">${p.song}</span>`;
+    b.onclick=()=>{stopAll();curProg=p;chState.off=0;chState.guide=0;renderProgList();renderProg();};progList.appendChild(b);});
+}
+function renderKeySel(){
+  const sel=$('#chKey'),p=curProg;sel.innerHTML='';
+  for(let pc=0;pc<12;pc++){const off=((pc-p.tonic)%12+12)%12,o2=off>6?off-12:off;
+    const par=(p.parent+o2+12)%12,o=document.createElement('option');o.value=o2;
+    o.textContent=cvNote(pc,par)+p.tm+(o2===0?'（元のキー）':'');if(o2===chState.off)o.selected=true;sel.appendChild(o);}
+}
+function chVoiceNow(){
+  const p=curProg,par=chParent();
+  chState.names=p.chords.map(c=>cvTrans(c,chState.off,par));
+  chState.voic=cvVoice(chState.names,chState.style);
+}
+function renderProg(){
+  const p=curProg;chVoiceNow();renderKeySel();
+  $('#pKey').textContent=chFill(p.key)+(chState.off?`（元のキーから ${chState.off>0?'+':''}${chState.off}）`:'');
+  $('#pTitle').textContent=p.titleT?chFill(p.titleT):chState.names.join(' – ');
+  const fr=chState.style==='fr';
+  chordRow.innerHTML='';chState.names.forEach((c,i)=>{const v=chState.voic[i],b=document.createElement('button');b.className='chord';b.dataset.i=i;
+    const asNm=fr&&v.as?c.replace(/m$/,'')+v.as:c;
+    b.innerHTML=`<span class="nm">${asNm}</span>${chordSVG(c,v)}<span class="rn">${p.rn[i]}</span><span class="vc">${v.lab}${fr&&v.orn?`<br>${CV_STRN[v.orn.s]} ${v.orn.t}`:''}</span>`;
+    b.setAttribute('aria-label',asNm+' を鳴らす');
+    b.onclick=()=>{ac();chPlayChord(v,ctx.currentTime+.02,'down',.28,2.2,.16);chState.guide=i;renderGuide(true);};chordRow.appendChild(b);});
+  $('#chLegend').hidden=!fr;
+  document.querySelectorAll('#chStyle button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.style===chState.style));
+  $('#pNote').innerHTML=p.note.map(t=>`<p>${chFill(t)}</p>`).join('');
+  renderBars(-1,0);renderGuide(true);
+}
+/* play one voicing; in Frusciante mode the ornament string starts on 'from' and hammers/pulls to 'to' after hd seconds */
+function chPlayChord(v,when,dir,gain,dur,hd){
+  const orn=chState.style==='fr'&&hd?v.orn:null;
+  const idx=[0,1,2,3,4,5];if(dir==='up')idx.reverse();
+  let k=0;idx.forEach(s=>{const f=v.f[s];if(f<0)return;const w=when+k*.018,g=gain*(dir==='up'?.75:1);k++;
+    if(orn&&orn.s===s){pluck(TUNING[s]+orn.from,w,g,hd);pluck(TUNING[s]+orn.to,w+hd,g*.9,Math.max(.2,dur-hd),{legato:true});}
+    else pluck(TUNING[s]+f,w,g,dur);});
+}
+function chArpNote(v,n,when,gain,dur,hd){
+  const ss=[0,1,2,3,4,5].filter(s=>v.f[s]>=0);if(!ss.length)return;
+  const up=ss.slice(1),seq=[ss[0],...up,...up.slice(0,-1).reverse()];const s=seq[n%seq.length];
+  const orn=chState.style==='fr'?v.orn:null;
+  if(orn&&orn.s===s&&n<seq.length){pluck(TUNING[s]+orn.from,when,gain,hd);pluck(TUNING[s]+orn.to,when+hd,gain*.9,dur,{legato:true});}
+  else pluck(TUNING[s]+v.f[s],when,gain,dur);
+}
+function renderBars(cur,frac,loop){
+  const n=curProg.chords.length,el=$('#chBars');
+  if(el.childElementCount!==n){el.innerHTML='';for(let i=0;i<n;i++){const d=document.createElement('div');d.className='ch-bar';d.innerHTML='<i></i>';el.appendChild(d);}}
+  [...el.children].forEach((d,i)=>{d.firstChild.style.width=(i<cur?100:i===cur?frac*100:0)+'%';d.classList.toggle('now',i===cur);});
+  const L=$('#chLoops').value;
+  $('#chPos').textContent=cur<0?'停止中':`${cur+1} / ${n} 小節・ループ ${loop} / ${L==='0'?'∞':L}`;
+}
+function chordTones(i){
+  const nm=chState.names[i],v=chState.voic[i],p=cvParse(nm);
+  const q=chState.style==='fr'&&v&&v.as?v.as:p.q;return{root:p.pc,q,iv:CV_QUAL[q]||CV_QUAL['']};
+}
+function renderGuide(force){
+  const i=Math.min(chState.guide,chState.names.length-1),key=i+'|'+chState.names.join()+chState.style;
+  if(!force&&key===chState.guideKey)return;chState.guideKey=key;
+  const p=curProg,par=chParent(),sr=(p.sc.root+chState.off+12)%12,sc=CV_SC[p.sc.type];
+  const scale=new Set(sc.iv.map(x=>(x+sr)%12).concat((p.sc.extra||[]).map(x=>(x+chState.off+12)%12)));
+  const ct=chordTones(i),tones=ct.iv.map(x=>({pc:(ct.root+x)%12,deg:ct.q==='sus2'&&x===2?'2':CV_DEG[x]}));
+  const nm=cvNote(ct.root,par)+ct.q;
+  const scName=cvNote(sr,par)+' '+sc.nm+((p.sc.extra||[]).length?'＋'+p.sc.extra.map(x=>cvNote(x+chState.off,par)).join('・'):'');
+  const chips=tones.map(t=>{const ins=scale.has(t.pc);return`<span class="ch-tone ${ins?'in':'out'}" title="${ins?'スケール内':'スケール外'}">${cvNote(t.pc,par)}<small>${t.deg}</small></span>`;}).join('');
+  const outs=tones.filter(t=>!scale.has(t.pc));
+  const tip=outs.length?`<b>${outs.map(t=>cvNote(t.pc,par)).join('・')}</b> はスケールの外にあるコードトーン。このコードの間だけ狙うと、進行に寄り添ったソロになる。`
+    :`コードトーンは全てスケールの中。${cvNote(tones[1]?tones[1].pc:ct.root,par)}（${tones[1]?tones[1].deg:'R'}）に着地して伸ばすと、コードとの一体感が出る。`;
+  $('#chGuide').innerHTML=`<div class="ch-ghead"><span class="eyebrow">ソロ用ガイド</span><h3>いまのコード: ${nm}<span class="muted">（${p.rn[i]}）</span></h3></div>
+    <p class="ch-gscale">土台のスケール: <b>${scName}</b></p>
+    <div class="ch-tones" aria-label="狙う音（コードトーン）">${chips}</div>
+    <p class="ch-gtip">${tip}</p>
+    <div class="ch-fb">${guideFB(tones,scale)}</div>
+    <p class="ch-gleg"><span class="ch-dot in"></span>コードトーン（スケール内） <span class="ch-dot out"></span>コードトーン（スケール外） <span class="ch-dot sc"></span>スケール音</p>`;
+}
+function guideFB(tones,scale){
+  const F=15,x0=26,fw=34,y0=12,sy=15,W=x0+F*fw+6,H=y0+5*sy+22;
+  const tm=new Map(tones.map(t=>[t.pc,t]));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="指板上のコードトーンとスケール音">`;
+  [3,5,7,9,15].forEach(f=>s+=`<circle cx="${x0+(f-.5)*fw}" cy="${y0+2.5*sy}" r="3" fill="var(--line)"/>`);
+  s+=`<circle cx="${x0+11.5*fw}" cy="${y0+1.5*sy}" r="3" fill="var(--line)"/><circle cx="${x0+11.5*fw}" cy="${y0+3.5*sy}" r="3" fill="var(--line)"/>`;
+  for(let f=0;f<=F;f++)s+=`<line x1="${x0+f*fw}" y1="${y0}" x2="${x0+f*fw}" y2="${y0+5*sy}" stroke="var(--muted)" stroke-width="${f===0?3:1}"/>`;
+  for(let i=0;i<6;i++)s+=`<line x1="${x0}" y1="${y0+i*sy}" x2="${x0+F*fw}" y2="${y0+i*sy}" stroke="var(--muted)" stroke-width=".8"/>`;
+  [3,5,7,9,12,15].forEach(f=>s+=`<text x="${x0+(f-.5)*fw}" y="${H-4}" font-size="9" text-anchor="middle" fill="var(--muted)" font-family="JetBrains Mono,monospace">${f}</text>`);
+  for(let si=0;si<6;si++){const str=5-si,y=y0+si*sy; // high e on top (TAB order)
+    for(let f=0;f<=F;f++){const pc=(TUNING[str]+f)%12,x=f===0?x0-12:x0+(f-.5)*fw,t=tm.get(pc);
+      if(t){const ins=scale.has(pc);s+=`<circle cx="${x}" cy="${y}" r="6.6" fill="${ins?'var(--accent)':'var(--blue)'}"/><text x="${x}" y="${y+3}" font-size="7.5" font-weight="700" text-anchor="middle" fill="var(--bg)" font-family="JetBrains Mono,monospace">${t.deg}</text>`;}
+      else if(scale.has(pc))s+=`<circle cx="${x}" cy="${y}" r="3.2" fill="var(--muted)" opacity=".75"/>`;}}
+  return s+'</svg>';
+}
+
+const progPlay=$('#progPlay');
+function chStartPlay(){
+  const mode=$('#progStrum').value,per=CV_PATS[mode].per;
+  const pb=()=>Math.min(180,Math.max(50,+$('#progBpm').value||84));
+  const p=curProg;let ended=false;
+  const t=startTransport(()=>(60/pb())*4/per,(s,w,d)=>{
+    if(ended)return;
+    const L=+$('#chLoops').value,len=p.chords.length;
+    if(L>0&&s>=L*len*per){ended=true;setTimeout(()=>{if(transport===t)stopAll();},Math.max(0,(w-ctx.currentTime)*1000));return;}
+    const bar=Math.floor(s/per)%len,inBar=s%per,v=chState.voic[bar];if(!v)return;
+    const beat=60/pb(),hd=Math.min(.3,beat/2);
+    if(mode==='funk16'){const c=CV_FUNK[inBar],dir=inBar%2?'up':'down';
+      if(c==='g')scratch(w,.16);else strum(v.f,w,dir,c==='S'?.26:.18,d*1.4);}
+    else if(mode==='arp'){chArpNote(v,inBar,w,inBar===0?.32:.24,Math.min(2.4,d*6),hd);}
+    else{const dir=per===8&&inBar%2?'up':'down',g=inBar===0?.3:.2,ring=per===1?2.4:Math.min(2.2,d*1.05);
+      if(inBar===0)chPlayChord(v,w,dir,g,Math.max(ring,hd+.4),hd);else chPlayChord(v,w,dir,g,ring,0);}
+    if($('#chClick').checked&&inBar%(per/4)===0)click(w,inBar===0);
+  },()=>{delete progPlay.dataset.on;progPlay.textContent='▶ 再生';progPlay.setAttribute('aria-pressed','false');
+    chordRow.querySelectorAll('.chord').forEach(x=>x.classList.remove('now'));renderBars(-1,0);});
+  t.vis=s=>{const len=p.chords.length,b=Math.floor(s/per),bar=b%len;
+    chordRow.querySelectorAll('.chord').forEach((x,i)=>x.classList.toggle('now',i===bar));
+    renderBars(bar,(s%per+1)/per,Math.floor(b/len)+1);
+    chState.guide=bar;renderGuide(false);};
+  progPlay.dataset.on=1;progPlay.textContent='■ 停止';progPlay.setAttribute('aria-pressed','true');
+}
+progPlay.onclick=()=>{if(progPlay.dataset.on){stopAll();return;}chStartPlay();};
+function chRestartIfPlaying(){if(progPlay.dataset.on){stopAll();chStartPlay();}}
+
+INIT.push(()=>{
+  $('#chKey').onchange=e=>{chState.off=+e.target.value;renderProg();};
+  const step=d=>{let o=chState.off+d;if(o>6)o-=12;if(o<-5)o+=12;chState.off=o;renderProg();};
+  $('#chKeyDn').onclick=()=>step(-1);$('#chKeyUp').onclick=()=>step(1);
+  document.querySelectorAll('#chStyle button').forEach(b=>b.onclick=()=>{chState.style=b.dataset.style;chSave();renderProg();});
+  $('#progStrum').onchange=()=>{chSave();chRestartIfPlaying();};
+  $('#chLoops').onchange=()=>{chSave();if(!progPlay.dataset.on)renderBars(-1,0);};
+  $('#chClick').onchange=chSave;
+  renderProgList();renderProg();
+});
+
+/* ---------- scales ---------- */
+const SCALES=[
+  {id:'minpent',name:'マイナー・ペンタトニック',iv:[0,3,5,7,10],hi:[],def:9,
+   note:['ソロの土台。Am（5フレット）のボックス1を、目をつぶっても弾けるまで。','フルシアンテはこの5音だけで長いソロを組み立てる。音を増やす前に、チョーキングの音程とビブラートの幅を揃えることを優先しよう。']},
+  {id:'blues',name:'ブルース・スケール',iv:[0,3,5,6,7,10],hi:[6],def:9,
+   note:['ペンタに ♭5 を足したもの。♭5は経過音として一瞬だけ通る。ファズを踏んだ荒々しいソロの質感が出る。']},
+  {id:'dorian',name:'ドリアン',iv:[0,2,3,5,7,9,10],hi:[9],def:9,
+   note:['マイナー・スケールの6度を半音上げたもの。Aドリアンの特徴音はF#。','Californicationのコーラス（C–G–D–Am）で、Dコードの上にF#が乗ると進行にぴったり合う。ペンタに「6度を1音足す」感覚で使う。']},
+  {id:'aeolian',name:'エオリアン（自然短音階）',iv:[0,2,3,5,7,8,10],hi:[8],def:9,
+   note:['♭6 が暗さと切なさを作る。Dani California型の i–♭VII–iv 進行と相性がいい。','Aエオリアンの特徴音はF。Dmコードの上で狙うと効果的。']},
+  {id:'majpent',name:'メジャー・ペンタトニック',iv:[0,2,4,7,9],hi:[],def:4,
+   note:['明るいメロディ用。Under the Bridge（Eメジャー）のような曲で、コードトーンを歌わせるときに使う。','EメジャーペンタはC#マイナーペンタと同じ音。ポジションをずらすだけで切り替えられる。']},
+  {id:'mixo',name:'ミクソリディアン',iv:[0,2,4,5,7,9,10],hi:[10],def:4,
+   note:['メジャースケールの7度を半音下げたもの。I–♭VII–IV 進行の上で使う、Hendrix直系の響き。','♭3→3 のハンマリング（マイナーペンタから借りる）を混ぜるとブルース・ロックらしくなる。']},
+  {id:'major',name:'メジャー（アイオニアン）',iv:[0,2,4,5,7,9,11],hi:[],def:0,
+   note:['トライアドと6度ダイアドの土台。練習3・4はこのスケールの中で動く。','高音弦でトライアドの形を探すときは、まずこの地図でコードトーン（1・3・5）の位置を確認しよう。']},
+];
+let curScale=SCALES[0],root=9;
+const SC={pos:1,mode:'scale',chord:0,fr:17};
+const SC_CAGED={maj:['E','D','C','A','G'],min:['Em','Dm','Cm','Am','Gm']};
+const SC_Q={'':[0,4,7],m:[0,3,7],'7':[0,4,7,10],m7:[0,3,7,10],maj7:[0,4,7,11]};
+const SC_CDEG={0:'R',3:'♭3',4:'3',7:'5',10:'♭7',11:'7'};
+// backing chords relative to the key: [roman, quality, semitones above key root]
+const SC_CHORDS={
+  min:[['i','m',0],['i7','m7',0],['♭III','',3],['iv','m',5],['IV','',5],['v','m',7],['V7','7',7],['♭VI','',8],['♭VII','',10]],
+  maj:[['I','',0],['Imaj7','maj7',0],['I7','7',0],['ii','m',2],['iii','m',4],['IV','',5],['V','',7],['V7','7',7],['vi','m',9],['♭VII','',10]]};
+const SC_SHAPES={E:{'':[0,2,2,1,0,0],m:[0,2,2,0,0,0],'7':[0,2,0,1,0,0],m7:[0,2,0,0,0,0],maj7:[0,2,1,1,0,0]},
+  A:{'':[-1,0,2,2,2,0],m:[-1,0,2,2,1,0],'7':[-1,0,2,0,2,0],m7:[-1,0,2,0,1,0],maj7:[-1,0,2,1,2,0]}};
+const scTon=()=>curScale.iv.includes(4)?'maj':'min';
+const scChordList=()=>SC_CHORDS[scTon()];
+function scCurChord(){const c=scChordList()[SC.chord]||scChordList()[0],pc=(root+c[2])%12;return {roman:c[0],q:c[1],pc,name:NN[pc]+c[1],iv:SC_Q[c[1]]};}
+function scVoicing(pc,q){const nm=NN[pc]+q;
+  if((q===''||q==='m')&&typeof CH!=='undefined'&&Array.isArray(CH[nm]))return CH[nm];
+  const fe=(pc-4+12)%12,fa=(pc-9+12)%12,[sh,f]=fe<=fa?['E',fe]:['A',fa];
+  return SC_SHAPES[sh][q].map(x=>x<0?-1:x+f);}
+
+/* positions: pentatonic box k (2 notes per string, starting on the 6th string at the k-th pentatonic note);
+   7-note / blues scales add their extra notes to the box, on whichever neighbouring string keeps the shape compact */
+function scPosition(k){
+  const P=scTon()==='maj'?[0,2,4,7,9]:[0,3,5,7,10],r=(root-4+12)%12;
+  const pent=[];for(let m=28;m<110;m++)if(P.includes((m-root+120)%12))pent.push(m);
+  const build=f0=>{const i0=pent.indexOf(40+f0),low=[],notes=[];
+    for(let s=0;s<6;s++){low.push(pent[i0+2*s]);for(let j=0;j<2;j++){const m=pent[i0+2*s+j];notes.push({s,f:m-TUNING[s],m});}}
+    low.push(pent[i0+12]);return {low,notes,hi:pent[i0+11]};};
+  // keep positions in ascending order from position 1 while they fit on the neck, otherwise wrap down an octave
+  let f0=r+P[k-1],b=build(f0);
+  if(b.notes.some(n=>n.f<0)){f0+=12;b=build(f0);}
+  if(f0>=12&&b.notes.some(n=>n.f>SC.fr-1)){f0-=12;b=build(f0);if(b.notes.some(n=>n.f<0)){f0+=12;b=build(f0);}}
+  const fs=b.notes.map(n=>n.f),minF=Math.min(...fs),maxF=Math.max(...fs),notes=b.notes.slice();
+  const ok=f=>f>=0&&f<=SC.fr,out=f=>f<minF?minF-f:f>maxF?f-maxF:0;
+  for(let m=b.low[0]-1;m<=b.hi+1;m++){const iv=(m-root+120)%12;
+    if(!curScale.iv.includes(iv)||P.includes(iv))continue;
+    let s=0;while(s<5&&m>=b.low[s+1])s++;
+    const opts=[{s,f:m-TUNING[s]}];if(s<5&&m>b.low[0])opts.push({s:s+1,f:m-TUNING[s+1]});
+    const v=opts.filter(o=>ok(o.f)).sort((a,c)=>out(a.f)-out(c.f));if(v.length)notes.push({...v[0],m});}
+  notes.sort((a,c)=>a.m-c.m);
+  const af=notes.map(n=>n.f);
+  return {k,notes,minF:Math.min(...af),maxF:Math.max(...af),shape:SC_CAGED[scTon()][k-1]};
+}
+
+const rootSel=$('#rootSel');NN.forEach((n,i)=>{const o=document.createElement('option');o.value=i;o.textContent=n;rootSel.appendChild(o);});
+const scaleGrid=$('#scaleGrid');
+function renderScaleBtns(){scaleGrid.innerHTML='';SCALES.forEach(s=>{const b=document.createElement('button');b.className='scale-btn';b.setAttribute('aria-pressed',s===curScale);
+  b.innerHTML=`<b>${s.name}</b><span>${s.iv.map(i=>DEG[i]).join(' ')}</span>`;
+  b.onclick=()=>{const t0=scTon();curScale=s;root=s.def;rootSel.value=root;if(scTon()!==t0)SC.chord=0;renderScaleBtns();scRenderChords();renderFB();};scaleGrid.appendChild(b);});}
+function renderPosBtns(){const el=$('#posSeg');el.innerHTML='';
+  [['全体',0],['1',1],['2',2],['3',3],['4',4],['5',5]].forEach(([l,k])=>{const b=document.createElement('button');b.className='btn';b.textContent=l;b.setAttribute('aria-label',k?'ポジション'+k:'指板全体');b.setAttribute('aria-pressed',SC.pos===k);
+    b.onclick=()=>{SC.pos=k;renderPosBtns();renderFB(true);};el.appendChild(b);});}
+function scRenderChords(){const el=$('#chordSeg');el.innerHTML='';
+  scChordList().forEach((c,i)=>{const b=document.createElement('button');b.className='btn';b.setAttribute('aria-pressed',i===SC.chord);
+    b.innerHTML=`${NN[(root+c[2])%12]+c[1]} <small>${c[0]}</small>`;
+    b.onclick=()=>{SC.chord=i;scRenderChords();renderFB();if(ENG.backing)ENG.backing=scVoicing(scCurChord().pc,scCurChord().q);};el.appendChild(b);});}
+
+/* generic fretboard renderer. notes:[{s,f,cls,lab,key,m}] s=0 low E..5 high e */
+function scBoard(svg,fr,notes,frame){
+  const x0=40,fw=55,W=x0+fr*fw,y0=30,sy=34,H=y0+5*sy+44;svg.setAttribute('viewBox',`0 0 ${W+10} ${H}`);
+  const fx=f=>f===0?x0-18:x0+(f-.5)*fw;
+  let s=`<rect x="${x0}" y="${y0-14}" width="${W-x0}" height="${5*sy+28}" rx="4" fill="var(--wood)"/><rect x="${x0-3}" y="${y0-14}" width="6" height="${5*sy+28}" fill="var(--inlay)"/>`;
+  [3,5,7,9,15,17].filter(f=>f<=fr).forEach(f=>s+=`<circle cx="${x0+(f-.5)*fw}" cy="${y0+2.5*sy}" r="6" fill="var(--inlay)" opacity=".35"/>`);
+  if(fr>=12)s+=`<circle cx="${x0+11.5*fw}" cy="${y0+1.5*sy}" r="6" fill="var(--inlay)" opacity=".35"/><circle cx="${x0+11.5*fw}" cy="${y0+3.5*sy}" r="6" fill="var(--inlay)" opacity=".35"/>`;
+  if(frame){const l=frame.minF===0?x0-34:x0+(frame.minF-1)*fw+3,r=x0+frame.maxF*fw-3;s+=`<rect class="pos-frame" x="${l}" y="${y0-20}" width="${r-l}" height="${5*sy+40}" rx="8"/>`;}
+  for(let f=1;f<=fr;f++)s+=`<line x1="${x0+f*fw}" y1="${y0-14}" x2="${x0+f*fw}" y2="${y0+5*sy+14}" stroke="var(--fretwire)" stroke-width="2"/>`;
+  for(let i=0;i<6;i++){const y=y0+i*sy;s+=`<line x1="${x0}" y1="${y}" x2="${W}" y2="${y}" stroke="var(--string)" stroke-width="${.8+i*.35}"/>`;}
+  for(let f=1;f<=fr;f++)s+=`<text class="fnum${frame&&f>=frame.minF&&f<=frame.maxF?' in':''}" x="${x0+(f-.5)*fw}" y="${y0+5*sy+34}" text-anchor="middle">${f}</text>`;
+  notes.forEach(n=>{const y=y0+(5-n.s)*sy;
+    s+=`<g class="nd ${n.cls||''}${n.f===0?' open':''}" data-k="${n.s}-${n.f}" data-m="${n.m}" role="button" aria-label="${NN[n.m%12]}（${6-n.s}弦${n.f}フレット）"><circle cx="${fx(n.f)}" cy="${y}" r="13"/><text x="${fx(n.f)}" y="${y+4}" text-anchor="middle">${n.lab}</text></g>`;});
+  svg.innerHTML=s;
+  svg.querySelectorAll('.nd').forEach(g=>g.onclick=()=>{ac();pluck(+g.dataset.m,ctx.currentTime+.01,.4);});
+  return {fw,x0,W:W+10};
+}
+function scHit(svg,keys){svg.querySelectorAll('.nd.hit').forEach(g=>g.classList.remove('hit'));
+  (keys||[]).forEach(k=>{const g=svg.querySelector(`.nd[data-k="${k}"]`);if(g)g.classList.add('hit');});}
+
+function renderFB(scroll){
+  const svg=$('#fb'),deg=$('#labelSel').value==='deg',chordMode=SC.mode==='chord',ch=scCurChord();
+  const pos=SC.pos?scPosition(SC.pos):null,inPos=new Set(pos?pos.notes.map(n=>n.s+'-'+n.f):[]);
+  const notes=[];
+  for(let str=0;str<6;str++)for(let f=0;f<=SC.fr;f++){const m=TUNING[str]+f,iv=(m-root+120)%12,inSc=curScale.iv.includes(iv);
+    const ci=(m-ch.pc+120)%12,isCT=chordMode&&ch.iv.includes(ci);
+    if(pos){if(inSc&&!inPos.has(str+'-'+f))continue;if(!inSc&&(f<pos.minF||f>pos.maxF))continue;}
+    if(!inSc&&!isCT)continue;
+    let cls,lab=deg?DEG[iv]:NN[m%12];
+    if(chordMode){if(isCT){cls=!inSc?'out':ci===0?'cr':'ct';lab=deg?SC_CDEG[ci]:NN[m%12];}else cls='dim';}
+    else cls=iv===0?'rt':curScale.hi.includes(iv)?'hi':'';
+    notes.push({s:str,f,m,cls,lab});}
+  const g=scBoard(svg,SC.fr,notes,pos);
+  if(scroll&&pos){const box=$('#fbScroll');if(box.scrollWidth>box.clientWidth){const cx=(g.x0+((pos.minF+pos.maxF)/2-.5)*g.fw)/g.W*svg.getBoundingClientRect().width;box.scrollLeft=Math.max(0,cx-box.clientWidth/2);}}
+  // legend
+  $('#scLegend').innerHTML=chordMode
+    ?`<span><i class="sw sw-cr"></i>コードのルート（R）</span><span><i class="sw sw-ct"></i>コードトーン（3・5・7）</span><span><i class="sw sw-out"></i>スケール外のコードトーン</span><span><i class="sw sw-dim"></i>その他のスケール音（経過音）</span>`
+    :`<span><i class="sw sw-rt"></i>ルート</span><span><i class="sw sw-sc"></i>スケール音</span>${curScale.hi.length?'<span><i class="sw sw-hi"></i>特徴音（'+curScale.hi.map(i=>DEG[i]).join('・')+'）</span>':''}<span>枠＝選択中のポジション</span>`;
+  // notes
+  let h=`<p><b>${NN[root]} ${curScale.name}</b>：${curScale.iv.map(i=>NN[(root+i)%12]).join(' – ')}</p>`;
+  if(pos){const pent=curScale.iv.length===5,extra=curScale.iv.filter(i=>!(scTon()==='maj'?[0,2,4,7,9]:[0,3,5,7,10]).includes(i));
+    h+=`<p><b>ポジション${pos.k}</b>（CAGEDの${pos.shape}フォーム周辺）：${pos.minF}〜${pos.maxF}フレット。`+
+      (pent?`ペンタトニックの5つのボックスのうち${pos.k}番目。各弦2音ずつ。`:`${NN[root]}${scTon()==='maj'?'メジャー':'マイナー'}・ペンタのボックス${pos.k}に ${extra.map(i=>NN[(root+i)%12]+'（'+DEG[i]+'）').join('・')} を足した形。`)+
+      `ポジション1〜5は指板を下から順につながっていて、隣のポジションと音を共有している。</p>`;}
+  else h+=`<p>ポジション1〜5を選ぶと、その範囲だけを表示して指使い順に再生できる（全体表示のときはポジション1を再生）。</p>`;
+  if(chordMode){const tones=ch.iv.map(i=>({i,n:NN[(ch.pc+i)%12],inSc:curScale.iv.includes((ch.pc+i-root+120)%12)})),outs=tones.filter(t=>!t.inSc);
+    h+=`<p><b>${ch.name}</b>（${ch.roman}）のコードトーン：${tones.map(t=>`${t.n}（${SC_CDEG[t.i]}）`).join('・')}。`+
+      (outs.length?`このうち ${outs.map(t=>`${t.n}（${SC_CDEG[t.i]}）`).join('・')} はスケール外（点線の丸）。半音下からのハンマリングやスライドで当てると、コードの響きがはっきり出る。`
+        :`すべてスケール内。フレーズの終わりをこの音に着地させよう。特に${SC_CDEG[ch.iv[1]]}度（${tones[1].n}）はコードの明暗を決める音。`)+`</p>`+
+      `<p>コツ：スケールを上下するのではなく、コードが変わる瞬間にいちばん近いコードトーンへ移る。音数を減らし、着地した音をビブラートで伸ばすとメロディになる。</p>`;}
+  h+=curScale.note.map(t=>`<p>${t}</p>`).join('');
+  $('#scaleNote').innerHTML=h;
+  scSyncBtns();
+}
+
+/* ---- playback engine: one 16th-note transport shared by backing loop, scale run and licks ---- */
+const ENG={t:null,backing:null,seq:null,next:0};
+function scSyncBtns(){const k=ENG.seq&&ENG.seq.kind;
+  const sp=$('#scalePlay');sp.setAttribute('aria-pressed',k==='scale');sp.textContent=k==='scale'?'■ 停止':'▶ ポジションを鳴らす';
+  const lp=$('#lickPlay');lp.setAttribute('aria-pressed',k==='lick');lp.textContent=k==='lick'?'■ 停止':'▶ 再生';
+  const bb=$('#backBtn');bb.setAttribute('aria-pressed',!!ENG.backing);bb.textContent=ENG.backing?'■ バッキング停止':'♪ バッキングを流す';}
+function engEnsure(){
+  if(ENG.t&&transport===ENG.t)return;
+  ENG.next=0;
+  const t=startTransport(()=>60/bpm()/4,(s,w,d)=>{ENG.next=s+1;
+    if(ENG.backing){const i=s%16;
+      if(i===0)strum(ENG.backing,w,'down',.17,d*15);else if(i===8)strum(ENG.backing,w,'down',.11,d*7.5);
+      else if(i===4||i===12)scratch(w,.06);else if(i===14)strum(ENG.backing,w,'up',.07,d*2);}
+    const q=ENG.seq;if(q){const rel=s-q.start;q.ev.forEach(e=>{if(e.at!==rel)return;
+      e.n.forEach((n,j)=>pluck(n.m,w+j*(e.n.length>2?.016:e.n.length>1?.006:0),e.n.length>1?.27:.38,Math.max(.12,e.len*d*1.05),e.o||{}));});}
+  },()=>{const q=ENG.seq;ENG.t=null;ENG.backing=null;ENG.seq=null;q&&q.done();scSyncBtns();});
+  t.vis=s=>{const q=ENG.seq;if(!q)return;const rel=s-q.start;
+    q.ev.forEach((e,j)=>{if(e.at===rel)q.hit(j);});
+    if(rel>=q.end){ENG.seq=null;q.done();if(!ENG.backing)stopAll();scSyncBtns();}};
+  ENG.t=t;
+}
+function engPlay(seq){
+  const old=ENG.seq;ENG.seq=null;old&&old.done();
+  const running=ENG.t&&transport===ENG.t;engEnsure();
+  seq.start=running?Math.ceil(ENG.next/4)*4:0;
+  seq.end=Math.max(...seq.ev.map(e=>e.at+e.len));ENG.seq=seq;scSyncBtns();
+}
+function engStopSeq(){const q=ENG.seq;ENG.seq=null;q&&q.done();if(!ENG.backing)stopAll();scSyncBtns();}
+
+$('#scalePlay').onclick=()=>{
+  if(ENG.seq&&ENG.seq.kind==='scale'){engStopSeq();return;}
+  ac();const pos=scPosition(SC.pos||1),up=pos.notes,dir=$('#dirSel').value;
+  const order=dir==='up'?up:dir==='down'?up.slice().reverse():[...up,...up.slice(0,-1).reverse()];
+  const svg=$('#fb');
+  engPlay({kind:'scale',ev:order.map((n,i)=>({at:i*2,len:2,n:[n],o:{}})),
+    hit:j=>scHit(svg,[order[j].s+'-'+order[j].f]),done:()=>scHit(svg,[])});
+};
+$('#backBtn').onclick=()=>{
+  if(ENG.backing){ENG.backing=null;if(!ENG.seq)stopAll();scSyncBtns();return;}
+  ac();const c=scCurChord();ENG.backing=scVoicing(c.pc,c.q);engEnsure();scSyncBtns();
+};
+document.querySelectorAll('#modeSeg .btn').forEach(b=>b.onclick=()=>{SC.mode=b.dataset.mode;
+  document.querySelectorAll('#modeSeg .btn').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  $('#chordRowSc').hidden=SC.mode!=='chord';
+  if(SC.mode!=='chord'&&ENG.backing){ENG.backing=null;if(!ENG.seq)stopAll();}
+  renderFB();});
+rootSel.onchange=()=>{root=+rootSel.value;scRenderChords();renderFB(true);if(ENG.backing){const c=scCurChord();ENG.backing=scVoicing(c.pc,c.q);}};
+$('#labelSel').onchange=()=>renderFB();
+
+/* ---- licks (original, in the style; strings numbered 1=high e .. 6=low E as in TAB) ----
+   ev: [at(16th), len(16ths), notes "s-f" separated by space, opts]  opts: b=bend semitones, v=vibrato, h/p=hammer/pull, sl=slide from fret */
+const LICKS=[
+  {id:'bend',name:'チョーキングで歌う',key:'Aマイナー・ペンタ（ボックス1）',over:'Am',
+   desc:'2弦8フレット（G）を1音チョーキングしてルートのAへ。ゆっくり上げて、着いた音程で止める。最後のAは指板を揺らすように深めのビブラート。音数より「1音の歌い方」を練習するリック。',
+   ev:[[0,2,'3-7'],[2,6,'2-8',{b:2,v:1}],[8,2,'1-5'],[10,2,'2-8'],[12,2,'2-5'],[14,2,'3-7'],[16,1,'3-5'],[17,3,'3-7',{h:1}],[20,12,'4-7',{v:1}]]},
+  {id:'thirds',name:'3度のダブルストップ',key:'Cメジャー／Aマイナー（3・2弦）',over:'C → Am',
+   desc:'3弦と2弦で、Cメジャー・スケールの3度を上下する。2本の弦を同じ指の腹で軽く押さえるか、人差し指と中指で。最後は4・3弦のA＋Cで、Amの響きに着地する。',
+   ev:[[0,2,'3-5 2-5'],[2,2,'3-7 2-6'],[4,4,'3-9 2-8',{v:1}],[8,2,'3-10 2-10'],[10,2,'3-9 2-8'],[12,2,'3-7 2-6'],[14,2,'3-5 2-5'],[16,12,'4-7 3-5',{v:1}]]},
+  {id:'sixths',name:'6度のスライド',key:'Aマイナー（3・1弦）',over:'Am → G',
+   desc:'2弦を飛ばして3弦と1弦で6度を弾く。2弦は押さえている指の腹で触れてミュート。5→7フレットはスライドでつなぎ、最後は4・3フレットのB＋GでGコードに解決する。ピックより指弾きの方が弾きやすい。',
+   ev:[[0,2,'3-5 1-5'],[2,2,'3-7 1-7',{sl:5}],[4,4,'3-9 1-8',{v:1}],[8,2,'3-7 1-7'],[10,2,'3-5 1-5'],[12,12,'3-4 1-3',{v:1}]]},
+  {id:'hammer',name:'Hendrix流ハンマリング',key:'Aマイナー（開放ポジション）',over:'Am',
+   desc:'Amのコードフォームを崩さずに、空いている指でハンマリング・プリングを足す。4弦0→2（D→E）、2弦1→3（C→D）と、コードの中にメロディを埋め込む。最後はAmの高音4本を軽く鳴らして終わる。',
+   ev:[[0,2,'5-0'],[2,2,'3-2 2-1'],[4,1,'4-0'],[5,1,'4-2',{h:1}],[6,1,'2-1'],[7,1,'2-3',{h:1}],[8,2,'1-0'],[10,1,'2-3'],[11,1,'2-1',{p:1}],[12,2,'3-2'],[14,2,'3-0',{p:1}],[16,12,'5-0 3-2 2-1 1-0',{v:0}]]},
+  {id:'slide',name:'スライドでボックスを移る',key:'Aマイナー・ペンタ（ボックス1→2）',over:'Am',
+   desc:'3弦7→9フレットのスライドで、ボックス1からボックス2へ移る。1弦8フレット（C）を1音チョーキングしてDへ。ポジション移動を「スライド1回」で済ませると、フレーズが途切れず歌い続けられる。',
+   ev:[[0,2,'3-5'],[2,2,'3-7'],[4,2,'3-9',{sl:7}],[6,2,'2-8'],[8,2,'2-10'],[10,4,'1-8',{b:2}],[14,2,'1-8'],[16,2,'2-8'],[18,12,'2-10',{v:1}]]},
+];
+let curLick=LICKS[0];
+function lickNotes(l){return l.ev.map(([at,len,ns,o={}])=>({at,len,o,n:ns.split(' ').map(x=>{const [st,f]=x.split('-').map(Number),s=6-st;return {s,f,m:TUNING[s]+f};})}));}
+function lickLabel(f,o){let l=String(f);if(o.h)l='h'+l;if(o.p)l='p'+l;if(o.sl!=null)l=(o.sl<f?'/':'\\')+l;if(o.b)l+='b'+(f+o.b);if(o.v)l+='~';return l;}
+function renderLickTab(l,ev){
+  const names=['e','B','G','D','A','E'],lines=names.map(n=>n+'|-');
+  ev.forEach((e,j)=>{const labs=Array(6).fill(null);e.n.forEach(n=>labs[5-n.s]=lickLabel(n.f,e.o));
+    // slides/hammers before a double-stop are shown on every note of it
+    const w=Math.max(...labs.map(x=>x?x.length:1)),gap=e.len>=4?'---':e.len>=2?'--':'-';
+    for(let i=0;i<6;i++){const t=labs[i]?labs[i].padEnd(w,'-'):'-'.repeat(w);lines[i]+=`<span class="c${j}">${t}</span>`+gap;}});
+  return lines.map(x=>x+'|').join('\n');
+}
+function renderLick(){
+  const l=curLick,ev=lickNotes(l);
+  document.querySelectorAll('#lickList .scale-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===l.id));
+  $('#lickTitle').textContent=`${l.name}　—　${l.key}／コード: ${l.over}`;
+  $('#lickDesc').textContent=l.desc;
+  const seen=new Map();ev.forEach(e=>e.n.forEach(n=>{const k=n.s+'-'+n.f;if(!seen.has(k))seen.set(k,{...n,cls:(n.m-9+120)%12===0?'rt':'',lab:DEG[(n.m-9+120)%12]});}));
+  const lsvg=$('#lickFb'),g=scBoard(lsvg,12,[...seen.values()],null),box=lsvg.parentElement;
+  if(box.scrollWidth>box.clientWidth){const fs=[...seen.values()].map(n=>n.f),c=(Math.min(...fs)+Math.max(...fs))/2;
+    box.scrollLeft=Math.max(0,(g.x0+(c-.5)*g.fw)/g.W*lsvg.getBoundingClientRect().width-box.clientWidth/2);}
+  $('#lickTab').innerHTML=renderLickTab(l,ev);
+}
+function renderLickBtns(){const el=$('#lickList');el.innerHTML='';
+  LICKS.forEach(l=>{const b=document.createElement('button');b.className='scale-btn';b.dataset.id=l.id;
+    b.innerHTML=`<b>${l.name}</b><span>${l.over}</span>`;b.onclick=()=>{if(ENG.seq&&ENG.seq.kind==='lick')engStopSeq();curLick=l;renderLick();};el.appendChild(b);});}
+$('#lickPlay').onclick=()=>{
+  if(ENG.seq&&ENG.seq.kind==='lick'){engStopSeq();return;}
+  ac();const ev=lickNotes(curLick),svg=$('#lickFb'),tab=$('#lickTab');
+  const evs=ev.map(e=>({at:e.at,len:e.len,n:e.n,o:{bend:e.o.b||0,vib:!!e.o.v,legato:!!(e.o.h||e.o.p||e.o.sl!=null),from:e.o.sl!=null?e.o.sl-e.n[0].f:0}}));
+  const clear=()=>{scHit(svg,[]);tab.querySelectorAll('span.hit').forEach(x=>x.classList.remove('hit'));};
+  engPlay({kind:'lick',ev:evs,hit:j=>{clear();scHit(svg,ev[j].n.map(n=>n.s+'-'+n.f));tab.querySelectorAll('.c'+j).forEach(x=>x.classList.add('hit'));},done:clear});
+};
+
+/* other modules may call scShow('dorian',9) to open the map on a scale/key */
+function scShow(id,pc,pos){const s=SCALES.find(x=>x.id===id);if(s){const t0=scTon();curScale=s;if(scTon()!==t0)SC.chord=0;}
+  if(pc!=null)root=((pc%12)+12)%12;else if(s)root=s.def;if(pos!=null)SC.pos=pos;
+  rootSel.value=root;renderScaleBtns();renderPosBtns();scRenderChords();renderFB(true);}
+
+INIT.push(()=>{rootSel.value=root;renderScaleBtns();renderPosBtns();scRenderChords();renderFB();renderLickBtns();renderLick();});
+
+/* ---------- practice ---------- */
+/* seq: [step(16th), "string-fret[flags] ...", label]. flags: h=hammer p=pull sN=slide from N bN=bend +N semitones (b alone = +2) v=vibrato
+   tempo: [start BPM, target BPM] = defaults for the per-exercise tempo trainer */
+const EX=[
+  {id:'cut16',lvl:'リズム',title:'1. 16分ミュート・カッティング',tempo:[70,100],
+   body:`<p>右手は止めずに16分（ダウン・アップ）で振り続け、オレンジのマスだけ左手を押さえてE9を鳴らす。それ以外は左手を浮かせて「チャッ」というミュート音にする。マスを押すとパターンを変えられる。</p>
+   <ul><li>BPM 70 から。ミュート音とコード音の音量差が小さくなるまで上げない</li><li>手首の振り幅は小さく、肘から先は脱力</li><li>慣れたら「1拍目を鳴らさない」パターンにも挑戦</li></ul>`,grid:true},
+  {id:'embel',lvl:'コード',title:'2. Hendrix流コード装飾',tempo:[70,100],
+   body:`<p>コードを押さえたまま、空いている指で内声を動かす。Under the Bridge や Little Wing 系のプレイの基礎。まずEmで、次にGやCで同じ考え方を応用する。</p>`,
+   len:32,ring:'string',seq:[[0,'6-0 5-2 4-2 3-0 2-0 1-0','Em'],[4,'4-2'],[6,'3-0'],[8,'2-0'],[9,'2-3h'],[12,'2-3'],[13,'2-0p'],[16,'3-0 1-0'],[20,'3-0'],[21,'3-2h'],[22,'3-0p'],[24,'6-0 5-2 4-2 3-0 2-0 1-0','Em']],
+   tips:['指を寝かせて隣の弦を軽くミュートする','装飾音（h・p）は小さく、コードの響きを残したまま']},
+  {id:'triad',lvl:'ハーモニー',title:'3. 1〜3弦のトライアド転回形',tempo:[60,90],
+   body:`<p>C・F・Gの3コードを、1〜3弦だけで3つのポジションに分けて弾く。Wet Sand や By the Way 期のクリーンなパートはこの形の組み合わせが多い。最後は「一番近い形」だけでC→F→G→Cとつなぐ。</p>`,
+   len:68,seq:[[0,'3-5 2-5 1-3','C'],[4,'3-9 2-8 1-8'],[8,'3-12 2-13 1-12'],[12,'3-2 2-1 1-1','F'],[16,'3-5 2-6 1-5'],[20,'3-10 2-10 1-8'],[24,'3-4 2-3 1-3','G'],[28,'3-7 2-8 1-7'],[32,'3-12 2-12 1-10'],
+     [36,'3-9 2-8 1-8','C'],[44,'3-10 2-10 1-8','F'],[52,'3-7 2-8 1-7','G'],[60,'3-9 2-8 1-8','C']],
+   tips:['各形でルートがどの弦にあるか声に出す','後半の「近い形」でのつなぎは、指の移動が最小になる所を探す']},
+  {id:'sixth',lvl:'ハーモニー',title:'4. 弦飛び6度ダイアドのスライド',tempo:[70,100],
+   body:`<p>3弦と1弦で6度を弾き、2弦は指の腹でミュートする。Cメジャー・スケールの6度をスライドでつないで上がり下がりする。Scar Tissue のような響きはこの形が基本。</p>`,
+   len:40,seq:[[0,'3-5 1-5','C'],[4,'3-7s5 1-7s5','D'],[8,'3-9s7 1-8s7','E'],[12,'3-10s9 1-10s8','F'],[16,'3-12s10 1-12s10','G'],[20,'3-10s12 1-10s12','F'],[24,'3-9s10 1-8s10','E'],[28,'3-7s9 1-7s8','D'],[32,'3-5s7 1-5s7','C']],
+   tips:['ピックは3弦、中指で1弦を弾く（ハイブリッド）と弦飛びが楽','「/」は上へ、「\\」は下へのスライド。指を弦から離さずに滑らせる']},
+  {id:'arp',lvl:'右手',title:'5. 16分アルペジオの持続',tempo:[60,90],
+   body:`<p>コードを押さえたまま、オルタネイト・ピッキングで16分の分散和音を途切れずに続ける。Snow (Hey Oh) のような曲を弾くための持久力と粒の揃いを鍛える。</p>`,
+   len:32,ring:'string',seq:(()=>{const s=[];[['Am','4-2','3-2','2-1'],['F','4-3','3-2','2-1']].forEach(([c,d,g,b],bar)=>{for(let i=0;i<16;i++){const n=[g,b,g,d][i%4];s.push([bar*16+i,n,i===0?c:undefined]);}});return s;})(),
+   tips:['BPM 60 から。1分間止まらずに弾ければ +5','コードチェンジの瞬間も右手のリズムは崩さない']},
+  {id:'three',lvl:'ソロ',title:'6. 3音だけのソロ',tempo:[80,100],
+   body:`<p>A・C・D の3音だけでソロを弾く。再生すると Am–G–Dm–Am の伴奏の上で、お手本フレーズが鳴る。音数を制限すると、リズム・ビブラート・チョーキング・休符に意識が向く。フルシアンテのソロの核心はここにある。</p>
+   <ul><li>Aは1弦5フレット、Cは1弦8フレット、Dは1弦10フレット（またはCから全音チョーキング）</li><li>「伴奏だけ」に切り替えて、自分のフレーズを乗せる</li><li>最後の音は必ずビブラート（~）で伸ばし切る</li></ul>`,
+   len:64,back:[[0,'Am'],[16,'G'],[32,'Dm'],[48,'Am']],
+   seq:[[0,'1-5v','Am'],[16,'','G'],[20,'1-8'],[22,'1-5'],[24,'1-8bv'],[32,'1-10v','Dm'],[40,'1-8'],[42,'1-5'],[48,'1-5v','Am']]},
+  {id:'ear',lvl:'耳',title:'7. 耳コピ・トレーニング',
+   body:`<p>彼はレコードを耳で覚えて上達したギタリストで、1998年の復帰時も基礎から弾き直している。下の問題は Aマイナー・ペンタトニック（5フレット付近）のフレーズ。最初の音はいつもA（1弦5フレット）。ギターで音を探してから、下のボタンで順番に答えよう。</p>
+   <ul><li>レベルは3音・4音・6音。「むずかしい」はリズムも変わる（最初に4拍のカウントが鳴る）</li><li>迷ったら「基準音 A」を鳴らして、そこからの距離で考える</li><li>慣れたら好きな曲から8小節を選び、TABを見ずに音を探す</li></ul>`,quiz:true},
+  {id:'oct',lvl:'リフ',title:'8. オクターブ奏法',tempo:[80,110],
+   body:`<p>6弦と4弦（または5弦と3弦）を同時に弾いて、1オクターブ離れた同じ音を鳴らす。間の弦は人差し指の腹で触れてミュートするので、ピックは3本まとめて振り切ってよい。単音リフに厚みと芯が出るので、ファンクやロックのリフでよく使われる（下はスタイル例のオリジナル・リフ）。</p>
+   <ul><li>形は「2本先の弦・2フレット先」。6弦5フレット(A)なら4弦7フレット(A)</li><li>2弦をまたぐ組み合わせ（4弦と2弦、3弦と1弦）は「3フレット先」になる</li></ul>`,
+   len:32,seq:[[0,'6-5 4-7','Am'],[3,'6-5 4-7'],[6,'6-8 4-10'],[8,'6-10 4-12'],[11,'6-8 4-10'],[12,'6-5 4-7'],
+     [16,'5-7 3-9','Em'],[19,'5-7 3-9'],[22,'5-10 3-12'],[24,'5-12s10 3-14s12'],[28,'5-10s12 3-12s14'],[30,'6-7 4-9']],
+   tips:['ミュート担当の人差し指は弦に「触れるだけ」。押さえ込むと音が出てしまう','スライドは2本の指の形を崩さず平行移動する']},
+  {id:'bend',lvl:'音程',title:'9. チョーキングの音程トレーニング',tempo:[60,80],
+   body:`<p>まず目標の音を普通に押さえて鳴らし、その高さを耳に残したまま、全音なら2フレット下・半音なら1フレット下からチョーキングで同じ高さまで上げる。チョーキングは音程が合ってはじめて「歌う」。再生すると「目標音 → チョーキング」の順に鳴る。</p>
+   <ul><li>TABの「8b10」は、8フレットを押さえて10フレットの音程まで上げるという意味</li><li>全音は薬指で押し、中指・人差し指を後ろに添えて3本で持ち上げる</li><li>上げ切ってからビブラート（~）。上げた位置を上限にして、少し下げて戻す動きを繰り返す</li></ul>`,
+   len:64,back:[[0,'Am'],[32,'Em']],
+   seq:[[0,'2-10','A'],[4,'2-8bv','full'],[16,'1-8','C'],[20,'1-7b1v','half'],[32,'3-9','E'],[36,'3-7bv','full'],[48,'2-12','B'],[52,'2-10bv','full']],
+   tips:['上げ足りない（音程が低い）のが一番多いミス。目標音と交互に鳴らして比べる','「伴奏だけ」にして、目標音なしで当てられるか試す']},
+  {id:'dstop',lvl:'コード',title:'10. Hendrix風 3度ダブルストップ',tempo:[70,100],
+   body:`<p>2弦と3弦で3度の和音（ダブルストップ）を作り、Dメジャー・スケールに沿って動かす。Hendrix がバラードで多用した、コードとメロディの中間のような弾き方で、フルシアンテのクリーンなパートにもよく出てくる（下はスタイル例のオリジナル・リック）。</p>
+   <ul><li>3弦と2弦が同じフレットなら長3度、2弦が1フレット低ければ短3度</li><li>最初は D の sus2 → 3度 のハンマリング（2弦5→7フレット）</li><li>最後は A の上で 4度 → 3度 のプリング（2弦3→2フレット）で解決</li></ul>`,
+   len:32,ring:'string',back:[[0,'D'],[16,'G'],[24,'A']],
+   seq:[[0,'3-7 2-5','D'],[2,'2-7h'],[4,'3-7 2-7'],[6,'3-9 2-8'],[8,'3-11 2-10'],[10,'3-12 2-12'],[12,'3-11 2-10'],[14,'3-9 2-8'],
+     [16,'3-4 2-3','G'],[18,'3-5h 2-5h'],[20,'3-4p 2-3p'],[24,'3-2 2-3','A'],[26,'2-2p'],[28,'5-0 4-2 3-2 2-2']],
+   tips:['人差し指1本で2本の弦をセーハするか、中指と薬指で分けるか、両方試す','コードを鳴らさず、ダブルストップだけで伴奏になるくらい音を揃える']},
+];
+function parseNote(tok){const m=tok.match(/^(\d)-(\d+)(.*)$/);if(!m)return null;const str=+m[1],fret=+m[2],f=m[3];
+  const sm=f.match(/s(\d+)/),bm=f.match(/b(\d)?/);
+  return {str,fret,legato:/[hp]/.test(f),hp:(f.match(/[hp]/)||[''])[0],from:sm?+sm[1]-fret:0,slideFrom:sm?+sm[1]:null,bend:bm?(bm[1]?+bm[1]:2):0,vib:/v/.test(f)};}
+const midiOf=n=>TUNING[6-n.str]+n.fret;
+function noteLabel(n){let l=String(n.fret);if(n.hp)l=n.hp+l;if(n.slideFrom!=null)l=(n.slideFrom<n.fret?'/':'\\')+l;if(n.bend)l+='b'+(n.fret+n.bend);if(n.vib)l+='~';return l;}
+const escH=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* TAB text; with html=true every event column is wrapped in <span class="tabcell" data-i=k> so playback can highlight it */
+function genTab(ex,html){
+  const evs=ex.seq.map(([st,notes,lab])=>({st,lab,ns:notes.split(' ').map(parseNote).filter(Boolean)}));
+  const maxStr=Math.max(1,...evs.flatMap(e=>e.ns.map(n=>n.str)));const names=['e','B','G','D','A','E'];
+  const lines=Array.from({length:maxStr},(_,i)=>names[i]+'|-');let ann='',annLen=0,col=3;
+  const wrap=(k,s)=>html?`<span class="tabcell" data-i="${k}">${escH(s)}</span>`:s;
+  evs.forEach((e,k)=>{const labs={};e.ns.forEach(n=>labs[n.str]=noteLabel(n));
+    const w=Math.max(1,...Object.values(labs).map(s=>s.length));const gap=(k<evs.length-1?evs[k+1].st:ex.len)-e.st;const pad=Math.min(6,Math.max(1,Math.round(gap/2)));
+    for(let s=1;s<=maxStr;s++){const t=labs[s]||'';lines[s-1]+=wrap(k,t+'-'.repeat(w-t.length))+'-'.repeat(pad);}
+    if(e.lab){const sp=annLen?Math.max(1,col-annLen):col;ann+=' '.repeat(sp)+wrap(k,e.lab);annLen+=sp+e.lab.length;}
+    col+=w+pad;});
+  return [ann||' ',...lines.map(l=>l+'|')].join('\n');
+}
+function evIndex(ex){const idx=new Array(ex.len).fill(-1);ex.seq.forEach(([st],k)=>{for(let i=st;i<ex.len;i++)idx[i]=k;});return idx;}
+function buildEvents(ex){ // per event: list of {midi,opts,dur(steps)}
+  const evs=ex.seq.map(([st,notes])=>({st,ns:notes.split(' ').map(parseNote).filter(Boolean)}));
+  evs.forEach((e,k)=>{e.ns.sort((a,b)=>b.str-a.str);e.ns.forEach(n=>{let nx=ex.len;
+      if(ex.ring==='string'){for(let j=k+1;j<evs.length;j++)if(evs[j].ns.some(o=>o.str===n.str)){nx=evs[j].st;break;}}
+      else{for(let j=k+1;j<evs.length;j++)if(evs[j].ns.length){nx=evs[j].st;break;}}
+      n.steps=nx-e.st;});});
+  return evs;
+}
+
+/* ---------- tempo trainer (per exercise) ---------- */
+function loadJSON(k){try{return JSON.parse(localStorage.getItem(k)||'{}')||{};}catch(e){return {};}}
+function saveJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+const tempoStore=loadJSON('fl-tempo');
+const clampB=(v,lo=30,hi=220)=>Math.min(hi,Math.max(lo,Math.round(+v||lo)));
+function tempoOf(ex){
+  if(!ex._t){const d=ex.tempo||[80,100];const s=Object.assign({start:d[0],target:d[1],inc:2,every:4,auto:true},tempoStore[ex.id]||{});
+    ex._t=Object.assign(s,{cur:s.start,slow:false,loops:0});}
+  return ex._t;
+}
+const playBpm=T=>T.cur*(T.slow?.5:1);
+function tempoHTML(){return `<div class="tempo" data-tempo>
+  <div class="tempo-now"><b data-cur></b><span class="unit">BPM</span><span class="tempo-sub" data-sub></span></div>
+  <div class="tempo-bar" aria-hidden="true"><i data-prog></i></div>
+  <div class="tempo-row">
+    <button class="btn" data-slow aria-pressed="false">ゆっくり (50%)</button>
+    <button class="btn" data-reset>開始テンポに戻す</button>
+  </div>
+  <div class="tempo-row tempo-set">
+    <label>開始<input type="number" inputmode="numeric" data-k="start" min="30" max="220"></label>
+    <label>目標<input type="number" inputmode="numeric" data-k="target" min="30" max="220"></label>
+    <label class="chk"><input type="checkbox" data-k="auto">自動アップ</label>
+    <label>+<input type="number" inputmode="numeric" data-k="inc" min="1" max="20">BPM</label>
+    <label><input type="number" inputmode="numeric" data-k="every" min="1" max="32">ループごと</label>
+  </div></div>`;}
+function updateTempoUI(ex){
+  const el=ex._el&&ex._el.querySelector('[data-tempo]');if(!el)return;const T=tempoOf(ex);
+  el.querySelector('[data-cur]').textContent=Math.round(playBpm(T));
+  const lo=Math.min(T.start,T.target),hi=Math.max(T.start,T.target);
+  el.querySelector('[data-prog]').style.width=(hi>lo?Math.min(100,Math.max(0,(T.cur-lo)/(hi-lo)*100)):100)+'%';
+  let sub=T.slow?`（${T.cur} の50%）`:'';
+  sub+=` 目標 ${T.target}`;
+  if(T.cur>=T.target)sub+=' · 目標到達';
+  else if(T.auto&&T.playing)sub+=` · ループ ${T.loops} · あと${T.every-T.loops%T.every}ループで +${T.inc}`;
+  else if(T.auto)sub+=` · ${T.every}ループごとに +${T.inc}`;
+  el.querySelector('[data-sub]').textContent=sub;
+  const sb=el.querySelector('[data-slow]');sb.setAttribute('aria-pressed',String(T.slow));
+}
+function bindTempo(ex){
+  const el=ex._el.querySelector('[data-tempo]');const T=tempoOf(ex);
+  el.querySelectorAll('[data-k]').forEach(inp=>{const k=inp.dataset.k;
+    if(inp.type==='checkbox')inp.checked=!!T[k];else inp.value=T[k];
+    inp.onchange=()=>{
+      if(k==='auto')T.auto=inp.checked;
+      else if(k==='inc')T.inc=clampB(inp.value,1,20);
+      else if(k==='every')T.every=clampB(inp.value,1,32);
+      else T[k]=clampB(inp.value);
+      if(inp.type!=='checkbox')inp.value=T[k];
+      if(k==='start'&&!T.playing)T.cur=T.start;
+      tempoStore[ex.id]={start:T.start,target:T.target,inc:T.inc,every:T.every,auto:T.auto};saveJSON('fl-tempo',tempoStore);
+      updateTempoUI(ex);};});
+  el.querySelector('[data-slow]').onclick=()=>{T.slow=!T.slow;updateTempoUI(ex);};
+  el.querySelector('[data-reset]').onclick=()=>{T.cur=T.start;T.loops=0;updateTempoUI(ex);};
+  updateTempoUI(ex);
+}
+/* loop playback driven by the exercise's tempo trainer */
+function runLoop(ex,btn,len,onStep,vis,onStop){
+  if(btn.dataset.on){stopAll();return;}
+  const T=tempoOf(ex);T.loops=0;const label=btn.textContent;
+  const t=startTransport(()=>60/playBpm(T)/4,(s,w,d)=>{const i=s%len;
+      if(i===0&&s>0){T.loops++;if(T.auto&&T.cur<T.target&&T.loops%T.every===0)T.cur=Math.min(T.target,T.cur+T.inc);}
+      onStep(i,w,d);},
+    ()=>{delete btn.dataset.on;btn.textContent=label;T.playing=false;onStop&&onStop();updateTempoUI(ex);});
+  t.vis=s=>{const i=s%len;vis&&vis(i);if(i===0)updateTempoUI(ex);};
+  btn.dataset.on=1;btn.textContent='■ 停止';T.playing=true;updateTempoUI(ex);
+}
+function playSeq(ex,btn,opts={}){
+  const evs=buildEvents(ex),map=new Map();evs.forEach(e=>map.set(e.st,e));
+  const backMap=new Map((ex.back||[]).map(([s,c])=>[s,c]));
+  const idx=evIndex(ex),wrapEl=ex._el.querySelector('.tab-wrap'),pre=wrapEl.querySelector('pre');let last=-1;
+  const hl=k=>{if(k===last)return;last=k;pre.querySelectorAll('.cur').forEach(x=>x.classList.remove('cur'));if(k<0)return;
+    const cells=pre.querySelectorAll(`[data-i="${k}"]`);cells.forEach(x=>x.classList.add('cur'));
+    const c=cells[cells.length-1];if(c&&(c.offsetLeft<wrapEl.scrollLeft||c.offsetLeft+c.offsetWidth>wrapEl.scrollLeft+wrapEl.clientWidth))wrapEl.scrollLeft=Math.max(0,c.offsetLeft-32);};
+  runLoop(ex,btn,ex.len,(i,w,d)=>{
+    if(ex.back&&i%4===0){let c=null;for(const [bs,bc] of backMap)if(bs<=i)c=bc;if(c)strum(CH[c],w,'down',i%16===0?.16:.09,d*3.6);}
+    if(i%4===0)click(w,i%16===0);
+    const e=!opts.backOnly&&map.get(i);if(!e)return;
+    e.ns.forEach((n,k)=>pluck(midiOf(n),w+k*(e.ns.length>2?.016:.006),e.ns.length>1?.26:.38,Math.min(2.4,n.steps*d+.05),{legato:n.legato,from:n.from,bend:n.bend,vib:n.vib}));
+  },i=>hl(opts.backOnly?-1:idx[i]),()=>hl(-1));
+}
+
+/* ---------- daily log / streak ---------- */
+const dayKey=d=>{const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());};
+const loadLog=()=>loadJSON('fl-log');
+let log=loadLog();
+function lastDays(n){const a=[];for(let i=n-1;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);a.push(dayKey(d));}return a;}
+function streakDays(){let n=0;const d=new Date();if(!(log[dayKey(d)]||[]).length)d.setDate(d.getDate()-1);
+  while((log[dayKey(d)]||[]).length){n++;d.setDate(d.getDate()-1);}return n;}
+function renderWeek(ex){const w=ex._el.querySelector('.week');if(!w)return;
+  w.innerHTML='<small>7日</small>'+lastDays(7).map(d=>`<i class="${(log[d]||[]).includes(ex.id)?'y':''}" title="${d}"></i>`).join('');}
+function renderStreak(){const s=$('#streak');if(!s)return;const n=streakDays(),today=(log[dayKey(new Date())]||[]).length;
+  s.innerHTML=`<b>${n}</b>日連続<span class="muted"> · 今日 ${today}/${EX.length}</span>`;}
+function markDone(id,on){const today=dayKey(new Date());const a=new Set(log[today]||[]);on?a.add(id):a.delete(id);log[today]=[...a];saveJSON('fl-log',log);
+  const ex=EX.find(e=>e.id===id);if(ex&&ex._el){const c=ex._el.querySelector('.done input');if(c)c.checked=on;renderWeek(ex);}renderStreak();}
+
+let pattern=[1,0,0,1, 0,0,1,0, 0,0,1,0, 1,0,0,0];
+function renderEx(){
+  const list=$('#exList');list.innerHTML='';const today=dayKey(new Date());
+  EX.forEach(ex=>{const el=document.createElement('article');el.className='ex';el.id='ex-'+ex.id;ex._el=el;
+    let h=`<div class="ex-head"><h3>${ex.title}</h3><span class="lvl">${ex.lvl}</span></div>${ex.body}`;
+    if(ex.extraHTML)h+=ex.extraHTML();
+    if(ex.seq){h+=`<div class="tab-wrap"><pre class="tab">${genTab(ex,true)}</pre></div>`+tempoHTML()+
+      `<div class="controls"><button class="btn primary" data-play>▶ お手本を再生</button>${ex.back?'<button class="btn" data-back>▶ 伴奏だけ</button>':''}<span class="muted hint">ループ再生。光っている列が今の音</span></div>`;}
+    if(ex.tips)h+=`<ul>${ex.tips.map(t=>`<li>${t}</li>`).join('')}</ul>`;
+    if(ex.quiz)h+=quizHTML();
+    if(ex.grid)h+=`<div class="count">${['1','e','&','a','2','e','&','a','3','e','&','a','4','e','&','a'].map(c=>`<span>${c}</span>`).join('')}</div><div class="grid16" id="grid16"></div>`+tempoHTML()+
+      `<div class="controls"><button class="btn primary" id="gridPlay">▶ パターン再生</button><button class="btn" id="gridClear">全部ミュート</button></div>`;
+    const doneToday=(log[today]||[]).includes(ex.id);
+    h+=`<div class="done"><input type="checkbox" id="chk-${ex.id}" ${doneToday?'checked':''}><label for="chk-${ex.id}">今日やった</label><span class="week"></span></div>`;
+    el.innerHTML=h;list.appendChild(el);
+    if(ex.seq||ex.grid)bindTempo(ex);
+    const pb=el.querySelector('[data-play]');if(pb)pb.onclick=()=>playSeq(ex,pb);
+    const bb=el.querySelector('[data-back]');if(bb)bb.onclick=()=>playSeq(ex,bb,{backOnly:true});
+    if(ex.quiz)bindQuiz(el);
+    if(ex.bind)ex.bind(el);
+    if(ex.grid){const gp=$('#gridPlay');
+      gp.onclick=()=>runLoop(ex,gp,16,(i,w,d)=>{if(pattern[i])strum(CH.E9,w,i%2?'up':'down',.26,d*1.6);else scratch(w);if(i%4===0)click(w,i===0);},
+        i=>document.querySelectorAll('#grid16 .step').forEach((x,j)=>x.classList.toggle('cur',j===i)),
+        ()=>document.querySelectorAll('#grid16 .step').forEach(x=>x.classList.remove('cur')));
+      $('#gridClear').onclick=()=>{pattern=pattern.map(()=>0);renderGrid();};}
+    el.querySelector(`#chk-${ex.id}`).onchange=e=>markDone(ex.id,e.target.checked);
+    renderWeek(ex);
+  });
+  renderGrid();renderStreak();
+}
+function renderGrid(){
+  const g=$('#grid16');if(!g)return;g.innerHTML='';
+  pattern.forEach((v,i)=>{const b=document.createElement('button');b.className='step'+(v?' ring':'')+(i%4===0?' beat':'');b.textContent=i%2?'U':'D';
+    b.setAttribute('aria-label',`${i+1}番目: ${v?'鳴らす':'ミュート'}`);b.onclick=()=>{pattern[i]=pattern[i]?0:1;renderGrid();};g.appendChild(b);});
+}
+
+INIT.push(()=>renderEx());
+
+/* ---------- practice: ear quiz (levels, rhythm, score, reference tone) ---------- */
+const QPOOL=[[4,5],[4,7],[3,5],[3,7],[2,5],[2,8],[1,5],[1,8]]; // A minor pentatonic, 5th position, low -> high
+const QLV={easy:{n:3,name:'やさしい',sub:'3音'},normal:{n:4,name:'ふつう',sub:'4音'},hard:{n:6,rhythm:true,name:'むずかしい',sub:'6音＋リズム'}};
+const QDUR={0.5:'8分',1:'4分',1.5:'付点4分',2:'2分'};
+const qMidi=([s,f])=>TUNING[6-s]+f;
+let quiz=null,qLevel='normal',qPick=[],qDone=false;
+const qScore=Object.assign({ok:0,total:0,run:0,best:0},loadJSON('fl-quiz'));
+function newQuiz(){const L=QLV[qLevel];const pick=()=>[.5,1,1,1.5][Math.floor(Math.random()*4)];
+  const seq=[{n:[1,5],d:L.rhythm?pick():1}];
+  for(let i=1;i<L.n;i++){let n;do{n=QPOOL[Math.floor(Math.random()*QPOOL.length)];}while(n.join()===seq[i-1].n.join());seq.push({n,d:L.rhythm?pick():1});}
+  if(L.rhythm)seq[seq.length-1].d=2;
+  quiz=seq;qPick=[];qDone=false;}
+function playQuiz(){ac();stopAll();const b=60/bpm();let t=ctx.currentTime+.08;
+  if(QLV[qLevel].rhythm){for(let i=0;i<4;i++)click(t+i*b,i===0);t+=4*b;}
+  quiz.forEach((q,i)=>{const lastN=i===quiz.length-1;pluck(qMidi(q.n),t,.4,b*q.d*1.02+(lastN?.5:0),{vib:lastN});t+=b*q.d;});}
+function quizAnswer(){let st=0;const seq=quiz.map(q=>{const r=[st,q.n.join('-')];st+=q.d*4;return r;});
+  let s=genTab({len:st,seq})+'\n\n音名: '+quiz.map(q=>NN[qMidi(q.n)%12]).join(' – ');
+  if(QLV[qLevel].rhythm)s+='\nリズム: '+quiz.map(q=>QDUR[q.d]).join(' – ');return s;}
+function quizHTML(){return `<div class="quiz">
+  <div class="qlv" role="group" aria-label="難易度">${Object.entries(QLV).map(([k,v])=>`<button class="btn" data-lv="${k}" aria-pressed="${k===qLevel}">${v.name}<small>${v.sub}</small></button>`).join('')}</div>
+  <div class="controls"><button class="btn primary" data-q="new">▶ 新しい問題</button><button class="btn" data-q="again">もう一度聴く</button><button class="btn" data-q="ref">基準音 A</button><button class="btn" data-q="ans">答えを見る</button></div>
+  <div class="qpad">${QPOOL.map(p=>`<button class="qn" data-n="${p.join('-')}">${NN[qMidi(p)%12]}<small>${p[0]}弦${p[1]}f</small></button>`).join('')}</div>
+  <div class="qrow"><div class="qpicks" data-picks aria-live="polite"></div><button class="btn" data-q="undo">1つ戻す</button></div>
+  <p class="qmsg" data-msg aria-live="polite">「新しい問題」を押して聴き、音を順番に押して答える。</p>
+  <div class="qscore" data-score></div>
+  <div class="tab-wrap" data-qa hidden><pre class="tab"></pre></div></div>`;}
+function bindQuiz(el){
+  const qa=el.querySelector('[data-qa]'),msg=el.querySelector('[data-msg]'),picks=el.querySelector('[data-picks]'),score=el.querySelector('[data-score]');
+  const showAns=()=>{qa.querySelector('pre').textContent=quizAnswer();qa.hidden=false;};
+  const drawScore=()=>{const p=qScore.total?Math.round(qScore.ok/qScore.total*100):0;
+    score.innerHTML=`正解 <b>${qScore.ok}</b> / ${qScore.total}（${p}%）· 連続 <b>${qScore.run}</b> · 最高 ${qScore.best}<button class="linkish" data-q="reset">リセット</button>`;
+    score.querySelector('[data-q="reset"]').onclick=()=>{Object.assign(qScore,{ok:0,total:0,run:0,best:0});saveJSON('fl-quiz',qScore);drawScore();};};
+  const drawPicks=()=>{if(!quiz){picks.innerHTML='';return;}
+    picks.innerHTML=quiz.map((q,i)=>{const p=qPick[i];if(!p)return '<span class="qp">?</span>';
+      const cls=qDone?(p.join('-')===q.n.join('-')?' ok':' ng'):'';return `<span class="qp${cls}">${NN[qMidi(p)%12]}</span>`;}).join('');};
+  const grade=()=>{qDone=true;const wrong=quiz.map((q,i)=>qMidi(q.n)!==qMidi(qPick[i])).map((b,i)=>b?i+1:0).filter(Boolean);
+    qScore.total++;if(!wrong.length){qScore.ok++;qScore.run++;qScore.best=Math.max(qScore.best,qScore.run);msg.textContent='正解！ 次の問題へ。';}
+    else{qScore.run=0;msg.textContent=`惜しい：${wrong.join('・')}音目が違う。答えを確認しよう。`;showAns();}
+    saveJSON('fl-quiz',qScore);drawScore();drawPicks();};
+  el.querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{qLevel=b.dataset.lv;el.querySelectorAll('[data-lv]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+    quiz=null;qPick=[];qDone=false;qa.hidden=true;drawPicks();msg.textContent=`${QLV[qLevel].name}（${QLV[qLevel].sub}）。「新しい問題」を押そう。`;});
+  el.querySelector('[data-q="new"]').onclick=()=>{newQuiz();qa.hidden=true;drawPicks();msg.textContent=`${quiz.length}音。1音目はA。2音目から順に押して答える。`;playQuiz();};
+  el.querySelector('[data-q="again"]').onclick=()=>{if(!quiz){newQuiz();drawPicks();}playQuiz();};
+  el.querySelector('[data-q="ref"]').onclick=()=>{ac();stopAll();const t=ctx.currentTime+.05;pluck(69,t,.42,1.6);pluck(57,t+.02,.22,1.6);};
+  el.querySelector('[data-q="ans"]').onclick=()=>{if(!quiz){newQuiz();drawPicks();}showAns();};
+  el.querySelector('[data-q="undo"]').onclick=()=>{if(qDone||!qPick.length)return;qPick.pop();drawPicks();};
+  el.querySelectorAll('.qn').forEach(b=>b.onclick=()=>{const p=b.dataset.n.split('-').map(Number);ac();pluck(qMidi(p),ctx.currentTime+.02,.36,.9);
+    if(!quiz||qDone)return;if(!qPick.length&&p.join('-')!=='1-5')qPick.push([1,5]); // 1音目(A)は省略可
+    qPick.push(p);if(qPick.length>quiz.length)qPick.length=quiz.length;drawPicks();if(qPick.length===quiz.length)grade();});
+  drawScore();drawPicks();
+}
+
+/* ---------- practice: today's routine (timed blocks, auto-check) ---------- */
+const BLOCKS=[
+  {min:5,ids:['cut16'],title:'16分カッティング'},
+  {min:10,ids:['triad','sixth','oct'],title:'トライアド／6度／オクターブ'},
+  {min:10,ids:['embel','arp','dstop'],title:'コード装飾／アルペジオ／ダブルストップ'},
+  {min:10,ids:['three','bend','ear'],title:'3音ソロ／チョーキング／耳コピ'},
+];
+let rt=null; // {b,end,left,paused,timer}
+const fmtClock=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');};
+const exNum=id=>EX.findIndex(e=>e.id===id)+1;
+function renderRoutine(){
+  const r=$('#routine');if(!r)return;const total=BLOCKS.reduce((a,b)=>a+b.min,0);
+  r.innerHTML=`<div class="rt-top"><button class="btn primary" id="rtStart">▶ 今日のルーティン（${total}分）</button>
+    <span class="streak" id="streak"></span></div>
+    <div class="rt-bar" id="rtBar" hidden>
+      <div class="rt-info"><small id="rtStep"></small><b id="rtTitle"></b><span class="rt-links" id="rtLinks"></span></div>
+      <div class="rt-clock" id="rtClock" role="timer" aria-live="off">00:00</div>
+      <div class="rt-prog" aria-hidden="true"><i id="rtProg"></i></div>
+      <div class="rt-btns"><button class="btn" id="rtPause">一時停止</button><button class="btn" id="rtNext">次のブロックへ</button><button class="btn" id="rtStop">終了</button></div>
+    </div>`;
+  const sec=r.closest('section');if(sec)sec.appendChild($('#rtBar')); // sticky to the bottom while scrolling the whole section
+  $('#rtStart').onclick=startRoutine;
+  $('#rtPause').onclick=()=>{if(!rt||rt.b>=BLOCKS.length)return;rt.paused=!rt.paused;if(rt.paused)rt.left=rt.end-Date.now();else rt.end=Date.now()+rt.left;rtTick();};
+  $('#rtNext').onclick=()=>{if(!rt)return;if(rt.b>=BLOCKS.length){endRoutine();return;}rtBlock(rt.b+1);};
+  $('#rtStop').onclick=endRoutine;
+  renderStreak();
+}
+function chime(){if(!ctx)return;const t=ctx.currentTime+.03;[69,73,76].forEach((m,i)=>pluck(m,t+i*.12,.3,1.2));}
+function startRoutine(){ac();if(rt)clearInterval(rt.timer);rt={b:0,paused:false,timer:setInterval(rtTick,250)};$('#rtBar').hidden=false;$('#rtStart').disabled=true;rtBlock(0);}
+function rtBlock(b){
+  rt.b=b;rt.paused=false;document.querySelectorAll('.ex.rt-on').forEach(e=>e.classList.remove('rt-on'));
+  if(b>=BLOCKS.length){$('#rtStep').textContent='完了';$('#rtTitle').textContent='今日のルーティン完了。おつかれさま！';$('#rtLinks').innerHTML='';
+    $('#rtClock').textContent='00:00';$('#rtProg').style.width='100%';$('#rtNext').textContent='閉じる';$('#rtPause').hidden=true;return;}
+  const B=BLOCKS[b];rt.end=Date.now()+B.min*60000;rt.left=B.min*60000;
+  $('#rtStep').textContent=`ブロック ${b+1}/${BLOCKS.length} · ${B.min}分`;$('#rtTitle').textContent=B.title;
+  $('#rtLinks').innerHTML=B.ids.map(id=>`<a href="#practice" data-go="${id}">練習${exNum(id)}</a>`).join('');
+  $('#rtLinks').querySelectorAll('[data-go]').forEach(a=>a.onclick=e=>{e.preventDefault();$('#ex-'+a.dataset.go).scrollIntoView({block:'start'});});
+  $('#rtNext').textContent=b===BLOCKS.length-1?'最後をスキップ':'次のブロックへ';$('#rtPause').hidden=false;
+  B.ids.forEach(id=>{const e=$('#ex-'+id);if(e)e.classList.add('rt-on');});
+  const first=$('#ex-'+B.ids[0]);if(first&&b>0)first.scrollIntoView({block:'start'});
+  rtTick();
+}
+function rtTick(){
+  if(!rt||rt.b>=BLOCKS.length)return;const B=BLOCKS[rt.b],left=rt.paused?rt.left:rt.end-Date.now();
+  $('#rtClock').textContent=fmtClock(left);$('#rtProg').style.width=Math.min(100,(1-left/(B.min*60000))*100)+'%';
+  $('#rtPause').textContent=rt.paused?'再開':'一時停止';$('#rtBar').classList.toggle('paused',rt.paused);
+  if(!rt.paused&&left<=0){B.ids.forEach(id=>markDone(id,true));chime();rtBlock(rt.b+1);}
+}
+function endRoutine(){if(rt)clearInterval(rt.timer);rt=null;document.querySelectorAll('.ex.rt-on').forEach(e=>e.classList.remove('rt-on'));
+  const bar=$('#rtBar');if(bar)bar.hidden=true;const s=$('#rtStart');if(s)s.disabled=false;}
+INIT.push(renderRoutine);
+
+/* ---------- 練習5: アルペジオ・ラボ（コード進行 × ピッキングパターン） ---------- */
+/* chord shapes: string(1=high e..6) -> fret, b = bass string */
+const ARP_CH={
+  Am:{b:5,f:{5:0,4:2,3:2,2:1,1:0}}, Am7:{b:5,f:{5:0,4:2,3:0,2:1,1:0}}, F:{b:4,f:{4:3,3:2,2:1,1:1}}, Fmaj7:{b:4,f:{4:3,3:2,2:1,1:0}},
+  C:{b:5,f:{5:3,4:2,3:0,2:1,1:0}}, Cmaj7:{b:5,f:{5:3,4:2,3:0,2:0,1:0}}, G:{b:6,f:{6:3,5:2,4:0,3:0,2:0,1:3}},
+  Em:{b:6,f:{6:0,5:2,4:2,3:0,2:0,1:0}}, Em7:{b:6,f:{6:0,5:2,4:2,3:0,2:3,1:0}}, D:{b:4,f:{4:0,3:2,2:3,1:2}}, Dm:{b:4,f:{4:0,3:2,2:3,1:1}},
+  Dsus2:{b:4,f:{4:0,3:2,2:3,1:0}}, Asus2:{b:5,f:{5:0,4:2,3:2,2:0,1:0}}, E:{b:6,f:{6:0,5:2,4:2,3:1,2:0,1:0}}, Bm:{b:5,f:{5:2,4:4,3:4,2:3,1:2}}
+};
+const ARP_PROGS=[
+  {id:'amf',name:'Am – F',desc:'i–♭VI。開放弦が鳴り続ける、いちばん基本の2コード。',ch:['Am','F']},
+  {id:'amgdm',name:'Am – G – Dm – Am',desc:'i–♭VII–iv–i。ベース弦が5→6→4→5弦と動くので、右手の移動を練習できる。',ch:['Am','G','Dm','Am']},
+  {id:'cgamf',name:'C – G – Am – F',desc:'I–V–vi–IV。ポップスの定番。G（6弦ルート）への弦移動に注意。',ch:['C','G','Am','F']},
+  {id:'emcgd',name:'Em – C – G – D',desc:'エオリアン調の i–♭VI–♭III–♭VII。Em と G の開放弦の響きを残す。',ch:['Em','C','G','D']},
+  {id:'maj7',name:'Cmaj7 – Fmaj7',desc:'メジャー7thの浮遊感。開放1・2弦がつながるので、指を離さず滑らかに。',ch:['Cmaj7','Fmaj7']},
+  {id:'dorian',name:'Am7 – D',desc:'ドリアンのi7–IV。Dコードの1弦2フレット（F#）が、Aドリアンの特徴音である6度。',ch:['Am7','D']},
+  {id:'sus',name:'Em7 – Asus2 – Dsus2 – Asus2',desc:'sus2と開放弦で作る、ニューウェイヴ風のきらめき（スタイル例）。',ch:['Em7','Asus2','Dsus2','Asus2']},
+  {id:'emb',name:'E – Bm – Asus2 – E',desc:'Eメジャーで♭なしのダイアトニック。Bmのセーハ（2フレット）を入れた上級編。',ch:['E','Bm','Asus2','E']},
+];
+/* pattern tokens per 16th: 'B'=bass string, '4','3','2','1'=string number, '-'=rest. pick: picking hint */
+const ARP_PATS=[
+  {id:'basic',name:'基本の往復',lv:1,desc:'3弦→2弦→3弦→4弦の繰り返し。現行の練習5と同じ形。',p:'3234323432343234'},
+  {id:'eighth',name:'8分でゆっくり',lv:1,desc:'8分音符だけ。ルートから上がって下りる。まず音の粒を揃える。',p:'B-3-2-1-2-3-4-3-'},
+  {id:'updown',name:'上昇・下降',lv:2,desc:'ベースから1弦まで上がって戻る。弦移動を一定のピッキングで。',p:'B4321234B4321234'},
+  {id:'bassline',name:'ベース＋高音弦',lv:2,desc:'1拍目と3拍目にベース。高音3弦をその間で回す。',p:'B321321-B321321-'},
+  {id:'cross',name:'クロス・ピッキング',lv:3,desc:'3弦→1弦→2弦→1弦。弦を飛び越える16分。Snow (Hey Oh) のような速いアルペジオの準備。',p:'3121312131213121'},
+  {id:'skip',name:'弦飛び',lv:3,desc:'隣ではなく1本飛ばす動き。右手の正確さが一気に問われる。',p:'B3142B3142B3142B'},
+  {id:'three',name:'3音グループ（3対4）',lv:4,desc:'3音の塊を16分で回す。アクセントが1拍ずつずれていく、ポストパンク的なうねり。',p:'B31B31B31B31B31B'},
+  {id:'gallop',name:'ギャロップ',lv:4,desc:'「タッ・タタ」の跳ねるリズム。休符でも右手は止めずに空振りする。',p:'B-32B-21B-32B-21'},
+];
+function arpStrFor(ch,tok){const c=ARP_CH[ch];if(tok==='B')return c.b;const s=+tok;return c.f[s]!=null?s:c.b;}
+function buildArpSeq(prog,pat){const seq=[];
+  prog.ch.forEach((ch,bar)=>{[...pat.p].forEach((tok,i)=>{if(tok==='-'){if(i===0)seq.push([bar*16,'',ch]);return;}
+    const s=arpStrFor(ch,tok);seq.push([bar*16+i,s+'-'+ARP_CH[ch].f[s],i===0?ch:undefined]);});
+    if(!seq.some(e=>e[0]===bar*16))seq.push([bar*16,'',ch]);});
+  seq.sort((a,b)=>a[0]-b[0]);return seq;}
+const arpStore=loadJSON('fl-arp');
+let arpProg=ARP_PROGS.find(p=>p.id===arpStore.prog)||ARP_PROGS[0];
+let arpPat=ARP_PATS.find(p=>p.id===arpStore.pat)||ARP_PATS[0];
+(()=>{const ex=EX.find(e=>e.id==='arp');if(!ex)return;
+  ex.title='5. アルペジオ・ラボ';ex.tempo=[60,96];ex.ring='string';
+  ex.body=`<p>コードを押さえたまま、16分の分散和音を途切れずに弾く。下で<b>コード進行</b>と<b>ピッキングパターン</b>を選ぶと、TABとお手本が切り替わる（${ARP_PROGS.length}×${ARP_PATS.length}=${ARP_PROGS.length*ARP_PATS.length}通り）。Snow (Hey Oh) のような曲を弾くための持久力と粒の揃いを鍛える。</p>`;
+  ex.tips=['基本はオルタネイト（ダウン・アップ交互）。弦飛び・3音グループでも振りのリズムは崩さない','コードを押さえる指は弾き終えるまで離さず、全部の音を鳴らし続ける','★1つのパターンで BPM 90 に届いたら、次の★へ','ベース弦（B）は少し強く、高音弦は軽く。強弱でメロディを浮かせる'];
+  const apply=()=>{ex.seq=buildArpSeq(arpProg,arpPat);ex.len=arpProg.ch.length*16;};apply();
+  const stars=n=>'★'.repeat(n)+'☆'.repeat(4-n);
+  ex.extraHTML=()=>`<div class="arp-lab">
+    <div class="arp-row"><label for="arpProg">コード進行</label><select id="arpProg">${ARP_PROGS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+    <div class="arp-row"><label for="arpPat">パターン</label><select id="arpPat">${ARP_PATS.map(p=>`<option value="${p.id}">${stars(p.lv)} ${p.name}</option>`).join('')}</select></div>
+    <button class="btn" id="arpRand">おまかせ</button>
+    <p class="arp-desc" id="arpDesc"></p></div>`;
+  ex.bind=el=>{const ps=el.querySelector('#arpProg'),pt=el.querySelector('#arpPat'),desc=el.querySelector('#arpDesc'),pre=el.querySelector('pre.tab');
+    const show=()=>{ps.value=arpProg.id;pt.value=arpPat.id;
+      desc.innerHTML=`<b>${arpProg.name}</b>：${arpProg.desc}<br><b>${stars(arpPat.lv)} ${arpPat.name}</b>：${arpPat.desc}<br><span class="muted">B＝そのコードのベース弦（ルート）</span>`;};
+    const change=()=>{const btn=el.querySelector('[data-play]');if(btn&&btn.dataset.on)stopAll();apply();pre.innerHTML=genTab(ex,true);show();saveJSON('fl-arp',{prog:arpProg.id,pat:arpPat.id});};
+    ps.onchange=()=>{arpProg=ARP_PROGS.find(p=>p.id===ps.value);change();};
+    pt.onchange=()=>{arpPat=ARP_PATS.find(p=>p.id===pt.value);change();};
+    el.querySelector('#arpRand').onclick=()=>{let a,b;do{a=ARP_PROGS[Math.floor(Math.random()*ARP_PROGS.length)];b=ARP_PATS[Math.floor(Math.random()*ARP_PATS.length)];}while(a===arpProg&&b===arpPat);arpProg=a;arpPat=b;change();};
+    show();};
+})();
+
+/* ---------- analysis: short original audio demos for each trait ---------- */
+// Each demo: {bpm, len (16th steps incl. tail), ev: [[step, fn(when, stepDur)], ...]}. Fixed tempo so the idea is audible at any header BPM.
+const ANA_E9=[-1,7,6,7,7,7];               // E9 x76777
+const ANA_CUT='X.gx.gX.gXg.X.gx';           // X/x = chord hit (x=accented), g = muted scratch, . = rest
+function anaCut(ghosts,accent){const ev=[];for(let bar=0;bar<2;bar++)[...ANA_CUT].forEach((c,i)=>{const s=bar*16+i,dir=i%2?'up':'down';
+  if(c==='X'||c==='x')ev.push([s,w=>strum(ANA_E9,w,dir,accent&&c==='x'?.3:.2,.11)]);
+  else if(c==='g'&&ghosts)ev.push([s,w=>scratch(w,.2)]);});return ev;}
+const ANA_PENT=[57,60,62,64,67,69,72,74];   // A minor pentatonic (A3..D5)
+const ANA_DEMOS={
+  hendrix:{bpm:66,len:24,ev:[            // D (xx0232) with sus4 / sus2 hammer-pull ornaments + open-D bass
+    [0,w=>strum([-1,-1,0,2,3,2],w,'down',.26,1.6)],
+    [4,w=>pluck(66,w,.3,.5)],[5,w=>pluck(67,w,.3,.5,{legato:1})],[6,w=>pluck(66,w,.3,.9,{legato:1})],
+    [8,w=>strum([-1,-1,-1,2,3,2],w,'up',.24,.9)],
+    [10,w=>pluck(64,w,.3,.5)],[11,w=>pluck(66,w,.3,1,{legato:1})],
+    [12,w=>pluck(50,w,.32,1.2)],[14,w=>strum([-1,-1,0,2,3,2],w,'down',.24,2)]]},
+  cut:{bpm:96,len:36,ev:anaCut(true,true)},
+  dyad:{bpm:84,len:32,ev:(()=>{const P=[[60,69],[62,71],[64,72],[65,74],[64,72],[62,71],[60,69]];const ev=[];
+    P.forEach((p,i)=>{const prev=P[i-1],s=i*4;ev.push([s,w=>p.forEach((m,k)=>pluck(m,w,.26,i===P.length-1?2:.9,prev?{from:prev[k]-m}:{}))]);});return ev;})()},
+  arp:{bpm:88,len:36,ev:[45,52,59,60,64,60,59,52,53,57,60,64,57,60,64,60,45,52,59,60,64,60,59,52,53,57,60,64,67,64,60,57]
+    .map((m,i)=>[i,w=>pluck(m,w,i%4?.18:.24,1.1)])},
+  solo:{bpm:72,len:32,ev:[
+    [0,w=>pluck(67,w,.32,.9,{bend:2})],[6,w=>pluck(69,w,.28,.4)],[7,w=>pluck(67,w,.26,.4,{legato:1})],
+    [8,w=>pluck(64,w,.28,1.2,{vib:1})],[16,w=>pluck(60,w,.26,.4)],[17,w=>pluck(62,w,.24,.4,{legato:1})],
+    [18,w=>pluck(57,w,.3,2.2,{vib:1})]]},
+  prog:{bpm:84,len:52,ev:(()=>{const C=[[-1,0,2,2,1,0],[3,2,0,0,0,3],[-1,-1,0,2,3,1],[-1,0,2,2,1,0]];const ev=[];
+    C.forEach((f,b)=>[[0,'down'],[6,'up'],[8,'down'],[10,'up'],[12,'down']].forEach(([s,d])=>{if(b===3&&s)return;ev.push([b*16+s,w=>strum(f,w,d,s?.18:.26,b===3?2.4:.6)]);}));return ev;})()},
+  ghost0:{bpm:96,len:36,ev:anaCut(false,false)},
+  ghost1:{bpm:96,len:36,ev:anaCut(true,false)},
+  dyn0:{bpm:92,len:36,ev:[0,2,3,4,6,7,8,10,11,12,14,15,16,18,19,20,22,23,24,26,27,28,30,31].map((s,i)=>[s,w=>pluck(ANA_PENT[[0,1,2,1][i%4]],w,.2,.18)])},
+  dyn1:{bpm:92,len:36,ev:[0,2,3,4,6,7,8,10,11,12,14,15,16,18,19,20,22,23,24,26,27,28,30,31].map((s,i)=>[s,w=>pluck(ANA_PENT[[0,1,2,1][i%4]],w,s%4===0?.36:s%2?.08:.16,.18)])},
+  vib0:{bpm:80,len:16,ev:[[0,w=>pluck(69,w,.32,2)]]},
+  vib1:{bpm:80,len:16,ev:[[0,w=>pluck(69,w,.32,2,{vib:1})]]},
+  bend0:{bpm:80,len:16,ev:[[0,w=>pluck(67,w,.32,1.6,{bend:1.6})]]},
+  bend1:{bpm:80,len:16,ev:[[0,w=>pluck(67,w,.32,1.6,{bend:2})]]},
+  space0:{bpm:88,len:20,ev:[57,60,62,64,67,64,62,60,57,60,62,64,67,69,67,64].map((m,i)=>[i,w=>pluck(m,w,.22,.2)])},
+  space1:{bpm:88,len:32,ev:[[0,w=>pluck(64,w,.3,.6,{from:-2})],[4,w=>pluck(62,w,.26,.35)],[5,w=>pluck(60,w,.24,.5,{legato:1})],[12,w=>pluck(57,w,.3,2.2,{vib:1})]]},
+};
+function anaPlay(btn){
+  const d=ANA_DEMOS[btn.dataset.demo];if(!d)return;
+  if(btn.getAttribute('aria-pressed')==='true'){stopAll();return;}
+  const by=new Map();d.ev.forEach(([s,f])=>{if(!by.has(s))by.set(s,[]);by.get(s).push(f);});
+  const sd=()=>60/d.bpm/4;
+  const t=startTransport(sd,(s,w,dur)=>{(by.get(s)||[]).forEach(f=>f(w,dur));
+    if(s===d.len)setTimeout(()=>{if(transport===t)stopAll();},Math.max(0,(w-ctx.currentTime)*1000));},
+    ()=>{btn.setAttribute('aria-pressed','false');btn.closest('.demo-row')?.classList.remove('playing');});
+  btn.setAttribute('aria-pressed','true');btn.closest('.demo-row')?.classList.add('playing');
+}
+INIT.push(()=>{const v=$('#v-analysis');if(!v)return;
+  v.querySelectorAll('button[data-demo]').forEach(b=>{b.setAttribute('aria-pressed','false');b.type='button';});
+  v.addEventListener('click',e=>{const b=e.target.closest('button[data-demo]');if(b)anaPlay(b);});
+});
+
+/* ---------- routing ---------- */
+const VIEWS=['analysis','chords','scales','practice'];
+const VIEW_TITLE={analysis:'スタイル分析',chords:'コード進行',scales:'スケール',practice:'練習メニュー'};
+let curView=null;
+function route(){
+  const h=location.hash.slice(1),v=VIEWS.includes(h)?h:'analysis';
+  if(v!==curView&&curView!==null)stopAll();           // any playback stops when the tab changes
+  VIEWS.forEach(x=>{const el=$('#v-'+x);if(el){el.hidden=x!==v;el.tabIndex=-1;}});
+  document.querySelectorAll('nav.tabs a').forEach(a=>{if(a.dataset.v===v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
+  document.title=VIEW_TITLE[v]+' — ファンク・ロック・ラボ';
+  const changed=curView!==null&&v!==curView;curView=v;return changed;
+}
+window.addEventListener('hashchange',()=>{stopAll();
+  if(route()){window.scrollTo(0,0);const el=$('#v-'+curView);el&&el.focus({preventScroll:true});}});
+// Esc stops whatever is playing (metronome, progression, demos)
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.target.closest('input,select,textarea'))stopAll();});
+
+// one failing module must not take down routing or the other tabs
+INIT.forEach(f=>{try{f();}catch(err){console.error(err);}});route();
+
+})();
+</script>
+
+<script src="../../assets/config.js"></script>
+<script src="../../assets/site.js"></script>
+</body></html>

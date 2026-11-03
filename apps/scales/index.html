@@ -1,0 +1,307 @@
+<!doctype html><html lang="ja" data-app data-base="../../"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>スケール指板帳｜ギター練習ラボ</title>
+<meta name="description" content="ギターで覚えるべきスケール8種を、キーとポジションを切り替えながら指板で確認・試聴できる無料アプリ。">
+<meta property="og:title" content="スケール指板帳｜ギター練習ラボ">
+<meta property="og:description" content="ギターで覚えるべきスケール8種を、キーとポジションを切り替えながら指板で確認・試聴できる無料アプリ。">
+<link rel="stylesheet" href="../../assets/appbar.css">
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: left = the order to learn (scale picker), right = controls + fretboard + scale notes. Stacks on phones. */
+:root{
+  --bg:#F1F2F5; --surface:#FFFFFF; --fg:#1B1E24; --muted:#5D6470; --line:#D9DCE2;
+  --accent:#9A6416; --accent-soft:#F6EAD6;
+  --board:#3B2A21; --board-edge:#2A1D17; --fret:#B9B4AC; --string:#D8D2C6; --inlay:#6E5A4C;
+  --dot:#F2EDE4; --dot-fg:#2A211C; --root:#E3A33C; --root-fg:#1E1407; --blue:#4F86D9; --blue-fg:#FFFFFF;
+  --font-display:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+  --font-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121418; --surface:#1A1D23; --fg:#E8EAEE; --muted:#9AA1AC; --line:#2C3038;
+  --accent:#E3A33C; --accent-soft:#2D2416;
+  --board:#2F221B; --board-edge:#1E1511; --fret:#8F8A82; --string:#BDB6AA; --inlay:#5A4A3F;
+  --dot:#F2EDE4; --dot-fg:#2A211C; --root:#E3A33C; --root-fg:#1E1407; --blue:#6C9BE6; --blue-fg:#0E1420;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#121418; --surface:#1A1D23; --fg:#E8EAEE; --muted:#9AA1AC; --line:#2C3038;
+  --accent:#E3A33C; --accent-soft:#2D2416;
+  --board:#2F221B; --board-edge:#1E1511; --fret:#8F8A82; --string:#BDB6AA; --inlay:#5A4A3F;
+  --dot:#F2EDE4; --dot-fg:#2A211C; --root:#E3A33C; --root-fg:#1E1407; --blue:#6C9BE6; --blue-fg:#0E1420;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+header h1{font-family:var(--font-display);font-weight:900;font-size:clamp(26px,4vw,36px);line-height:1.25;margin:0;text-wrap:balance;letter-spacing:.01em}
+header p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.grid{display:grid;grid-template-columns:290px minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+/* order list */
+.order{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 12px;display:flex;flex-direction:column;gap:14px}
+.tier h2{font-size:11.5px;letter-spacing:.12em;color:var(--muted);margin:0 6px 6px;font-weight:700}
+.tier ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.sc-btn{width:100%;display:grid;grid-template-columns:26px minmax(0,1fr);gap:4px 8px;align-items:baseline;text-align:left;
+  background:none;border:0;border-radius:7px;padding:8px 8px;color:var(--fg);font:inherit;cursor:pointer}
+.sc-btn:hover{background:var(--bg)}
+.sc-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.sc-btn[aria-pressed="true"]{background:var(--accent-soft)}
+.sc-btn .n{font-family:var(--font-mono);font-size:13px;color:var(--accent);font-weight:600}
+.sc-btn .nm{font-weight:700;font-size:14.5px}
+.sc-btn .iv{grid-column:2;font-family:var(--font-mono);font-size:11.5px;color:var(--muted);line-height:1.3}
+
+/* main */
+.main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px}
+.ctl > span{font-size:11.5px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+select,.seg button,.play{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:6px 10px;cursor:pointer}
+select:focus-visible,.seg button:focus-visible,.play:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{padding:6px 10px;min-width:38px}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.play{background:var(--accent);color:var(--root-fg);border-color:var(--accent);font-weight:700;padding:6px 16px}
+:root[data-theme="dark"] .play{color:#1E1407}
+
+.board-box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 12px 10px}
+.board-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.board-scroll svg{display:block;min-width:820px;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted);margin-top:8px;padding:0 4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+.hint{font-size:12.5px;color:var(--muted);margin:6px 4px 0}
+
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.detail h3{margin:0;font-family:var(--font-display);font-size:22px;font-weight:900;line-height:1.3}
+.detail h3 small{font-family:var(--font-mono);font-weight:500;font-size:13px;color:var(--muted);margin-left:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:flex;flex-direction:column;align-items:center;min-width:46px;padding:5px 8px;border:1px solid var(--line);border-radius:7px;font-family:var(--font-mono);line-height:1.25}
+.chip b{font-size:15px}
+.chip span{font-size:11.5px;color:var(--muted)}
+.chip.root{background:var(--accent-soft);border-color:var(--accent)}
+.chip.blue b{color:var(--blue)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.facts div{min-width:0}
+.facts h4{margin:0 0 2px;font-size:11.5px;letter-spacing:.1em;color:var(--muted)}
+.facts p{margin:0;max-width:60ch}
+
+svg text{font-family:var(--font-mono)}
+.dot circle{transition:opacity .15s}
+.dot.dim{opacity:.22}
+.dot.on circle{stroke:var(--fg);stroke-width:3}
+@media (prefers-reduced-motion:reduce){.dot circle{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>覚えるべきスケール 8選</h1>
+    <p>上から順に覚えるのがおすすめです。左のリストでスケールを選ぶと、指板に表示されます。ポジションを選ぶと、その形だけが強調されます。▶ボタンで音も確認できます。</p>
+  </header>
+
+  <div class="grid">
+    <nav class="order" id="order" aria-label="スケールの一覧"></nav>
+
+    <div class="main">
+      <div class="controls">
+        <label class="ctl"><span>キー</span>
+          <select id="key"></select>
+        </label>
+        <div class="ctl"><span>ポジション</span>
+          <div class="seg" id="pos" role="group" aria-label="ポジション"></div>
+        </div>
+        <div class="ctl"><span>表示</span>
+          <div class="seg" id="lab" role="group" aria-label="表示">
+            <button type="button" id="lab-deg" data-v="deg" aria-pressed="true">度数</button>
+            <button type="button" id="lab-name" data-v="name" aria-pressed="false">音名</button>
+          </div>
+        </div>
+        <button type="button" class="play" id="play">▶ 再生</button>
+      </div>
+
+      <div class="board-box">
+        <div class="board-scroll"><svg id="board" role="img" aria-label="ギター指板"></svg></div>
+        <div class="legend">
+          <span><i style="background:var(--root)"></i>ルート（1）</span>
+          <span><i style="background:var(--dot);border:1px solid var(--line)"></i>スケール音</span>
+          <span id="lg-blue"><i style="background:var(--blue)"></i>ブルーノート（♭5）</span>
+        </div>
+        <p class="hint">上が1弦（細い弦）、下が6弦です。TAB譜と同じ向きです。</p>
+      </div>
+
+      <section class="detail" id="detail" aria-live="polite"></section>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCALES=[
+ {id:'minpent',tier:0,name:'マイナーペンタトニック',en:'Minor Pentatonic',iv:[0,3,5,7,10],
+  use:'ロック、ブルース、ポップスのソロの基本です。迷ったらまずこれを使います。',
+  tip:'ポジション1（6弦のルートから始まる形）を完璧にしたら、ポジション2とつなげて弾きます。5つの形がつながると、指板全体で弾けるようになります。'},
+ {id:'majpent',tier:0,name:'メジャーペンタトニック',en:'Major Pentatonic',iv:[0,2,4,7,9],
+  use:'明るい曲、カントリー、J-POPの歌うようなソロに使います。',
+  tip:'形はマイナーペンタと同じで、ルートの位置だけが違います（Cメジャーペンタ＝Aマイナーペンタ）。ルートを意識して弾くと響きが変わります。'},
+ {id:'blues',tier:0,name:'ブルーススケール',en:'Blues Scale',iv:[0,3,5,6,7,10],
+  use:'マイナーペンタに♭5を足したスケールです。ブルースやロックの「泣き」の味付けになります。',
+  tip:'♭5は通過する音です。この音で止まらず、隣の4か5へ流れるように弾きます。'},
+ {id:'major',tier:1,name:'メジャースケール',en:'Major / Ionian',iv:[0,2,4,5,7,9,11],
+  use:'すべての音楽理論の基準です。コードやモードは、このスケールから作られています。',
+  tip:'度数を声に出しながら弾きます。ポジションは「1弦に3音」の形なので、指使いが一定で速弾きの練習にもなります。'},
+ {id:'minor',tier:1,name:'ナチュラルマイナー',en:'Natural Minor / Aeolian',iv:[0,2,3,5,7,8,10],
+  use:'暗く切ない曲、ハードロック、メタルに使います。',
+  tip:'マイナーペンタに2度と♭6を足したものと考えると、早く覚えられます。'},
+ {id:'dorian',tier:2,name:'ドリアン',en:'Dorian',iv:[0,2,3,5,7,9,10],
+  use:'ファンク、フュージョン、サンタナ風のマイナーです。m7コードが続く曲で使います。',
+  tip:'ナチュラルマイナーとの違いは6度だけです。この6度を強調すると、ドリアンらしいおしゃれな響きになります。'},
+ {id:'mixo',tier:2,name:'ミクソリディアン',en:'Mixolydian',iv:[0,2,4,5,7,9,10],
+  use:'7thコード（ドミナント）の上で使います。ブルースロックやファンクに合います。',
+  tip:'メジャースケールの7度を半音下げただけです。♭7を狙って弾くと、7thコードの響きが出ます。'},
+ {id:'harm',tier:2,name:'ハーモニックマイナー',en:'Harmonic Minor',iv:[0,2,3,5,7,8,11],
+  use:'マイナーキーのⅤ7コードの上、ネオクラシカル、エキゾチックな雰囲気に使います。',
+  tip:'♭6から7へ1音半とぶところが特徴です。ここをゆっくり正確に弾きます。'}
+];
+const TIERS=['まずここから','次に覚える','上級へ'];
+const DEG=['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'];
+const SHARP=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const FLAT=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+const KEYS=[[0,'C'],[1,'D♭'],[2,'D'],[3,'E♭'],[4,'E'],[5,'F'],[6,'F♯'],[7,'G'],[8,'A♭'],[9,'A'],[10,'B♭'],[11,'B']];
+const OPEN=[40,45,50,55,59,64]; // 6弦→1弦
+const SNAME=['E','A','D','G','B','E'];
+const FRETS=17;
+
+const st={sc:'minpent',key:9,pos:0,lab:'deg'};
+try{const s=JSON.parse(localStorage.getItem('scale-fb')||'null');if(s)Object.assign(st,s)}catch(e){}
+const save=()=>{try{localStorage.setItem('scale-fb',JSON.stringify(st))}catch(e){}};
+const cur=()=>SCALES.find(s=>s.id===st.sc)||SCALES[0];
+const rel=p=>((p-st.key)%12+12)%12;
+
+function useFlat(sc){
+  let m=st.key;
+  if(sc.id==='dorian')m=st.key+10;else if(sc.id==='mixo')m=st.key+5;
+  else if(sc.iv.includes(3)&&!sc.iv.includes(4))m=st.key+3;
+  return [1,3,5,8,10].includes(m%12);
+}
+function nameOf(pc,sc){const r=((pc-st.key)%12+12)%12;if(r===6)return FLAT[pc];return (useFlat(sc)?FLAT:SHARP)[pc]}
+
+/* positions: pentatonic = 2 notes/string, 7-note = 3 notes/string */
+function positions(sc){
+  const base=sc.id==='blues'?[0,3,5,7,10]:sc.iv, ps=base.length===5?2:3, out=[]; let prevMin=-1;
+  for(let k=0;k<base.length;k++){
+    const target=(st.key+base[k])%12; let p=40+((target-40)%12+12)%12;
+    const seq=[];while(seq.length<ps*6){if(base.includes(rel(p)))seq.push(p);p++}
+    let cells=[];for(let j=0;j<6;j++)for(let t=0;t<ps;t++){const pitch=seq[j*ps+t];cells.push({s:j,f:pitch-OPEN[j]})}
+    let mn=Math.min(...cells.map(c=>c.f)),mx=Math.max(...cells.map(c=>c.f));
+    if(mn<0){cells.forEach(c=>c.f+=12);mn+=12;mx+=12}
+    if(mx>FRETS&&mn-12>=0){cells.forEach(c=>c.f-=12);mn-=12;mx-=12}
+    if(mn<prevMin&&mx+12<=FRETS){cells.forEach(c=>c.f+=12);mn+=12;mx+=12}
+    prevMin=mn;
+    if(sc.iv.length>base.length){
+      for(let j=0;j<6;j++)for(let f=mn;f<=mx;f++){const r=rel(OPEN[j]+f);if(sc.iv.includes(r)&&!base.includes(r))cells.push({s:j,f})}
+    }
+    out.push(cells.filter(c=>c.f>=0&&c.f<=FRETS));
+  }
+  return out;
+}
+
+/* order list */
+function renderOrder(){
+  const el=document.getElementById('order');let n=0;el.innerHTML='';
+  TIERS.forEach((t,ti)=>{
+    const d=document.createElement('div');d.className='tier';
+    d.innerHTML='<h2>'+t+'</h2>';const ol=document.createElement('ol');
+    SCALES.filter(s=>s.tier===ti).forEach(s=>{n++;
+      const li=document.createElement('li');const b=document.createElement('button');
+      b.type='button';b.className='sc-btn';b.id='sc-'+s.id;b.setAttribute('aria-pressed',s.id===st.sc);
+      b.innerHTML='<span class="n">'+String(n).padStart(2,'0')+'</span><span class="nm">'+s.name+'</span><span class="iv">'+s.iv.map(i=>DEG[i]).join(' ')+'</span>';
+      b.onclick=()=>{st.sc=s.id;st.pos=0;stop();save();renderAll()};
+      li.appendChild(b);ol.appendChild(li)});
+    d.appendChild(ol);el.appendChild(d)});
+}
+
+function renderControls(){
+  const k=document.getElementById('key');
+  if(!k.options.length){KEYS.forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=l;k.appendChild(o)});
+    k.onchange=()=>{st.key=+k.value;stop();save();renderAll()}}
+  k.value=st.key;
+  const sc=cur(),n=sc.id==='blues'?5:sc.iv.length,pos=document.getElementById('pos');pos.innerHTML='';
+  if(st.pos>n)st.pos=0;
+  const mk=(v,l)=>{const b=document.createElement('button');b.type='button';b.id='pos-'+v;b.textContent=l;b.setAttribute('aria-pressed',st.pos===v);
+    b.onclick=()=>{st.pos=v;stop();save();renderAll()};pos.appendChild(b)};
+  mk(0,'全体');for(let i=1;i<=n;i++)mk(i,String(i));
+  document.querySelectorAll('#lab button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.v===st.lab);
+    b.onclick=()=>{st.lab=b.dataset.v;save();renderAll()}});
+  document.getElementById('lg-blue').hidden=!sc.iv.includes(6);
+}
+
+const W=48,X0=44,Y0=22,G=27;
+const fx=f=>f===0?X0-22:X0+(f-.5)*W, sy=j=>Y0+(5-j)*G;
+function renderBoard(){
+  const sc=cur(),svg=document.getElementById('board'),width=X0+FRETS*W+12,h=Y0+5*G+46;
+  svg.setAttribute('viewBox','0 0 '+width+' '+h);
+  const box=st.pos?positions(sc)[st.pos-1]:null,inBox=new Set(box?box.map(c=>c.s+'-'+c.f):[]);
+  let s='<rect x="'+X0+'" y="'+(Y0-12)+'" width="'+(FRETS*W)+'" height="'+(5*G+24)+'" rx="3" fill="var(--board)" stroke="var(--board-edge)"/>';
+  const midY=Y0+2.5*G;
+  [3,5,7,9,15,17].forEach(f=>{if(f<=FRETS)s+='<circle cx="'+fx(f)+'" cy="'+midY+'" r="6" fill="var(--inlay)"/>'});
+  s+='<circle cx="'+fx(12)+'" cy="'+(Y0+1.5*G)+'" r="6" fill="var(--inlay)"/><circle cx="'+fx(12)+'" cy="'+(Y0+3.5*G)+'" r="6" fill="var(--inlay)"/>';
+  for(let f=1;f<=FRETS;f++)s+='<line x1="'+(X0+f*W)+'" x2="'+(X0+f*W)+'" y1="'+(Y0-12)+'" y2="'+(Y0+5*G+12)+'" stroke="var(--fret)" stroke-width="2"/>';
+  s+='<rect x="'+(X0-4)+'" y="'+(Y0-12)+'" width="6" height="'+(5*G+24)+'" fill="var(--dot)" stroke="var(--board-edge)"/>';
+  for(let j=0;j<6;j++){s+='<line x1="'+(X0-30)+'" x2="'+(X0+FRETS*W)+'" y1="'+sy(j)+'" y2="'+sy(j)+'" stroke="var(--string)" stroke-width="'+(2.6-j*.35)+'"/>';
+    s+='<text x="4" y="'+(sy(j)+4)+'" font-size="11" fill="var(--muted)">'+(6-j)+'</text>'}
+  for(let f=1;f<=FRETS;f++)if([3,5,7,9,12,15,17].includes(f)||f===1)s+='<text x="'+fx(f)+'" y="'+(h-10)+'" text-anchor="middle" font-size="12" font-weight="600" fill="var(--muted)">'+f+'</text>';
+  for(let j=0;j<6;j++)for(let f=0;f<=FRETS;f++){
+    const p=OPEN[j]+f,r=rel(p);if(!sc.iv.includes(r))continue;
+    const root=r===0,blue=r===6&&sc.id==='blues';
+    const fill=root?'var(--root)':blue?'var(--blue)':'var(--dot)',tc=root?'var(--root-fg)':blue?'var(--blue-fg)':'var(--dot-fg)';
+    const label=st.lab==='deg'?DEG[r]:nameOf(p%12,sc);
+    const dim=box&&!inBox.has(j+'-'+f)?' dim':'';
+    s+='<g class="dot'+dim+'" id="d-'+j+'-'+f+'"><circle cx="'+fx(f)+'" cy="'+sy(j)+'" r="11.5" fill="'+fill+'"/><text x="'+fx(f)+'" y="'+(sy(j)+4)+'" text-anchor="middle" font-size="'+(label.length>2?9.5:11)+'" font-weight="600" fill="'+tc+'">'+label+'</text></g>';
+  }
+  svg.innerHTML=s;
+}
+
+function renderDetail(){
+  const sc=cur(),keyName=KEYS.find(k=>k[0]===st.key)[1];
+  const chips=sc.iv.map(i=>'<div class="chip'+(i===0?' root':'')+(i===6?' blue':'')+'"><b>'+DEG[i]+'</b><span>'+nameOf((st.key+i)%12,sc)+'</span></div>').join('');
+  const n=sc.id==='blues'?5:sc.iv.length;
+  const shape=sc.iv.length===7?'1弦に3音ずつの形が'+n+'つあります。':'1弦に2音ずつの形（ボックス）が5つあります。';
+  document.getElementById('detail').innerHTML=
+   '<h3>'+keyName+' '+sc.name+'<small>'+sc.en+'</small></h3>'+
+   '<div class="chips">'+chips+'</div>'+
+   '<div class="facts"><div><h4>使いどころ</h4><p>'+sc.use+'</p></div><div><h4>練習のポイント</h4><p>'+sc.tip+' '+shape+'</p></div></div>';
+}
+function renderAll(){renderOrder();renderControls();renderBoard();renderDetail()}
+
+/* sound */
+let ac=null,timers=[];
+function pluck(midi,t){
+  const f=440*Math.pow(2,(midi-69)/12),o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain(),lp=ac.createBiquadFilter();
+  o.type='triangle';o2.type='sawtooth';o.frequency.value=f;o2.frequency.value=f;
+  const g2=ac.createGain();g2.gain.value=.12;o2.connect(g2);g2.connect(lp);o.connect(lp);
+  lp.type='lowpass';lp.frequency.setValueAtTime(f*6,t);lp.frequency.exponentialRampToValueAtTime(f*1.5,t+.4);
+  lp.connect(g);g.connect(ac.destination);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.3,t+.005);g.gain.exponentialRampToValueAtTime(.001,t+1.1);
+  o.start(t);o2.start(t);o.stop(t+1.2);o2.stop(t+1.2);
+}
+function stop(){timers.forEach(clearTimeout);timers=[];document.querySelectorAll('.dot.on').forEach(d=>d.classList.remove('on'));
+  const b=document.getElementById('play');if(b)b.textContent='▶ 再生'}
+document.getElementById('play').onclick=()=>{
+  if(timers.length){stop();return}
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){return}
+  const sc=cur(),cells=positions(sc)[Math.max(0,st.pos-1)].slice().sort((a,b)=>(OPEN[a.s]+a.f)-(OPEN[b.s]+b.f));
+  const seq=cells.concat(cells.slice(0,-1).reverse()),step=.2,t0=ac.currentTime+.05;
+  document.getElementById('play').textContent='■ 停止';
+  seq.forEach((c,i)=>{pluck(OPEN[c.s]+c.f,t0+i*step);
+    timers.push(setTimeout(()=>{document.querySelectorAll('.dot.on').forEach(d=>d.classList.remove('on'));
+      const d=document.getElementById('d-'+c.s+'-'+c.f);if(d)d.classList.add('on')},(i*step+.05)*1000))});
+  timers.push(setTimeout(stop,(seq.length*step+.4)*1000));
+};
+renderAll();
+</script>
+
+<script src="../../assets/config.js"></script>
+<script src="../../assets/site.js"></script>
+</body></html>
