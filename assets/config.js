@@ -6,7 +6,7 @@ window.SITE_CONFIG = {
 
   // Amazonアソシエイトの「トラッキングID」（例: "yourname-22"）
   // 審査に通ったらここに入れる。空のままでもリンクは普通に動く（紹介料が付かないだけ）。
-  amazonTag: "",
+  amazonTag: "guitarlab0c1-22",
 
   // 投げ銭ページのURL（Ko-fi / OFUSE / Buy Me a Coffee など）
   // 空のままならボタンは表示されない。
