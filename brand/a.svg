@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+ <defs>
+  <radialGradient id="sb" cx="46%" cy="42%" r="70%">
+   <stop offset="0" stop-color="#F6C25A"/><stop offset=".32" stop-color="#E08A2A"/>
+   <stop offset=".62" stop-color="#9A3E10"/><stop offset=".9" stop-color="#2A1206"/>
+  </radialGradient>
+  <linearGradient id="wd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3A2418"/><stop offset=".5" stop-color="#4A2F20"/><stop offset="1" stop-color="#2E1C12"/></linearGradient>
+  <clipPath id="c"><circle cx="512" cy="512" r="512"/></clipPath>
+ </defs>
+ <g clip-path="url(#c)">
+  <rect width="1024" height="1024" fill="url(#sb)"/>
+  <!-- fretboard, slightly tilted -->
+  <g transform="rotate(-18 512 512)">
+   <rect x="352" y="-60" width="320" height="1144" fill="url(#wd)"/>
+   <g stroke="#CFC6B6" stroke-width="10">
+    <line x1="352" x2="672" y1="140" y2="140"/><line x1="352" x2="672" y1="330" y2="330"/>
+    <line x1="352" x2="672" y1="510" y2="510"/><line x1="352" x2="672" y1="680" y2="680"/>
+    <line x1="352" x2="672" y1="840" y2="840"/>
+   </g>
+   <g stroke="#E9E1CF" stroke-opacity=".75">
+    <line x1="385" x2="385" y1="-60" y2="1084" stroke-width="7"/><line x1="436" x2="436" y1="-60" y2="1084" stroke-width="6"/>
+    <line x1="487" x2="487" y1="-60" y2="1084" stroke-width="5"/><line x1="538" x2="538" y1="-60" y2="1084" stroke-width="4"/>
+    <line x1="589" x2="589" y1="-60" y2="1084" stroke-width="3.2"/><line x1="640" x2="640" y1="-60" y2="1084" stroke-width="2.6"/>
+   </g>
+   <!-- pentatonic box dots -->
+   <g>
+    <circle cx="385" cy="420" r="30" fill="#F6C25A"/>
+    <circle cx="436" cy="595" r="26" fill="#F3EBDD"/>
+    <circle cx="487" cy="420" r="26" fill="#F3EBDD"/>
+    <circle cx="538" cy="595" r="30" fill="#F6C25A"/>
+    <circle cx="589" cy="420" r="26" fill="#F3EBDD"/>
+    <circle cx="640" cy="595" r="26" fill="#F3EBDD"/>
+   </g>
+  </g>
+ </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+ <defs>
+  <radialGradient id="sb" cx="45%" cy="38%" r="75%">
+   <stop offset="0" stop-color="#F7C963"/><stop offset=".35" stop-color="#E0862A"/>
+   <stop offset=".7" stop-color="#8E3410"/><stop offset="1" stop-color="#2A1206"/>
+  </radialGradient>
+  <clipPath id="pk"><path d="M512 905 C 420 860 250 640 215 470 C 185 320 300 190 512 190 C 724 190 839 320 809 470 C 774 640 604 860 512 905 Z"/></clipPath>
+ </defs>
+ <rect width="1024" height="1024" fill="#17110D"/>
+ <path d="M512 905 C 420 860 250 640 215 470 C 185 320 300 190 512 190 C 724 190 839 320 809 470 C 774 640 604 860 512 905 Z" fill="url(#sb)"/>
+ <g clip-path="url(#pk)" stroke="#2A1206" stroke-opacity=".35">
+  <g stroke-width="6"><line x1="352" x2="352" y1="150" y2="950"/><line x1="416" x2="416" y1="150" y2="950"/><line x1="480" x2="480" y1="150" y2="950"/><line x1="544" x2="544" y1="150" y2="950"/><line x1="608" x2="608" y1="150" y2="950"/><line x1="672" x2="672" y1="150" y2="950"/></g>
+ </g>
+ <g fill="#FFF6E6">
+  <circle cx="416" cy="380" r="28"/><circle cx="544" cy="380" r="28"/>
+  <circle cx="352" cy="500" r="28"/><circle cx="480" cy="500" r="34" fill="#17110D"/><circle cx="608" cy="500" r="28"/>
+  <circle cx="416" cy="620" r="28"/><circle cx="544" cy="620" r="28"/>
+ </g>
+ <path d="M512 905 C 420 860 250 640 215 470 C 185 320 300 190 512 190 C 724 190 839 320 809 470 C 774 640 604 860 512 905 Z" fill="none" stroke="#FFF6E6" stroke-opacity=".25" stroke-width="6"/>
+</svg>
