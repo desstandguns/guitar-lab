@@ -1,0 +1,761 @@
+<!doctype html><html lang="ja" data-app data-base="../../"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>ベース・グルーヴ・ラボ｜ギター練習ラボ</title>
+<meta name="description" content="4弦ベースの指板（スケール・アルペジオ）、ドラムに合わせるグルーヴ練習、リズムトレーナー、練習タイマーをブラウザで使える無料アプリ。">
+<meta property="og:title" content="ベース・グルーヴ・ラボ｜ギター練習ラボ">
+<meta property="og:description" content="4弦ベースの指板、ドラムに合わせるグルーヴ練習、リズムトレーナー、練習タイマー。登録不要・無料。">
+<link rel="stylesheet" href="../../assets/appbar.css">
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky header with tabs; four tools (指板 / グルーヴ / リズム / 練習メニュー). Night-club teal palette, amber roots. */
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --fg:#141920; --muted:#58616E; --line:#D3D9E0; --line-strong:#87919E;
+  --accent:#0E6A70; --accent-soft:#DCEEEE; --on-accent:#FFFFFF;
+  --board:#2C2420; --board-edge:#1C1714; --fret:#B5B0A8; --string:#CFC8BB; --inlay:#5E5048;
+  --dot:#F1EDE5; --dot-fg:#231C18; --root:#E3A33C; --root-fg:#1E1407; --cur:#0E6A70;
+  --display:"Dela Gothic One","Zen Kaku Gothic New",system-ui,sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1317; --surface:#171C22; --fg:#E5E9EE; --muted:#9AA3AF; --line:#29313A; --line-strong:#5E6874;
+  --accent:#4DB6B6; --accent-soft:#132A2C; --on-accent:#05201F;
+  --board:#261E1A; --board-edge:#140F0D; --fret:#8C877F; --string:#B9B2A6; --inlay:#4D4038;
+  --cur:#4DB6B6; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0F1317; --surface:#171C22; --fg:#E5E9EE; --muted:#9AA3AF; --line:#29313A; --line-strong:#5E6874;
+  --accent:#4DB6B6; --accent-soft:#132A2C; --on-accent:#05201F;
+  --board:#261E1A; --board-edge:#140F0D; --fret:#8C877F; --string:#B9B2A6; --inlay:#4D4038;
+  --cur:#4DB6B6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.7;
+  padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding-block:10px}
+.brand{font-family:var(--display);font-size:18px;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.brand i{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--bg) 0 3px,var(--accent) 4px 7px,var(--root) 8px 11px)}
+.tabs{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs button{font:inherit;font-size:14px;font-weight:700;background:none;border:0;border-radius:8px;padding:6px 12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--fg);color:var(--bg)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+main{padding-block:24px 40px}
+.view{display:flex;flex-direction:column;gap:18px}
+.intro h1,.intro h2{font-family:var(--display);font-weight:400;font-size:clamp(24px,4vw,32px);line-height:1.3;margin:0;text-wrap:balance}
+.intro p{margin:6px 0 0;color:var(--muted);max-width:66ch}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ctl>span{font-size:11.5px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+select,.seg button,.btn,input[type=number]{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line-strong);border-radius:7px;padding:6px 10px;cursor:pointer;min-height:36px}
+input[type=number]{width:76px;cursor:text;font-family:var(--mono)}
+input[type=range]{accent-color:var(--accent);width:150px}
+select:focus-visible,.seg button:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{padding:6px 10px;min-width:38px}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn.play{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:700;padding:6px 18px}
+.btn.play[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;min-height:36px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--accent)}
+.muted{color:var(--muted)}
+.small{font-size:12.5px}
+
+/* fretboard */
+.fb-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.fb-grid{grid-template-columns:minmax(0,1fr)}}
+.list{display:flex;flex-direction:column;gap:12px;padding:14px 10px}
+.list h3{font-size:11.5px;letter-spacing:.12em;color:var(--muted);margin:0 6px 4px;font-weight:700}
+.list ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.it{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;align-items:baseline;text-align:left;background:none;border:0;border-radius:7px;padding:7px 8px;color:var(--fg);font:inherit;cursor:pointer}
+.it:hover{background:var(--bg)}
+.it:focus-visible{outline:2px solid var(--accent)}
+.it[aria-pressed="true"]{background:var(--accent-soft)}
+.it b{font-size:14.5px}
+.it span{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.fb-main{display:flex;flex-direction:column;gap:14px;min-width:0}
+.board-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.board-scroll svg{display:block;min-width:740px;width:100%;height:auto}
+svg text{font-family:var(--mono)}
+.dot{cursor:pointer}
+.dot circle{transition:opacity .15s}
+.dot.dim{opacity:.2}
+.dot.on circle{stroke:var(--fg);stroke-width:3}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+.detail h3{margin:0;font-size:20px;font-weight:900;line-height:1.35}
+.detail h3 small{font-family:var(--mono);font-weight:500;font-size:13px;color:var(--muted);margin-left:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{display:flex;flex-direction:column;align-items:center;min-width:46px;padding:4px 8px;border:1px solid var(--line);border-radius:7px;font-family:var(--mono);line-height:1.25}
+.chip b{font-size:15px}.chip span{font-size:11.5px;color:var(--muted)}
+.chip.root{background:var(--accent-soft);border-color:var(--accent)}
+.detail p{margin:0;max-width:66ch}
+.opens{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+
+/* groove */
+.gv-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.gv{text-align:left;font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.gv:hover{border-color:var(--line-strong)}
+.gv[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+.gv:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.gv b{font-size:15px}.gv span{font-size:12px;color:var(--muted)}
+.bars{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,400px),1fr));gap:12px}
+.bar{min-width:0}
+.bar .ch{font-family:var(--mono);font-weight:600;font-size:14px;margin:0 0 4px 22px}
+.tabg{display:grid;grid-template-columns:18px repeat(16,minmax(0,1fr));font-family:var(--mono);font-size:12.5px;line-height:1}
+.tabg div{height:22px;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(var(--line-strong),var(--line-strong)) center/100% 1px no-repeat}
+.tabg .sn{background:none;color:var(--muted);font-size:11px;justify-content:flex-start}
+.tabg .b0{border-left:2px solid var(--line-strong)}
+.tabg .bq{border-left:1px dashed var(--line)}
+.tabg .n b{background:var(--surface);padding:0 1px;font-weight:600;z-index:1}
+.tabg .n.gh b{color:var(--muted)}
+.tabg .sus{background:linear-gradient(var(--accent),var(--accent)) center/100% 3px no-repeat}
+.tabg .cur{background-color:color-mix(in srgb,var(--cur) 22%,transparent)}
+.tabg .n.cur b{background:var(--cur);color:var(--on-accent);border-radius:3px;padding:1px 2px}
+.drow{display:grid;grid-template-columns:18px repeat(16,minmax(0,1fr));font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px}
+.drow span{text-align:center}
+.gv-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.gv-info h4{margin:0 0 2px;font-size:11.5px;letter-spacing:.1em;color:var(--muted)}
+.gv-info p{margin:0}
+
+/* rhythm */
+.lamps{display:flex;gap:14px;justify-content:center;padding:18px 0 8px}
+.lamp{width:clamp(44px,14vw,72px);aspect-ratio:1;border-radius:50%;border:3px solid var(--line-strong);display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:18px;color:var(--muted);transition:background .05s}
+.lamp.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.lamp.on.one{background:var(--root);border-color:var(--root);color:var(--root-fg)}
+.lamps.rest .lamp{border-style:dashed}
+.lamps.rest .lamp.on{background:transparent;color:var(--accent);border-color:var(--accent)}
+.rh-state{text-align:center;font-weight:700;min-height:1.7em}
+.rh-tips{margin:0;padding-left:1.2em;display:grid;gap:6px;max-width:70ch}
+
+/* practice */
+.routine{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.step{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.step .mm{font-family:var(--mono);font-weight:600;color:var(--accent);min-width:3.4em}
+.step b{display:block}
+.step .d{font-size:13px;color:var(--muted)}
+.step.now{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.step.done{opacity:.6}
+.step.done .mm::before{content:"✓ "}
+.step .go{font-size:13px;padding:4px 10px;min-height:30px}
+.timer{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+.clock{font-family:var(--mono);font-size:40px;font-weight:600;line-height:1}
+.prog{flex:1 1 200px;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--accent)}
+.days{display:flex;gap:5px;flex-wrap:wrap}
+.days span{width:28px;height:36px;border-radius:6px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.2}
+.days span.ok{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.days span.today{outline:2px solid var(--fg);outline-offset:1px}
+.stat{display:flex;gap:24px;flex-wrap:wrap}
+.stat div b{font-family:var(--mono);font-size:24px;display:block;line-height:1.2}
+.stat div span{font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.dot circle,.lamp{transition:none}}
+</style>
+
+<header class="top">
+  <div class="wrap topbar">
+    <div class="brand"><i aria-hidden="true"></i>ベース・グルーヴ・ラボ</div>
+    <nav class="tabs" role="tablist" aria-label="セクション">
+      <button type="button" role="tab" id="t-fb" data-v="fb" aria-controls="v-fb">指板</button>
+      <button type="button" role="tab" id="t-gv" data-v="gv" aria-controls="v-gv">グルーヴ</button>
+      <button type="button" role="tab" id="t-rh" data-v="rh" aria-controls="v-rh">リズム</button>
+      <button type="button" role="tab" id="t-pr" data-v="pr" aria-controls="v-pr">練習メニュー</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- FRETBOARD -->
+<section class="view" id="v-fb" role="tabpanel" aria-labelledby="t-fb">
+  <div class="intro">
+    <span class="eyebrow">Fretboard</span>
+    <h1>4弦の指板で、コードの音を覚える</h1>
+    <p>ベースはまず「コードの音（ルート・3度・5度・7度）」を指板で見つけられることが大切です。左から形を選び、キーとポジションを切り替えて確認します。指板の丸をタップすると、その音が鳴ります。</p>
+  </div>
+  <div class="fb-grid">
+    <nav class="card list" id="fbList" aria-label="アルペジオとスケール"></nav>
+    <div class="fb-main">
+      <div class="controls">
+        <label class="ctl"><span>キー</span><select id="fbKey"></select></label>
+        <div class="ctl"><span>ポジション</span><div class="seg" id="fbPos" role="group" aria-label="ポジション"></div></div>
+        <div class="ctl"><span>表示</span><div class="seg" id="fbLab" role="group" aria-label="表示">
+          <button type="button" data-v="deg">度数</button><button type="button" data-v="name">音名</button></div></div>
+        <button type="button" class="btn play" id="fbPlay" aria-pressed="false">▶ 再生</button>
+      </div>
+      <div class="card">
+        <div class="board-scroll"><svg id="board" role="img" aria-label="ベース指板（上が1弦G、下が4弦E）"></svg></div>
+        <div class="legend">
+          <span><i style="background:var(--root)"></i>ルート（1）</span>
+          <span><i style="background:var(--dot);border:1px solid var(--line-strong)"></i>コード／スケールの音</span>
+          <span>上が1弦（G）、下が4弦（E）。TAB譜と同じ向きです。</span>
+        </div>
+      </div>
+      <div class="card detail" id="fbDetail" aria-live="polite"></div>
+      <div class="opens"><span class="small muted">開放弦の音（チューニングの確認に）:</span>
+        <button type="button" class="btn" data-open="28">E</button><button type="button" class="btn" data-open="33">A</button><button type="button" class="btn" data-open="38">D</button><button type="button" class="btn" data-open="43">G</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- GROOVE -->
+<section class="view" id="v-gv" role="tabpanel" aria-labelledby="t-gv" hidden>
+  <div class="intro">
+    <span class="eyebrow">Groove</span>
+    <h2>ドラムに合わせて、グルーヴを弾く</h2>
+    <p>パターンを選んで▶で再生すると、ドラムとベースの見本がループします。TAB譜の今の位置が光ります。慣れたら「ベースを消す」にして、ドラムだけで自分が弾きます。</p>
+  </div>
+  <div class="gv-list" id="gvList" role="group" aria-label="グルーヴの一覧"></div>
+  <div class="controls">
+    <label class="ctl"><span>キー</span><select id="gvKey"></select></label>
+    <label class="ctl"><span>テンポ（BPM）</span><input type="number" id="gvBpm" min="40" max="200" inputmode="numeric"></label>
+    <button type="button" class="btn play" id="gvPlay" aria-pressed="false">▶ 再生</button>
+    <label class="chk"><input type="checkbox" id="gvMute">ベースを消す（自分で弾く）</label>
+    <label class="chk"><input type="checkbox" id="gvRamp">1周ごとに +2 BPM</label>
+  </div>
+  <div class="controls">
+    <label class="ctl"><span>ベースの音量</span><input type="range" id="gvBv" min="0" max="1" step="0.01"></label>
+    <label class="ctl"><span>ドラムの音量</span><input type="range" id="gvDv" min="0" max="1" step="0.01"></label>
+  </div>
+  <div class="card"><div class="bars" id="gvBars"></div>
+    <p class="small muted" style="margin:10px 0 0">数字はフレット、x はゴーストノート（弦をミュートして鳴らす音）。線の長さは音を伸ばす長さです。1マス＝16分音符。</p></div>
+  <div class="card gv-info" id="gvInfo"></div>
+</section>
+
+<!-- RHYTHM -->
+<section class="view" id="v-rh" role="tabpanel" aria-labelledby="t-rh" hidden>
+  <div class="intro">
+    <span class="eyebrow">Rhythm trainer</span>
+    <h2>体の中にテンポを持つ</h2>
+    <p>ベースはバンドのテンポの土台です。クリックを2・4拍や裏拍だけにしたり、ときどき消したりして、クリックに頼らずにテンポを保つ練習をします。</p>
+  </div>
+  <div class="controls">
+    <label class="ctl"><span>テンポ（BPM）</span><input type="number" id="rhBpm" min="40" max="220" inputmode="numeric"></label>
+    <div class="ctl"><span>細かさ</span><div class="seg" id="rhSub" role="group" aria-label="細かさ">
+      <button type="button" data-v="1">4分</button><button type="button" data-v="2">8分</button><button type="button" data-v="3">3連</button><button type="button" data-v="4">16分</button></div></div>
+    <div class="ctl"><span>クリックの位置</span><div class="seg" id="rhMode" role="group" aria-label="クリックの位置">
+      <button type="button" data-v="all">全部の拍</button><button type="button" data-v="24">2・4拍だけ</button><button type="button" data-v="off">裏拍だけ</button></div></div>
+  </div>
+  <div class="controls">
+    <label class="ctl"><span>鳴らす小節</span><select id="rhOn"></select></label>
+    <label class="ctl"><span>消す小節</span><select id="rhOff"></select></label>
+    <button type="button" class="btn play" id="rhPlay" aria-pressed="false">▶ スタート</button>
+  </div>
+  <div class="card">
+    <div class="lamps" id="lamps"></div>
+    <div class="rh-state" id="rhState" aria-live="polite">止まっています</div>
+  </div>
+  <div class="card">
+    <h3 style="margin:0 0 8px;font-size:16px">練習のしかた</h3>
+    <ol class="rh-tips">
+      <li><b>全部の拍・8分</b>で、開放弦のルートを8分で弾きます。クリックの音が自分の音で聞こえなくなる（ぴったり重なる）のが目標です。</li>
+      <li><b>2・4拍だけ</b>にすると、ドラムのスネアと同じ位置でクリックが鳴ります。1・3拍は自分で感じます。</li>
+      <li><b>裏拍だけ</b>は難しめです。クリックを「ウラ」と感じたまま、オモテで弾き続けます。</li>
+      <li><b>消す小節</b>を1〜2にすると、無音のあいだも弾き続けて、クリックが戻ってきたときにズレていないか確かめられます。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- PRACTICE -->
+<section class="view" id="v-pr" role="tabpanel" aria-labelledby="t-pr" hidden>
+  <div class="intro">
+    <span class="eyebrow">Practice routine</span>
+    <h2>1日30分のルーティン</h2>
+    <p>「スタート」を押すと、上から順にタイマーが進みます。各項目の「開く」で、その練習に使うタブに移動します。最後まで終えるか「今日の練習を記録」を押すと、カレンダーに記録されます。記録はこの端末の中にだけ保存されます。</p>
+  </div>
+  <div class="card timer">
+    <div><div class="small muted" id="prNow">次: —</div><div class="clock" id="prClock">00:00</div></div>
+    <div class="prog" aria-hidden="true"><i id="prBar"></i></div>
+    <div class="controls">
+      <button type="button" class="btn play" id="prStart" aria-pressed="false">▶ スタート</button>
+      <button type="button" class="btn" id="prSkip">次へ</button>
+      <button type="button" class="btn" id="prReset">リセット</button>
+    </div>
+  </div>
+  <ol class="routine" id="routine"></ol>
+  <div class="card" style="display:flex;flex-direction:column;gap:12px">
+    <div class="stat"><div><b id="stStreak">0</b><span>連続日数</span></div><div><b id="stTotal">0</b><span>練習した日（合計）</span></div></div>
+    <div class="days" id="days" aria-label="直近14日の記録"></div>
+    <div><button type="button" class="btn" id="prLog">今日の練習を記録</button></div>
+  </div>
+</section>
+
+</main>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const NAMES=['C','D♭','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+const DEG=['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'];
+const OPEN=[28,33,38,43]; // 4弦E → 1弦G
+const SNAME=['E','A','D','G'];
+const FRETS=15;
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+const KEYS=[4,5,6,7,8,9,10,11,0,1,2,3]; // E から並べる（ベースでよく使う順）
+
+/* ---------- state ---------- */
+const ST={tab:'fb',
+  fb:{id:'m7',key:9,pos:1,lab:'deg'},
+  gv:{id:'rock8',key:4,bpm:0,mute:false,ramp:false,bv:.8,dv:.7},
+  rh:{bpm:80,sub:2,mode:'all',on:4,off:0},
+  log:[]};
+try{const s=JSON.parse(localStorage.getItem('bass-lab')||'null');
+  if(s){['fb','gv','rh'].forEach(k=>{if(s[k]&&typeof s[k]==='object')Object.assign(ST[k],s[k])});
+    if(Array.isArray(s.log))ST.log=s.log.filter(d=>typeof d==='string');
+    if(['fb','gv','rh','pr'].includes(s.tab))ST.tab=s.tab;}}catch(e){}
+const save=()=>{try{localStorage.setItem('bass-lab',JSON.stringify(ST))}catch(e){}};
+
+/* ---------- audio ---------- */
+let ac=null,bassBus,drumBus,clickBus,noiseBuf;
+function audio(){
+  if(!ac){
+    ac=new (window.AudioContext||window.webkitAudioContext)();
+    const comp=ac.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=4;comp.connect(ac.destination);
+    bassBus=ac.createGain();drumBus=ac.createGain();clickBus=ac.createGain();
+    [bassBus,drumBus,clickBus].forEach(g=>g.connect(comp));clickBus.gain.value=.9;
+    noiseBuf=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);
+    const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  }
+  if(ac.state==='suspended')ac.resume();
+  setMix();return ac;
+}
+function setMix(){if(!ac)return;const live=ENG.kind==='gv';
+  bassBus.gain.value=(live&&ST.gv.mute)?0:(live?ST.gv.bv:.85);drumBus.gain.value=ST.gv.dv}
+function bassNote(m,t,dur,vel=1){
+  const f=mtof(m),o=ac.createOscillator(),s=ac.createOscillator(),lp=ac.createBiquadFilter(),og=ac.createGain(),sg=ac.createGain(),g=ac.createGain();
+  o.type='sawtooth';s.type='sine';o.frequency.value=f;s.frequency.value=f;
+  og.gain.value=.28;sg.gain.value=.9;o.connect(og);s.connect(sg);og.connect(lp);sg.connect(lp);
+  lp.type='lowpass';lp.Q.value=2;lp.frequency.setValueAtTime(Math.min(f*12,2600),t);lp.frequency.setTargetAtTime(f*2.2+90,t+.01,.09);
+  lp.connect(g);g.connect(bassBus);
+  const pk=.55*vel,end=t+Math.max(dur,.07);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+.006);g.gain.setTargetAtTime(pk*.5,t+.012,.18);g.gain.setTargetAtTime(0,end,.03);
+  o.start(t);s.start(t);o.stop(end+.25);s.stop(end+.25);
+}
+function ghost(t){
+  const n=ac.createBufferSource(),bp=ac.createBiquadFilter(),g=ac.createGain();
+  n.buffer=noiseBuf;bp.type='bandpass';bp.frequency.value=420;bp.Q.value=1.2;n.connect(bp);bp.connect(g);g.connect(bassBus);
+  g.gain.setValueAtTime(.5,t);g.gain.exponentialRampToValueAtTime(.001,t+.05);n.start(t,Math.random()*.5);n.stop(t+.06);
+  const o=ac.createOscillator(),og=ac.createGain();o.frequency.value=70;o.connect(og);og.connect(bassBus);
+  og.gain.setValueAtTime(.35,t);og.gain.exponentialRampToValueAtTime(.001,t+.05);o.start(t);o.stop(t+.06);
+}
+function noiseHit(t,type,freq,gain,dec,bus,q){
+  const n=ac.createBufferSource(),fl=ac.createBiquadFilter(),g=ac.createGain();
+  n.buffer=noiseBuf;fl.type=type;fl.frequency.value=freq;if(q)fl.Q.value=q;n.connect(fl);fl.connect(g);g.connect(bus);
+  g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.001,t+dec);n.start(t,Math.random()*.5);n.stop(t+dec+.02);
+}
+function kick(t){const o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(42,t+.12);
+  o.connect(g);g.connect(drumBus);g.gain.setValueAtTime(1,t);g.gain.exponentialRampToValueAtTime(.001,t+.38);o.start(t);o.stop(t+.4)}
+function snare(t,v=1){noiseHit(t,'highpass',1300,.45*v,.17,drumBus);
+  const o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.setValueAtTime(200,t);o.frequency.exponentialRampToValueAtTime(150,t+.08);
+  o.connect(g);g.connect(drumBus);g.gain.setValueAtTime(.4*v,t);g.gain.exponentialRampToValueAtTime(.001,t+.1);o.start(t);o.stop(t+.12)}
+const hat=(t,v=1,open)=>noiseHit(t,'highpass',7500,.16*v,open?.22:.045,drumBus);
+const ride=(t,v=1)=>noiseHit(t,'bandpass',5200,.13*v,.3,drumBus,.8);
+function click(t,level){ // level: 2=accent,1=beat,0=sub
+  const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=level===2?1760:level===1?1250:950;
+  o.connect(g);g.connect(clickBus);const v=level===0?.18:.45;
+  g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+.035);o.start(t);o.stop(t+.05)}
+
+/* ---------- shared scheduler (one thing plays at a time) ---------- */
+const SW=[0,1/3,2/3,5/6]; // swing: 8分の裏を3連の3つ目へ
+const ENG={kind:null,timer:0,raf:0,q:[],stopUI:{}};
+function stopAll(){
+  clearInterval(ENG.timer);cancelAnimationFrame(ENG.raf);ENG.q=[];
+  const k=ENG.kind;ENG.kind=null;if(k&&ENG.stopUI[k])ENG.stopUI[k]();
+}
+function run(kind,o){
+  stopAll();try{audio()}catch(e){return false}
+  ENG.kind=kind;setMix();
+  let i=0,beatT=ac.currentTime+.08;
+  const tick=()=>{
+    if(ENG.kind!==kind)return;
+    for(;;){
+      const spb=o.spb(),bd=60/o.bpm(),sub=i%spb,tt=beatT+(o.swing&&spb===4?SW[sub]:sub/spb)*bd;
+      if(tt>ac.currentTime+.12)break;
+      if(tt>=ac.currentTime-.03){o.sched(i,tt,bd/spb);ENG.q.push([tt,i])}
+      i++;if(i%spb===0)beatT+=bd;
+    }
+  };
+  const frame=()=>{
+    if(ENG.kind!==kind)return;
+    let last=null;while(ENG.q.length&&ENG.q[0][0]<=ac.currentTime)last=ENG.q.shift()[1];
+    if(last!==null)o.ui(last);
+    ENG.raf=requestAnimationFrame(frame);
+  };
+  ENG.timer=setInterval(tick,25);tick();frame();
+  return true;
+}
+
+/* ---------- tabs ---------- */
+function showTab(v){
+  ST.tab=v;save();
+  $$('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));
+  ['fb','gv','rh','pr'].forEach(k=>{$('#v-'+k).hidden=k!==v});
+}
+$$('.tabs button').forEach(b=>b.onclick=()=>{showTab(b.dataset.v);window.scrollTo({top:0})});
+
+function fillKeys(sel,val,onch){
+  if(!sel.options.length)KEYS.forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=NAMES[k];sel.appendChild(o)});
+  sel.value=val;sel.onchange=onch;
+}
+function seg(el,val,onpick){
+  el.querySelectorAll('button').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.v)===String(val));b.onclick=()=>onpick(b.dataset.v)});
+}
+
+/* =========================================================
+   1) FRETBOARD
+   ========================================================= */
+const SHAPES=[
+ {g:'ウォームアップ',id:'chrom',name:'クロマチック 1-2-3-4',iv:[0,1,2,3,4,5,6,7,8,9,10,11],en:'Chromatic',
+  use:'左手の指を1フレットに1本ずつ置く「1フィンガー1フレット」の基本練習です。',
+  tip:'人差し指から小指まで順番に押さえ、4弦→1弦へ上がって戻ります。押さえ終わった指はすぐに離さず、弦の上に置いたままにすると手の形が安定します。'},
+ {g:'コードの音（アルペジオ）',id:'maj',name:'メジャー',iv:[0,4,7],en:'Major triad',
+  use:'明るいコード（C、Gなど）の上で一番安全な3音です。ルートと5度だけでも曲は成り立ちます。',
+  tip:'ルート→3度→5度→オクターブを、指板上の「形」として覚えます。4弦ルートなら、3度は3弦の1フレット下にあります。'},
+ {g:'コードの音（アルペジオ）',id:'min',name:'マイナー',iv:[0,3,7],en:'Minor triad',
+  use:'暗いコード（Am、Emなど）の上の基本の3音です。',
+  tip:'メジャーとの違いは3度だけ（半音下がる）。同じルートでメジャーとマイナーを交互に弾き、違いを指で覚えます。'},
+ {g:'コードの音（アルペジオ）',id:'dom7',name:'セブンス（7）',iv:[0,4,7,10],en:'Dominant 7th',
+  use:'ブルース、ファンク、ロックンロールで一番よく出てくるコードです。',
+  tip:'♭7はルートの2フレット下、1本細い弦の同じフレット…ではなく「オクターブの2フレット手前」です。オクターブと♭7の行き来はファンクの定番です。'},
+ {g:'コードの音（アルペジオ）',id:'m7',name:'マイナーセブンス（m7）',iv:[0,3,7,10],en:'Minor 7th',
+  use:'ファンク、R&B、ジャズ、J-POPのおしゃれなコードの基本です。',
+  tip:'ルート・♭3・5・♭7は、4弦ルートなら指を大きく動かさずに全部押さえられます。まずはこの形からがおすすめです。'},
+ {g:'コードの音（アルペジオ）',id:'maj7',name:'メジャーセブンス（maj7）',iv:[0,4,7,11],en:'Major 7th',
+  use:'やわらかく浮遊感のあるコードです。シティポップやバラードによく出てきます。',
+  tip:'7度はルートの半音下です。オクターブの1フレット手前、と覚えると速く見つかります。'},
+ {g:'コードの音（アルペジオ）',id:'m7b5',name:'マイナー7♭5（m7♭5）',iv:[0,3,6,10],en:'Half-diminished',
+  use:'マイナーキーのⅡのコードとしてジャズやボサノバに出てきます。',
+  tip:'m7の5度を半音下げた形です。m7と並べて弾くと覚えやすいです。'},
+ {g:'スケール',id:'minpent',name:'マイナーペンタトニック',iv:[0,3,5,7,10],en:'Minor Pentatonic',
+  use:'ロックやブルースのベースラインやフィルの基本です。ルートの周りを動くときにまずこれを使います。',
+  tip:'4弦ルートの形は「ルート・♭3｜4・5｜♭7・オクターブ」と、各弦2音ずつです。'},
+ {g:'スケール',id:'majpent',name:'メジャーペンタトニック',iv:[0,2,4,7,9],en:'Major Pentatonic',
+  use:'カントリー、モータウン、明るいポップスのベースラインに合います。',
+  tip:'6度からルートへ上がる動き（6→オクターブ）は、明るい曲で定番のフレーズです。'},
+ {g:'スケール',id:'major',name:'メジャースケール',iv:[0,2,4,5,7,9,11],en:'Major / Ionian',
+  use:'すべての基準になるスケールです。コード同士をつなぐ「経過音」はここから選びます。',
+  tip:'度数を声に出しながら弾きます。4弦ルートなら、中指スタートで1フィンガー1フレットに収まります。'},
+ {g:'スケール',id:'minor',name:'ナチュラルマイナー',iv:[0,2,3,5,7,8,10],en:'Natural Minor / Aeolian',
+  use:'マイナーキーの曲全般で使います。',
+  tip:'マイナーペンタに2度と♭6を足したもの、と考えると覚えやすいです。'},
+ {g:'スケール',id:'dorian',name:'ドリアン',iv:[0,2,3,5,7,9,10],en:'Dorian',
+  use:'ファンクやフュージョンで、m7のコードが長く続くときに使います。',
+  tip:'ナチュラルマイナーとの違いは6度だけ。6度を通るラインを弾くと、ドリアンらしい明るさが出ます。'},
+ {g:'スケール',id:'mixo',name:'ミクソリディアン',iv:[0,2,4,5,7,9,10],en:'Mixolydian',
+  use:'7のコードの上で使います。ブルースロックやファンクのベースに合います。',
+  tip:'メジャースケールの7度を半音下げたものです。♭7を経由してオクターブへ上がる動きを練習します。'}
+];
+const shape=()=>SHAPES.find(s=>s.id===ST.fb.id)||SHAPES[4];
+const rel=p=>((p-ST.fb.key)%12+12)%12;
+// root fret on string j (0=4弦E), 0–11
+const rootFret=j=>((ST.fb.key-OPEN[j])%12+12)%12;
+function windowOf(pos){ // pos 1: 4弦ルート, 2: 3弦ルート（クロマチックは 1: 1フレット〜, 2: 5フレット〜）
+  const sc=shape();
+  if(sc.id==='chrom'){const lo=pos===2?5:1;return {lo,hi:lo+3,j:0,r:lo}}
+  const j=pos===1?0:1,r=rootFret(j);
+  return {lo:Math.max(0,r-1),hi:r+4,j,r};
+}
+function boxCells(pos){
+  const sc=shape(),w=windowOf(pos),out=[];
+  for(let j=(sc.id==='chrom'?0:w.j);j<4;j++)for(let f=w.lo;f<=w.hi;f++){
+    if(f<0||f>FRETS)continue;const p=OPEN[j]+f;if(!sc.iv.includes(rel(p)))continue;
+    if(j===w.j&&f<w.r&&sc.id!=='chrom')continue; // ルートより低い音は始点の弦では弾かない
+    out.push({j,f,m:p});
+  }
+  return out;
+}
+
+function renderFbList(){
+  const el=$('#fbList');el.innerHTML='';const groups=[...new Set(SHAPES.map(s=>s.g))];
+  groups.forEach(g=>{const d=document.createElement('div');d.innerHTML='<h3>'+g+'</h3>';const ul=document.createElement('ul');
+    SHAPES.filter(s=>s.g===g).forEach(s=>{const li=document.createElement('li'),b=document.createElement('button');
+      b.type='button';b.className='it';b.setAttribute('aria-pressed',s.id===ST.fb.id);
+      b.innerHTML='<b>'+s.name+'</b><span>'+(s.id==='chrom'?'1 2 3 4':s.iv.map(i=>DEG[i]).join(' '))+'</span>';
+      b.onclick=()=>{ST.fb.id=s.id;if(s.id==='chrom'&&!ST.fb.pos)ST.fb.pos=1;stopAll();save();renderFb()};li.appendChild(b);ul.appendChild(li)});
+    d.appendChild(ul);el.appendChild(d)});
+}
+const W=52,X0=64,Y0=24,G=32;
+const fx=f=>f===0?X0-24:X0+(f-.5)*W, sy=j=>Y0+(3-j)*G;
+function renderBoard(){
+  const sc=shape(),svg=$('#board'),width=X0+FRETS*W+12,h=Y0+3*G+46;
+  svg.setAttribute('viewBox','0 0 '+width+' '+h);
+  const box=ST.fb.pos?new Set(boxCells(ST.fb.pos).map(c=>c.j+'-'+c.f)):null;
+  let s='<rect x="'+X0+'" y="'+(Y0-14)+'" width="'+(FRETS*W)+'" height="'+(3*G+28)+'" rx="3" fill="var(--board)" stroke="var(--board-edge)"/>';
+  const mid=Y0+1.5*G;
+  [3,5,7,9,15].forEach(f=>s+='<circle cx="'+fx(f)+'" cy="'+mid+'" r="6" fill="var(--inlay)"/>');
+  s+='<circle cx="'+fx(12)+'" cy="'+(Y0+.5*G)+'" r="6" fill="var(--inlay)"/><circle cx="'+fx(12)+'" cy="'+(Y0+2.5*G)+'" r="6" fill="var(--inlay)"/>';
+  for(let f=1;f<=FRETS;f++)s+='<line x1="'+(X0+f*W)+'" x2="'+(X0+f*W)+'" y1="'+(Y0-14)+'" y2="'+(Y0+3*G+14)+'" stroke="var(--fret)" stroke-width="2"/>';
+  s+='<rect x="'+(X0-4)+'" y="'+(Y0-14)+'" width="6" height="'+(3*G+28)+'" fill="var(--dot)" stroke="var(--board-edge)"/>';
+  for(let j=0;j<4;j++){s+='<line x1="'+(X0-40)+'" x2="'+(X0+FRETS*W)+'" y1="'+sy(j)+'" y2="'+sy(j)+'" stroke="var(--string)" stroke-width="'+(4-j*.7)+'"/>';
+    s+='<text x="2" y="'+(sy(j)+4)+'" font-size="11" fill="var(--muted)">'+(4-j)+SNAME[j]+'</text>'}
+  [1,3,5,7,9,12,15].forEach(f=>s+='<text x="'+fx(f)+'" y="'+(h-10)+'" text-anchor="middle" font-size="12" font-weight="600" fill="var(--muted)">'+f+'</text>');
+  for(let j=0;j<4;j++)for(let f=0;f<=FRETS;f++){
+    const p=OPEN[j]+f,r=rel(p);if(!sc.iv.includes(r))continue;
+    if(sc.id==='chrom'&&box&&!box.has(j+'-'+f))continue;
+    const root=r===0,fill=root?'var(--root)':'var(--dot)',tc=root?'var(--root-fg)':'var(--dot-fg)';
+    const lab=ST.fb.lab==='deg'?DEG[r]:NAMES[p%12],dim=box&&!box.has(j+'-'+f)?' dim':'';
+    s+='<g class="dot'+dim+'" id="d-'+j+'-'+f+'" data-m="'+p+'"><circle cx="'+fx(f)+'" cy="'+sy(j)+'" r="13" fill="'+fill+'"/><text x="'+fx(f)+'" y="'+(sy(j)+4)+'" text-anchor="middle" font-size="'+(lab.length>2?10:12)+'" font-weight="600" fill="'+tc+'">'+lab+'</text></g>';
+  }
+  svg.innerHTML=s;
+}
+$('#board').addEventListener('click',e=>{const d=e.target.closest('.dot');if(!d)return;
+  try{audio()}catch(_){return}bassNote(+d.dataset.m,ac.currentTime+.01,.6);
+  d.classList.add('on');setTimeout(()=>d.classList.remove('on'),300)});
+$$('[data-open]').forEach(b=>b.onclick=()=>{try{audio()}catch(_){return}bassNote(+b.dataset.open,ac.currentTime+.01,2.2)});
+
+function renderFb(){
+  renderFbList();
+  fillKeys($('#fbKey'),ST.fb.key,e=>{ST.fb.key=+e.target.value;stopAll();save();renderFb()});
+  const sc=shape(),pos=$('#fbPos');
+  const opts=sc.id==='chrom'?[[1,'1フレット〜'],[2,'5フレット〜']]:[[0,'全体'],[1,'4弦ルート'],[2,'3弦ルート']];
+  if(!opts.some(o=>o[0]===ST.fb.pos))ST.fb.pos=opts[0][0];
+  pos.innerHTML=opts.map(([v,l])=>'<button type="button" data-v="'+v+'">'+l+'</button>').join('');
+  seg(pos,ST.fb.pos,v=>{ST.fb.pos=+v;stopAll();save();renderFb()});
+  seg($('#fbLab'),ST.fb.lab,v=>{ST.fb.lab=v;save();renderFb()});
+  renderBoard();
+  const k=NAMES[ST.fb.key];
+  const chips=sc.id==='chrom'?'':'<div class="chips">'+sc.iv.map(i=>'<div class="chip'+(i===0?' root':'')+'"><b>'+DEG[i]+'</b><span>'+NAMES[(ST.fb.key+i)%12]+'</span></div>').join('')+'</div>';
+  $('#fbDetail').innerHTML='<h3>'+(sc.id==='chrom'?'':k+' ')+sc.name+'<small>'+sc.en+'</small></h3>'+chips+
+    '<p><b>使いどころ：</b>'+sc.use+'</p><p style="margin-top:6px"><b>練習のポイント：</b>'+sc.tip+'</p>';
+}
+
+ENG.stopUI.fb=()=>{$('#fbPlay').textContent='▶ 再生';$('#fbPlay').setAttribute('aria-pressed','false');$$('.dot.on').forEach(d=>d.classList.remove('on'))};
+$('#fbPlay').onclick=()=>{
+  if(ENG.kind==='fb'){stopAll();return}
+  const sc=shape();let cells=boxCells(ST.fb.pos||1);
+  if(sc.id==='chrom')cells.sort((a,b)=>a.j-b.j||a.f-b.f);
+  else{cells.sort((a,b)=>a.m-b.m);const seen=new Set();cells=cells.filter(c=>!seen.has(c.m)&&seen.add(c.m))}
+  if(!cells.length)return;
+  const seq=cells.concat(cells.slice(0,-1).reverse());
+  const ok=run('fb',{spb:()=>2,bpm:()=>80,sched:(i,t,sd)=>{if(i<seq.length)bassNote(seq[i].m,t,sd*.9)},
+    ui:i=>{$$('.dot.on').forEach(d=>d.classList.remove('on'));if(i>=seq.length){stopAll();return}
+      const d=$('#d-'+seq[i].j+'-'+seq[i].f);if(d)d.classList.add('on')}});
+  if(ok){$('#fbPlay').textContent='■ 停止';$('#fbPlay').setAttribute('aria-pressed','true')}
+};
+
+/* =========================================================
+   2) GROOVE
+   bars: [step(0-15), interval | 'A'(次のルートの半音下) | 'H'(半音上), length(16分の数), 'g'=ghost]
+   drums: k=kick s=snare(g=ghost) h=hat(o=open) r=ride, 16 chars per bar
+   ========================================================= */
+const R8=[0,2,4,6,8,10,12,14];
+const GROOVES=[
+ {id:'rock8',name:'ルート弾き 8分',tag:'入門 ・ ロック／ポップ',key:4,bpm:100,
+  prog:[[0,''],[7,''],[9,'m'],[5,'']],
+  bars:[R8.map(s=>[s,0,2]),R8.map(s=>[s,0,2]),R8.map(s=>[s,0,2]),[[0,0,2],[2,0,2],[4,0,2],[6,0,2],[8,0,2],[10,0,2],[12,7,2],[14,'A',2]]],
+  drums:{k:'x.......x.x.....',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.'},
+  point:'右手（ピッキング）の強さと、音を止めるタイミングをそろえます。8つの音が同じ大きさ・同じ長さで並ぶと、それだけでバンドが安定します。',
+  next:'4小節目の最後の「半音下からの経過音」は、次のコードへ入る合図です。他の小節でも入れてみましょう。'},
+ {id:'country',name:'ルートと5度（2ビート）',tag:'入門 ・ カントリー／ロックンロール',key:7,bpm:112,
+  prog:[[0,''],[5,''],[7,''],[0,'']],
+  bars:[[[0,0,3],[4,-5,3],[8,0,3],[12,-5,3]],[[0,0,3],[4,-5,3],[8,0,3],[12,-5,3]],[[0,0,3],[4,-5,3],[8,0,3],[12,-5,3]],[[0,0,3],[4,-5,3],[8,0,3],[12,'A',3]]],
+  drums:{k:'x.......x.......',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.'},
+  point:'1・3拍目でルート、2・4拍目で下の5度。5度はルートと同じフレットの、1本太い弦にあります（4弦ルートのときは3弦の2フレット上）。',
+  next:'5度を上（ルートの1本細い弦の2フレット上）に変えると、明るくはずむ感じになります。'},
+ {id:'octave',name:'オクターブ（ディスコ）',tag:'初級 ・ ディスコ／ダンス',key:9,bpm:116,
+  prog:[[0,'m'],[5,'m'],[0,'m'],[10,'']],
+  bars:Array(4).fill(0).map(()=>R8.map(s=>s%4===0?[s,0,2]:[s,12,1])),
+  drums:{k:'x...x...x...x...',s:'....x.......x...',h:'..o...o...o...o.'},
+  point:'オクターブ上は、ルートの2フレット上・2本細い弦です。人差し指でルート、薬指か小指でオクターブを押さえ、手の形を変えずに移動します。',
+  next:'オクターブ上の音を短く切る（押さえている指を少し浮かす）と、はねるようなノリになります。'},
+ {id:'motown',name:'コードの音＋経過音',tag:'初級 ・ ソウル／ポップス',key:0,bpm:104,
+  prog:[[0,''],[9,'m'],[5,''],[7,'']],
+  bars:[[[0,0,3],[3,0,1],[4,4,2],[6,7,2],[8,9,2],[10,7,2],[12,4,2],[14,'A',2]],
+        [[0,0,3],[3,0,1],[4,3,2],[6,7,2],[8,10,2],[10,7,2],[12,3,2],[14,'A',2]],
+        [[0,0,3],[3,0,1],[4,4,2],[6,7,2],[8,9,2],[10,7,2],[12,4,2],[14,'A',2]],
+        [[0,0,3],[3,0,1],[6,7,2],[8,12,2],[10,10,2],[12,7,2],[14,'H',2]]],
+  drums:{k:'x.....x.x.......',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.'},
+  point:'1拍目はルート、そのあとはコードの音（3度・5度・6度）を上り下りして、最後の8分で次のコードの半音となりへ。メロディのように動くベースの基本形です。',
+  next:'「指板」タブでメジャー／マイナーの形を確かめてから弾くと、どの音を選んでいるかが見えてきます。'},
+ {id:'funk16',name:'16分ファンク（ゴースト）',tag:'中級 ・ ファンク',key:4,bpm:96,
+  prog:[[0,'7'],[0,'7']],
+  bars:[[[0,0,2],[2,null,1,'g'],[3,0,1],[6,12,1],[7,null,1,'g'],[8,10,2],[10,7,1],[11,null,1,'g'],[12,0,1],[14,12,1],[15,null,1,'g']],
+        [[0,0,2],[3,null,1,'g'],[4,3,1],[5,4,1],[6,7,2],[9,null,1,'g'],[10,0,1],[11,0,1],[12,10,2],[14,7,1],[15,'A',1]]],
+  drums:{k:'x.....x...x.....',s:'....x..g.g..x..g',h:'xxxxxxxxxxxxxxxx'},
+  point:'右手は16分で止めずに動かし続け、弾かないところは左手で弦を軽くミュートして「x」の音（ゴーストノート）を入れます。1拍目のルートを一番強く。',
+  next:'テンポを70まで落としてから、「1周ごとに+2 BPM」で少しずつ上げると、無理なく速くなります。'},
+ {id:'walk',name:'ウォーキング（ii–V–I）',tag:'中級 ・ ジャズ／スウィング',key:5,bpm:120,swing:true,
+  prog:[[2,'m7'],[7,'7'],[0,'maj7'],[9,'7']],
+  bars:[[[0,0,4],[4,2,4],[8,3,4],[12,'A',4]],[[0,0,4],[4,4,4],[8,7,4],[12,'H',4]],[[0,0,4],[4,2,4],[8,4,4],[12,'A',4]],[[0,0,4],[4,4,4],[8,7,4],[12,'H',4]]],
+  drums:{r:'x...x.x.x...x.x.',h:'....x.......x...'},
+  point:'4分音符で「1拍目にルート → コードの音や音階でつなぐ → 4拍目で次のルートの半音となり」。この型を守れば、どんなコード進行でもラインが作れます。',
+  next:'音を切らずに次の音までしっかり伸ばします。4拍目の経過音を、上からと下からで入れ替えてみましょう。'},
+ {id:'reggae',name:'ワンドロップ',tag:'中級 ・ レゲエ',key:2,bpm:76,
+  prog:[[0,'m'],[5,'m']],
+  bars:[[[4,0,2],[6,0,2],[10,7,2],[12,10,1],[14,12,2]],[[4,0,2],[6,0,2],[10,7,2],[12,3,1],[14,0,2]]],
+  drums:{k:'........x.......',s:'........x.......',h:'x.x.x.x.x.x.x.x.'},
+  point:'1拍目はあえて弾きません。休符のあとに太く短い音を置くと、レゲエらしい「重いのに軽い」ノリになります。',
+  next:'音量を下げ、指の腹でやわらかく弾くと雰囲気が出ます。休符を数えるときは「(ウン)・タ・タ」と口で言いながら。'}
+];
+const groove=()=>GROOVES.find(g=>g.id===ST.gv.id)||GROOVES[0];
+const rootMidi=pc=>28+((pc-4)%12+12)%12;
+function placeNote(m,anchor){
+  let best=null;for(let j=0;j<4;j++){const f=m-OPEN[j];if(f<0||f>FRETS)continue;
+    const c=Math.abs(f-anchor)+(f>anchor+3?1:0);if(!best||c<best.c)best={j,f,c}}
+  return best;
+}
+function compile(g,key){
+  const roots=g.prog.map(([o])=>rootMidi((key+o)%12));
+  return g.bars.map((bar,b)=>{
+    const r=roots[b],nr=roots[(b+1)%roots.length];
+    const rp=r-28<=7?{j:0,f:r-28}:{j:1,f:r-33},anchor=rp.f+1;
+    let lastJ=rp.j;
+    return bar.map(([s,iv,len,fl])=>{
+      if(fl==='g')return {s,len,ghost:true,j:lastJ};
+      let m=iv==='A'?nr-1:iv==='H'?nr+1:r+iv;
+      while(m<28)m+=12;while(m>OPEN[3]+12)m-=12;
+      const p=placeNote(m,anchor);lastJ=p.j;
+      return {s,len,m,j:p.j,f:p.f};
+    });
+  });
+}
+const chordName=(g,b)=>NAMES[(ST.gv.key+g.prog[b][0])%12]+g.prog[b][1];
+let GC=null;
+function renderGv(){
+  const g=groove();if(!ST.gv.bpm)ST.gv.bpm=g.bpm;
+  $('#gvList').innerHTML=GROOVES.map(x=>'<button type="button" class="gv" data-id="'+x.id+'" aria-pressed="'+(x.id===g.id)+'"><b>'+x.name+'</b><span>'+x.tag+' ・ '+x.bpm+' BPM</span></button>').join('');
+  $$('#gvList .gv').forEach(b=>b.onclick=()=>{const n=GROOVES.find(x=>x.id===b.dataset.id);ST.gv.id=n.id;ST.gv.key=n.key;ST.gv.bpm=n.bpm;stopAll();save();renderGv()});
+  fillKeys($('#gvKey'),ST.gv.key,e=>{ST.gv.key=+e.target.value;save();renderGv()});
+  $('#gvBpm').value=ST.gv.bpm;$('#gvMute').checked=ST.gv.mute;$('#gvRamp').checked=ST.gv.ramp;$('#gvBv').value=ST.gv.bv;$('#gvDv').value=ST.gv.dv;
+  GC=compile(g,ST.gv.key);
+  $('#gvBars').innerHTML=GC.map((bar,b)=>{
+    const cells=[[],[],[],[]];
+    for(let j=0;j<4;j++)for(let s=0;s<16;s++)cells[j][s]='';
+    const cls=[[],[],[],[]];
+    bar.forEach(n=>{cells[n.j][n.s]=n.ghost?'x':String(n.f);cls[n.j][n.s]='n'+(n.ghost?' gh':'');
+      if(!n.ghost)for(let k=1;k<n.len&&n.s+k<16;k++)if(!cls[n.j][n.s+k])cls[n.j][n.s+k]='sus'});
+    let h='<div class="bar" id="gb'+b+'"><div class="ch">'+chordName(g,b)+'</div><div class="tabg">';
+    for(let row=3;row>=0;row--){h+='<div class="sn">'+SNAME[row]+'</div>';
+      for(let s=0;s<16;s++){const c=['c'+s,s===0?'b0':s%4===0?'bq':'',cls[row][s]||''].join(' ').trim();
+        h+='<div class="'+c+'">'+(cells[row][s]?'<b>'+cells[row][s]+'</b>':'')+'</div>'}}
+    h+='</div><div class="drow"><span></span>'+Array.from({length:16},(_,s)=>'<span>'+(s%4===0?(s/4+1):s%4===2?(g.swing?'':'&'):'')+'</span>').join('')+'</div></div>';
+    return h}).join('');
+  $('#gvInfo').innerHTML='<div><h4>ポイント</h4><p>'+g.point+'</p></div><div><h4>慣れたら</h4><p>'+g.next+'</p></div>';
+}
+ENG.stopUI.gv=()=>{$('#gvPlay').textContent='▶ 再生';$('#gvPlay').setAttribute('aria-pressed','false');$$('#gvBars .cur').forEach(c=>c.classList.remove('cur'))};
+function startGv(){
+  const g=groove(),nb=g.bars.length;
+  const ok=run('gv',{spb:()=>4,bpm:()=>ST.gv.bpm,swing:!!g.swing,
+    sched:(i,t,sd)=>{
+      const b=Math.floor(i/16)%nb,s=i%16;
+      if(ST.gv.ramp&&i>0&&i%(16*nb)===0){ST.gv.bpm=Math.min(200,ST.gv.bpm+2)}
+      const D=g.drums,ch=k=>D[k]?D[k][s]:'.';
+      if(ch('k')==='x')kick(t);
+      if(ch('s')==='x')snare(t);else if(ch('s')==='g')snare(t,.25);
+      if(ch('h')==='x')hat(t,s%2?.6:1);else if(ch('h')==='o')hat(t,1,true);
+      if(ch('r')==='x')ride(t,s%4?.7:1);
+      GC[b].forEach(n=>{if(n.s!==s)return;if(n.ghost)ghost(t);else bassNote(n.m,t,n.len*sd*(g.swing?.95:.88),s===0?1:.85)});
+    },
+    ui:i=>{const b=Math.floor(i/16)%nb,s=i%16;
+      $$('#gvBars .cur').forEach(c=>c.classList.remove('cur'));
+      $$('#gb'+b+' .c'+s).forEach(c=>c.classList.add('cur'));
+      if(+$('#gvBpm').value!==ST.gv.bpm)$('#gvBpm').value=ST.gv.bpm}});
+  if(ok){$('#gvPlay').textContent='■ 停止';$('#gvPlay').setAttribute('aria-pressed','true')}
+}
+$('#gvPlay').onclick=()=>{if(ENG.kind==='gv'){stopAll();save();return}startGv()};
+$('#gvBpm').onchange=e=>{const v=Math.round(+e.target.value);ST.gv.bpm=Math.min(200,Math.max(40,v||groove().bpm));e.target.value=ST.gv.bpm;save()};
+$('#gvMute').onchange=e=>{ST.gv.mute=e.target.checked;setMix();save()};
+$('#gvRamp').onchange=e=>{ST.gv.ramp=e.target.checked;save()};
+$('#gvBv').oninput=e=>{ST.gv.bv=+e.target.value;setMix();save()};
+$('#gvDv').oninput=e=>{ST.gv.dv=+e.target.value;setMix();save()};
+
+/* =========================================================
+   3) RHYTHM
+   ========================================================= */
+function renderRh(){
+  $('#rhBpm').value=ST.rh.bpm;
+  seg($('#rhSub'),ST.rh.sub,v=>{ST.rh.sub=+v;save();renderRh();if(ENG.kind==='rh')startRh()});
+  seg($('#rhMode'),ST.rh.mode,v=>{ST.rh.mode=v;save();renderRh();if(ENG.kind==='rh')startRh()});
+  const on=$('#rhOn'),off=$('#rhOff');
+  if(!on.options.length){[1,2,4,8].forEach(n=>on.add(new Option(n+'小節',n)));[0,1,2,4].forEach(n=>off.add(new Option(n?n+'小節':'消さない',n)))}
+  on.value=ST.rh.on;off.value=ST.rh.off;
+  $('#lamps').innerHTML=[1,2,3,4].map(n=>'<div class="lamp'+(n===1?' one':'')+'" data-b="'+(n-1)+'">'+n+'</div>').join('');
+}
+ENG.stopUI.rh=()=>{$('#rhPlay').textContent='▶ スタート';$('#rhPlay').setAttribute('aria-pressed','false');$$('.lamp.on').forEach(l=>l.classList.remove('on'));$('#lamps').classList.remove('rest');$('#rhState').textContent='止まっています'};
+function startRh(){
+  const R=ST.rh,spb=R.mode==='off'?2:R.sub,cyc=R.on+R.off;
+  const ok=run('rh',{spb:()=>spb,bpm:()=>ST.rh.bpm,
+    sched:(i,t)=>{
+      const beat=Math.floor(i/spb)%4,bar=Math.floor(i/(spb*4)),sub=i%spb;
+      if(R.off&&bar%cyc>=R.on)return;
+      if(R.mode==='all'){if(sub===0)click(t,beat===0?2:1);else click(t,0)}
+      else if(R.mode==='24'){if(sub===0&&(beat===1||beat===3))click(t,1)}
+      else if(R.mode==='off'){if(sub===1)click(t,1)}
+    },
+    ui:i=>{
+      const beat=Math.floor(i/spb)%4,bar=Math.floor(i/(spb*4)),rest=R.off&&bar%cyc>=R.on;
+      if(i%spb!==0)return;
+      $$('.lamp').forEach(l=>l.classList.toggle('on',+l.dataset.b===beat));
+      $('#lamps').classList.toggle('rest',!!rest);
+      $('#rhState').textContent=rest?'無音 — 心の中でカウントを続けて':(R.off?'クリックあり（'+(bar%cyc+1)+' / '+R.on+'小節）':'小節 '+(bar+1));
+    }});
+  if(ok){$('#rhPlay').textContent='■ 停止';$('#rhPlay').setAttribute('aria-pressed','true')}
+}
+$('#rhPlay').onclick=()=>{if(ENG.kind==='rh'){stopAll();return}startRh()};
+$('#rhBpm').onchange=e=>{const v=Math.round(+e.target.value);ST.rh.bpm=Math.min(220,Math.max(40,v||80));e.target.value=ST.rh.bpm;save()};
+$('#rhOn').onchange=e=>{ST.rh.on=+e.target.value;save();if(ENG.kind==='rh')startRh()};
+$('#rhOff').onchange=e=>{ST.rh.off=+e.target.value;save();if(ENG.kind==='rh')startRh()};
+
+/* =========================================================
+   4) PRACTICE ROUTINE
+   ========================================================= */
+const ROUTINE=[
+ {min:3,t:'チューニングと開放弦',d:'開放弦を1本ずつ4分で鳴らし、音の長さと止め方をそろえる。',tab:'fb'},
+ {min:5,t:'クロマチック 1-2-3-4',d:'BPM 60〜80で、1フィンガー1フレット。左右の手のタイミングを合わせる。',tab:'fb',fb:'chrom'},
+ {min:5,t:'コードの音（アルペジオ）',d:'m7と7を、4弦ルート・3弦ルートの両方で。キーを毎日1つずつ変える。',tab:'fb',fb:'m7'},
+ {min:5,t:'リズム：2・4拍クリック',d:'ルートを8分で。慣れたら「消す小節」を1〜2に。',tab:'rh'},
+ {min:10,t:'グルーヴ',d:'パターンを1つ選び、見本と一緒に → ベースを消して自分だけで。',tab:'gv'},
+ {min:2,t:'クールダウン',d:'好きなラインを自由に。今日いちばん良かった所をもう一度。',tab:null}
+];
+const PR={i:0,left:ROUTINE[0].min*60,run:false,timer:0,last:0,done:new Set()};
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');
+function renderRoutine(){
+  $('#routine').innerHTML=ROUTINE.map((r,i)=>'<li class="step'+(i===PR.i&&PR.i<ROUTINE.length?' now':'')+(PR.done.has(i)?' done':'')+'"><span class="mm">'+r.min+'分</span><div><b>'+r.t+'</b><span class="d">'+r.d+'</span></div>'+
+    (r.tab?'<button type="button" class="btn go" data-i="'+i+'">開く</button>':'<span></span>')+'</li>').join('');
+  $$('#routine .go').forEach(b=>b.onclick=()=>{const r=ROUTINE[+b.dataset.i];if(r.fb){ST.fb.id=r.fb;ST.fb.pos=1;renderFb()}showTab(r.tab);window.scrollTo({top:0})});
+  const total=ROUTINE.reduce((a,r)=>a+r.min*60,0),passed=ROUTINE.slice(0,PR.i).reduce((a,r)=>a+r.min*60,0)+(PR.i<ROUTINE.length?ROUTINE[PR.i].min*60-PR.left:0);
+  $('#prBar').style.width=Math.min(100,passed/total*100)+'%';
+  $('#prClock').textContent=fmt(PR.i<ROUTINE.length?PR.left:0);
+  $('#prNow').textContent=PR.i<ROUTINE.length?(PR.run?'いま: ':'次: ')+ROUTINE[PR.i].t:'今日のルーティン完了！';
+  $('#prStart').textContent=PR.run?'❚❚ 一時停止':'▶ スタート';$('#prStart').setAttribute('aria-pressed',PR.run);
+}
+function chime(){try{audio();const t=ac.currentTime+.02;click(t,2);click(t+.18,2)}catch(e){}}
+function advance(){PR.done.add(PR.i);PR.i++;chime();
+  if(PR.i>=ROUTINE.length){PR.run=false;clearInterval(PR.timer);logToday()}else PR.left=ROUTINE[PR.i].min*60;renderRoutine()}
+$('#prStart').onclick=()=>{
+  if(PR.i>=ROUTINE.length)return;
+  PR.run=!PR.run;clearInterval(PR.timer);
+  if(PR.run){PR.last=Date.now();PR.timer=setInterval(()=>{const n=Date.now();PR.left-=(n-PR.last)/1000;PR.last=n;if(PR.left<=0)advance();else renderRoutine()},250)}
+  renderRoutine()};
+$('#prSkip').onclick=()=>{if(PR.i<ROUTINE.length)advance()};
+$('#prReset').onclick=()=>{clearInterval(PR.timer);PR.i=0;PR.left=ROUTINE[0].min*60;PR.run=false;PR.done.clear();renderRoutine()};
+function logToday(){const t=today();if(!ST.log.includes(t)){ST.log.push(t);ST.log=ST.log.slice(-400);save()}renderDays()}
+$('#prLog').onclick=logToday;
+function renderDays(){
+  const set=new Set(ST.log),now=new Date();let h='';
+  for(let k=13;k>=0;k--){const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-k),s=ymd(d);
+    h+='<span class="'+(set.has(s)?'ok':'')+(k===0?' today':'')+'" title="'+s+'">'+(d.getMonth()+1)+'/<br>'+d.getDate()+'</span>'}
+  $('#days').innerHTML=h;
+  let streak=0,d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(!set.has(ymd(d)))d.setDate(d.getDate()-1);
+  while(set.has(ymd(d))){streak++;d.setDate(d.getDate()-1)}
+  $('#stStreak').textContent=streak;$('#stTotal').textContent=set.size;
+  $('#prLog').textContent=set.has(today())?'✓ 今日は記録済み':'今日の練習を記録';
+}
+
+/* ---------- init ---------- */
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&ENG.kind)stopAll()});
+renderFb();renderGv();renderRh();renderRoutine();renderDays();showTab(ST.tab);
+})();
+</script>
+
+<script src="../../assets/config.js"></script>
+<script src="../../assets/site.js"></script>
+</body></html>
