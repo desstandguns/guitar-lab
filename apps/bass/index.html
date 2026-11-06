@@ -678,7 +678,7 @@ function barHTML(g,bar,b){
 function renderTab(){
   const g=groove();PER=perLine();let h='';
   g.sec.forEach(([label,st,n],si)=>{
-    h+='<div class="sec'+(ST.gv.loop>=0&&ST.gv.loop!==si?' off':'')+'"><div class="sec-h">'+label+'<span>'+(st+1)+'–'+(st+n)+'小節</span></div>';
+    h+='<div class="sec'+(ST.gv.loop>=0&&ST.gv.loop!==si?' off':'')+'"><div class="sec-h">'+label+(label.includes('小節')?'':'<span>'+(st+1)+'–'+(st+n)+'小節</span>')+'</div>';
     for(let b=st;b<st+n;b+=PER){
       h+='<div class="sys" style="--n:'+Math.min(PER,st+n-b)+'"><div class="sn"><span></span><span>G</span><span>D</span><span>A</span><span>E</span></div>';
       for(let k=b;k<Math.min(b+PER,st+n);k++)h+=barHTML(g,GC[k],k);
