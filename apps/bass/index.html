@@ -335,9 +335,33 @@ function audio(){
     noiseBuf=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);
     const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
   }
-  if(ac.state==='suspended')ac.resume();
+  if(ac.state!=='running'){try{ac.resume()}catch(e){}} // iOS は 'interrupted' にもなる
+  unlockIOS();
   setMix();return ac;
 }
+/* iPhone 対策:
+   1) 消音スイッチがオンでも鳴るよう、オーディオセッションを「再生」にする
+      （iOS 17+ は navigator.audioSession、それ以前は無音の <audio> をループ再生して切り替える）
+   2) タップの瞬間に無音を1回鳴らして Web Audio のロックを外す */
+let silentEl=null,unlocked=false;
+function silentWavURL(){
+  const n=4000,b=new ArrayBuffer(44+n),v=new DataView(b),w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);
+  for(let i=0;i<n;i++)v.setUint8(44+i,128);
+  return URL.createObjectURL(new Blob([b],{type:'audio/wav'}));
+}
+function unlockIOS(){
+  try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback'}catch(e){}
+  try{
+    if(!silentEl){silentEl=document.createElement('audio');silentEl.src=silentWavURL();silentEl.loop=true;
+      silentEl.setAttribute('playsinline','');silentEl.setAttribute('x-webkit-airplay','deny');silentEl.preload='auto'}
+    if(silentEl.paused){const p=silentEl.play();if(p&&p.catch)p.catch(()=>{})}
+  }catch(e){}
+  if(ac&&!unlocked){try{const b=ac.createBuffer(1,1,22050),s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start(0);unlocked=true}catch(e){}}
+}
+// どこかをタップした瞬間に音声を準備しておく（ボタンを押したときに確実に鳴るように）
+['touchend','pointerdown','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{audio()}catch(e){}},{capture:true,passive:true}));
 function setMix(){if(!ac)return;const live=ENG.kind==='gv';
   bassBus.gain.value=(live&&ST.gv.mute)?0:(live?ST.gv.bv:.85);drumBus.gain.value=ST.gv.dv}
 function bassNote(m,t,dur,vel=1){
@@ -822,7 +846,7 @@ function renderDays(){
 }
 
 /* ---------- init ---------- */
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&ENG.kind)stopAll()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(ENG.kind)stopAll();if(silentEl)silentEl.pause();unlocked=false}});
 renderFb();renderGv();renderRh();renderRoutine();renderDays();showTab(ST.tab);
 })();
 </script>
